@@ -145,6 +145,15 @@ vite.config.ts.timestamp-*
 #pycharm data
 .idea/
 .venv/
+venv/
 .env
 __pycache__/
 *.pyc
+
+# Node dependencies
+node_modules/
+
+#Generated data
+courses.csv
+
+backend/scripts/courses.csv
