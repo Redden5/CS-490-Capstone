@@ -1,15 +1,22 @@
 """Scrape Marshall University's 2026-2027 undergraduate and graduate catalog.
 
-Run from the repository root:
+Run from repository root:
     python -m backend.scripts.scrape_catalog
 
-Use --test to scrape just CS undergraduate and graduate pages.
+Use --test for CS undergraduate and graduate pages, or --subject mth.
+
+Outputs (full run):
+    backend/scripts/courses.csv              (existing schema; unchanged)
+    backend/scripts/catalog_attributes.csv   (NEW, review before seeding)
+
+Neither output file is overwritten when scraping reports page errors.
 """
 
 import argparse
 import csv
 import re
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
@@ -19,9 +26,12 @@ from backend.models import models
 
 BASE_URL = "https://catalog.marshall.edu"
 CATALOG_PATHS = ("undergraduate", "graduate")
+CATALOG_YEAR = "2026-2027"
 OUTPUT_FILE = Path(__file__).resolve().parent / "courses.csv"
-# Parse heading from the text of each courseblock instead of assuming a
-# .courseblocktitle element (not all CourseLeaf layouts use that class).
+ATTRIBUTE_OUTPUT_FILE = OUTPUT_FILE.with_name("catalog_attributes.csv")
+
+# Parse heading from each courseblock's text (the HTML class for the
+# course heading is not consistent across every CourseLeaf page).
 COURSE_HEADING = re.compile(
     r"^(?P<subject>[A-Z][A-Z0-9&]{0,7})\s+"
     r"(?P<number>\d{2,4}[A-Z0-9]*(?:-[A-Z0-9]+)?)\s+"
@@ -34,12 +44,24 @@ CREDITS = re.compile(
     r"^(\d+(?:\.\d+)?)(?:\s*(?:-|–|—|to)\s*(\d+(?:\.\d+)?))?$",
     re.IGNORECASE,
 )
+
+# Named group allows us to identify which metadata field begins, then
+# capture its text up until the next metadata field.
 METADATA_START = re.compile(
-    r"\b(?:Pre-req|Prerequisites?|Concurrent PR|Corequisites?|Co-req|CR/PR|"
-    r"Grade Mode|Attributes|Repeatability|Equivalent Course|Restrictions|Cross-listed)\s*:",
+    r"\b(?P<label>Pre-req|Prerequisites?|Concurrent PR|Corequisites?|"
+    r"Co-req|CR/PR|Grade Mode|Attributes|Repeatability|Equivalent Course|"
+    r"Restrictions|Cross-listed)\s*:",
     re.IGNORECASE,
 )
 
+ATTRIBUTE_COLUMNS = (
+    "course_code",
+    "attribute_name",
+    "source_url",
+    "catalog_year",
+    "catalog_level",
+    "observed_at_utc",
+)
 
 
 def normalize(text):
@@ -64,9 +86,7 @@ def discover_subjects(client, level):
         if parsed.netloc != urlparse(BASE_URL).netloc or not path.startswith(prefix):
             continue
         slug = path[len(prefix):].strip("/")
-        # The index also links to "courses-az.pdf". It is a PDF,
-        # not a subject page, and should never be scraped as HTML.
-        # Subject slugs are simple names such as cs, mth, or a_s.
+        # Skip PDF and other non-subject links.
         if re.fullmatch(r"[a-z0-9_][a-z0-9_-]*", slug, re.IGNORECASE):
             canonical_url = f"{BASE_URL}{prefix}{slug}/"
             results[canonical_url] = normalize(a.get_text(" ", strip=True))
@@ -85,12 +105,33 @@ def parse_credits(value):
 
 
 def course_blocks(soup):
-    # CourseLeaf subject pages use courseblock markup, which need not
-    # be nested under a container named #content.
     return soup.select(".courseblock")
 
 
-def parse_subject_page(soup, url):
+def parse_metadata(after_heading):
+    """Return metadata field labels mapped to their text within one course.
+
+    Extracting by field boundaries avoids capturing later fields such as
+    'Grade Mode:' as part of an Attributes value.
+    """
+    matches = list(METADATA_START.finditer(after_heading))
+    fields = {}
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(after_heading)
+        label = normalize(match.group("label")).casefold()
+        value = normalize(after_heading[match.end():end])
+        if value:
+            fields.setdefault(label, []).append(value)
+    return fields
+
+
+def parse_subject_page(soup, url, attribute_sink=None):
+    """Parse existing Course models, optionally capturing attribute rows.
+
+    attribute_sink is a dictionary populated as
+        {"MTH 229": ["Critical Thinking", "Core II Mathematics"]}.
+    We intentionally do NOT add attributes to models.Course or courses.csv.
+    """
     parsed = []
     blocks = course_blocks(soup)
     if not blocks:
@@ -98,8 +139,6 @@ def parse_subject_page(soup, url):
 
     skipped = 0
     for block in blocks:
-        # Some pages use .courseblocktitle, others do not. We only need the
-        # displayed text; the course heading ends in 'N Credit hours'.
         block_text = normalize(block.get_text(" ", strip=True))
         match = COURSE_HEADING.search(block_text)
         if not match:
@@ -117,12 +156,9 @@ def parse_subject_page(soup, url):
             skipped += 1
             continue
 
-        # After the heading, the catalog puts description text followed by
-        # metadata such as 'Pre-req:' and 'Grade Mode:'. Do not mix metadata
-        # into the general course description.
         after_heading = block_text[match.end():].strip()
-        metadata = METADATA_START.search(after_heading)
-        description = after_heading[:metadata.start()].strip() if metadata else after_heading
+        metadata_matches = list(METADATA_START.finditer(after_heading))
+        description = after_heading[:metadata_matches[0].start()].strip() if metadata_matches else after_heading
         description = description or None
 
         anchor = block.get("id")
@@ -144,10 +180,19 @@ def parse_subject_page(soup, url):
             print(f"  WARN: invalid course {subject} {number}: {exc}")
             skipped += 1
             continue
+
+        if attribute_sink is not None:
+            fields = parse_metadata(after_heading)
+            attributes = []
+            for value in fields.get("attributes", []):
+                for entry in value.split(","):
+                    label = normalize(entry)
+                    if label and label not in attributes:
+                        attributes.append(label)
+            attribute_sink[course.course_code] = attributes
+
         parsed.append(course)
 
-    # Refuse to call a page successful if any course was skipped;
-    # missing even one course would give an incomplete catalog.
     if skipped:
         raise ValueError(
             f"Could not parse {skipped} of {len(blocks)} course blocks; "
@@ -156,7 +201,8 @@ def parse_subject_page(soup, url):
     return parsed
 
 
-def scrape_catalog(test=False, subject=None):
+def scrape_catalog(test=False, subject=None, attribute_sink=None):
+    """Return (courses, errors); optionally populate attribute_sink."""
     courses = {}
     errors = []
     with httpx.Client(
@@ -181,41 +227,81 @@ def scrape_catalog(test=False, subject=None):
             print(f"{level}: {len(subjects)} subject pages")
             for index, url in enumerate(subjects, start=1):
                 try:
-                    page_courses = parse_subject_page(get_soup(client, url), url)
+                    page_attributes = {}
+                    soup = get_soup(client, url)
+                    page_courses = parse_subject_page(soup, url, attribute_sink=page_attributes)
                     print(f"  [{index}/{len(subjects)}] {url}: {len(page_courses)} courses")
                     for course in page_courses:
-                        # Undergraduate version wins if a code appears in both.
-                        courses.setdefault(course.course_code, course)
+                        # Keep original behavior: undergraduate record wins.
+                        if course.course_code not in courses:
+                            courses[course.course_code] = course
+                            if attribute_sink is not None:
+                                attribute_sink[course.course_code] = {
+                                    "attributes": page_attributes.get(course.course_code, []),
+                                    "source_url": course.source_url,
+                                    "catalog_level": level,
+                                }
                 except (httpx.HTTPError, ValueError) as exc:
                     errors.append((url, str(exc)))
                     print(f"  ERROR: {url}: {exc}")
-                time.sleep(0.25)  # Respectful request pacing
+                time.sleep(0.25)
     return courses, errors
 
 
 def main():
     parser = argparse.ArgumentParser()
     selection = parser.add_mutually_exclusive_group()
-    selection.add_argument("--test", action="store_true", help="Scrape only undergraduate/graduate CS")
-    selection.add_argument("--subject", type=str, help="Scrape one subject slug, e.g. a_s or cs")
+    selection.add_argument("--test", action="store_true", help="Scrape undergraduate/graduate CS only")
+    selection.add_argument("--subject", type=str, help="Scrape one subject slug, e.g. a_s or mth")
     args = parser.parse_args()
-    courses, errors = scrape_catalog(test=args.test, subject=args.subject)
+
+    attributes_by_course = {}
+    courses, errors = scrape_catalog(
+        test=args.test, subject=args.subject, attribute_sink=attributes_by_course
+    )
     if not courses:
-        raise SystemExit("No courses parsed; existing courses.csv was NOT overwritten")
+        raise SystemExit("No courses parsed; existing CSV files were NOT overwritten")
     if errors:
-        raise SystemExit(f"{len(errors)} page errors; existing courses.csv was NOT overwritten")
-    output = OUTPUT_FILE.with_name("catalog_test.csv") if (args.test or args.subject) else OUTPUT_FILE
+        raise SystemExit(f"{len(errors)} page errors; existing CSV files were NOT overwritten")
+
+    testing = args.test or args.subject
+    output = OUTPUT_FILE.with_name("catalog_test.csv") if testing else OUTPUT_FILE
+    attribute_output = (
+        ATTRIBUTE_OUTPUT_FILE.with_name("catalog_attributes_test.csv")
+        if testing else ATTRIBUTE_OUTPUT_FILE
+    )
+    observed_at = datetime.now(timezone.utc).isoformat()
+
+    # Existing course CSV format stays unchanged for seed_supabase.py.
     with output.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(models.Course.model_fields))
         writer.writeheader()
         for code in sorted(courses):
             writer.writerow(courses[code].model_dump())
+
+    count = 0
+    with attribute_output.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=ATTRIBUTE_COLUMNS)
+        writer.writeheader()
+        for code, info in sorted(attributes_by_course.items()):
+            for attr in info["attributes"]:
+                writer.writerow({
+                    "course_code": code,
+                    "attribute_name": attr,
+                    "source_url": info["source_url"],
+                    "catalog_year": CATALOG_YEAR,
+                    "catalog_level": info["catalog_level"],
+                    "observed_at_utc": observed_at,
+                })
+                count += 1
+
+    distinct_attrs = {x for info in attributes_by_course.values() for x in info["attributes"]}
+    courses_with_attrs = sum(bool(info["attributes"]) for info in attributes_by_course.values())
     print(f"\nSaved {len(courses)} unique courses to {output}")
-    print(f"Page errors: {len(errors)}")
-    if errors:
-        print("Review errors before seeding; this CSV may be incomplete.")
-        for url, error in errors:
-            print(f"  {url}: {error}")
+    print(f"Saved {count} course-attribute associations to {attribute_output}")
+    print(f"Courses with attributes: {courses_with_attrs}")
+    print(f"Distinct attribute names: {len(distinct_attrs)}")
+    print("No database writes performed. Review catalog_attributes.csv before seeding.")
 
 
 if __name__ == "__main__":
