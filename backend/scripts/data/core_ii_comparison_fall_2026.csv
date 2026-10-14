@@ -1,0 +1,189 @@
+course_code,attribute_name,on_official_list,offered_sections,sections_with_attribute,status
+ANT 201,Core II Social Sciences,True,3,3,AGREEMENT
+ANT 201H,Core II Social Sciences,True,1,1,AGREEMENT
+ART 112,Core II Fine Arts,True,6,6,AGREEMENT
+ART 112H,Core II Fine Arts,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+ART 201,Core II Fine Arts,True,2,2,AGREEMENT
+ART 202,Core II Fine Arts,True,2,2,AGREEMENT
+BSC 104,Core II Natural Sciences,True,2,2,AGREEMENT
+BSC 104L,Core II Natural Sciences,True,7,7,AGREEMENT
+BSC 105,Core II Natural Sciences,True,3,3,AGREEMENT
+BSC 105L,Core II Natural Sciences,True,8,8,AGREEMENT
+BSC 120,Core II Natural Sciences,True,3,3,AGREEMENT
+BSC 120H,Core II Natural Sciences,True,1,1,AGREEMENT
+BSC 120L,Core II Natural Sciences,True,12,12,AGREEMENT
+BSC 121,Core II Natural Sciences,True,2,2,AGREEMENT
+BSC 121L,Core II Natural Sciences,True,5,5,AGREEMENT
+BSC 228,Core II Natural Sciences,True,3,3,AGREEMENT
+BSC 228L,Core II Natural Sciences,True,6,6,AGREEMENT
+BSC 250,Core II Natural Sciences,True,2,2,AGREEMENT
+BSC 250L,Core II Natural Sciences,True,5,5,AGREEMENT
+CHM 111,Core II Natural Sciences,True,3,3,AGREEMENT
+CHM 112,Core II Natural Sciences,True,1,1,AGREEMENT
+CHM 211,Core II Natural Sciences,True,5,5,AGREEMENT
+CHM 212,Core II Natural Sciences,True,3,3,AGREEMENT
+CHM 217,Core II Natural Sciences,True,10,10,AGREEMENT
+CHM 218,Core II Natural Sciences,True,4,4,AGREEMENT
+CJ 200,Core II Social Sciences,True,4,4,AGREEMENT
+CJ 211,Core II Social Sciences,True,1,1,AGREEMENT
+CJ 221,Core II Social Sciences,True,1,1,AGREEMENT
+CJ 231,Core II Social Sciences,True,1,1,AGREEMENT
+CL 210,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+CL 230,Core II Humanities,True,1,1,AGREEMENT
+CL 231,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+CL 232,Core II Humanities,True,1,1,AGREEMENT
+CL 233,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+CL 234,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+CL 236,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+CL 237,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+CL 250,Core II Humanities,True,1,1,AGREEMENT
+CMM 103,Core II Communication Studies,True,28,28,AGREEMENT
+CMM 104H,Core II Communication Studies,True,1,1,AGREEMENT
+CMM 205,Core II Humanities,True,1,1,AGREEMENT
+CMM 207,Core II Communication Studies,True,6,6,AGREEMENT
+CMM 213,Core II Social Sciences,True,4,4,AGREEMENT
+CMM 239,Core II Humanities,True,1,1,AGREEMENT
+DH 201,Core II Humanities,True,2,2,AGREEMENT
+EDF 201,Core II Social Sciences,True,4,4,AGREEMENT
+EDF 218,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+ENG 101,Composition Core II,True,32,32,AGREEMENT
+ENG 101P,Composition Core II,True,28,28,AGREEMENT
+ENG 200,Core II Humanities,True,8,8,AGREEMENT
+ENG 200H,Composition Core II,True,3,3,AGREEMENT
+ENG 200H,Core II Humanities,True,3,3,AGREEMENT
+ENG 201,Composition Core II,True,16,16,AGREEMENT
+ENG 201H,Composition Core II,True,2,2,AGREEMENT
+ENG 203,Core II Humanities,True,3,3,AGREEMENT
+ENG 205,Core II Humanities,True,1,1,AGREEMENT
+ENG 206,Core II Humanities,True,1,1,AGREEMENT
+ENG 207,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+ENG 209,Core II Humanities,True,1,1,AGREEMENT
+ENG 210,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+ENG 211,Core II Humanities,True,1,1,AGREEMENT
+ENG 212,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+ENG 213,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+ENG 214,Core II Humanities,True,1,1,AGREEMENT
+ENG 215,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+ENG 220,Core II Humanities,True,1,1,AGREEMENT
+ENG 221,Core II Humanities,True,1,1,AGREEMENT
+ENG 225,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+ENG 231,Core II Humanities,True,1,1,AGREEMENT
+ENG 232,Core II Humanities,True,4,4,AGREEMENT
+ENG 235,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+ENG 236,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+ENG 240,Core II Humanities,True,1,1,AGREEMENT
+ENG 241,Core II Humanities,True,2,2,AGREEMENT
+ENG 242,Core II Humanities,True,2,2,AGREEMENT
+ENG 263,Core II Humanities,True,1,1,AGREEMENT
+FRN 240,Core II Humanities,True,1,1,AGREEMENT
+FSC 224,Core II Natural Sciences,True,3,3,AGREEMENT
+GEO 100,Core II Social Sciences,True,1,1,AGREEMENT
+GEO 101,Core II Natural Sciences,True,2,2,AGREEMENT
+GEO 101L,Core II Natural Sciences,True,3,3,AGREEMENT
+GEO 203,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+GEO 206,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+GEO 207,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+GEO 222,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+GEO 230,Core II Natural Sciences,True,4,4,AGREEMENT
+GEO 230L,Core II Natural Sciences,True,4,4,AGREEMENT
+GER 240,Core II Humanities,True,1,1,AGREEMENT
+GLY 100,Core II Natural Sciences,True,1,1,AGREEMENT
+GLY 150,Core II Natural Sciences,True,1,1,AGREEMENT
+GLY 150L,Core II Natural Sciences,True,1,1,AGREEMENT
+GLY 200,Core II Natural Sciences,True,2,2,AGREEMENT
+GLY 201,Core II Natural Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+GLY 210L,Core II Natural Sciences,True,3,3,AGREEMENT
+GLY 211L,Core II Natural Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+HST 101,Core II Social Sciences,True,2,2,AGREEMENT
+HST 101H,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+HST 102,Core II Social Sciences,True,1,1,AGREEMENT
+HST 102H,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+HST 103,Core II Social Sciences,True,4,4,AGREEMENT
+HST 103H,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+HST 208,Core II Social Sciences,True,1,1,AGREEMENT
+HST 210,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+HST 219,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+HST 220,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+HST 223,Core II Social Sciences,True,1,1,AGREEMENT
+HST 230,Core II Social Sciences,True,5,5,AGREEMENT
+HST 231,Core II Social Sciences,True,3,3,AGREEMENT
+HST 231H,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+HST 250,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+HST 260,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+HST 265,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+JMC 101,Core II Humanities,True,5,5,AGREEMENT
+JPN 240,Core II Humanities,True,1,1,AGREEMENT
+JPN 245,Core II Humanities,True,1,1,AGREEMENT
+JPN 250,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+MTH 121,Core II Mathematics,True,3,3,AGREEMENT
+MTH 121B,Core II Mathematics,True,6,6,AGREEMENT
+MTH 122,Core II Mathematics,True,2,2,AGREEMENT
+MTH 127,Core II Mathematics,True,10,10,AGREEMENT
+MTH 130,Core II Mathematics,True,3,3,AGREEMENT
+MTH 132,Core II Mathematics,True,3,3,AGREEMENT
+MTH 140,Core II Mathematics,True,3,3,AGREEMENT
+MTH 140H,Core II Mathematics,True,1,1,AGREEMENT
+MTH 160,Core II Mathematics,True,1,1,AGREEMENT
+MTH 220,Core II Mathematics,True,1,1,AGREEMENT
+MTH 229,Core II Mathematics,True,4,4,AGREEMENT
+MTH 229H,Core II Mathematics,True,1,1,AGREEMENT
+MTH 230,Core II Mathematics,True,3,3,AGREEMENT
+MTH 231,Core II Mathematics,True,1,1,AGREEMENT
+MUS 142,Core II Fine Arts,True,11,11,AGREEMENT
+MUS 142H,Core II Fine Arts,True,1,1,AGREEMENT
+MUS 200,Core II Fine Arts,True,1,1,AGREEMENT
+MUS 210,Core II Fine Arts,True,1,1,AGREEMENT
+MUS 227,Core II Fine Arts,True,2,2,AGREEMENT
+NRE 111,Core II Natural Sciences,True,2,2,AGREEMENT
+NRE 111L,Core II Natural Sciences,True,9,9,AGREEMENT
+PHL 200,Core II Humanities,True,1,1,AGREEMENT
+PHL 200H,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+PHL 201,Core II Humanities,True,2,2,AGREEMENT
+PHL 203,Core II Humanities,True,1,1,AGREEMENT
+PHL 204,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+PHL 250,Core II Humanities,True,1,1,AGREEMENT
+PHY 101,Core II Natural Sciences,True,1,1,AGREEMENT
+PHY 101L,Core II Natural Sciences,True,2,2,AGREEMENT
+PHY 102,Core II Natural Sciences,True,1,1,AGREEMENT
+PHY 102L,Core II Natural Sciences,True,2,2,AGREEMENT
+PHY 201,Core II Natural Sciences,True,2,2,AGREEMENT
+PHY 202,Core II Natural Sciences,True,7,7,AGREEMENT
+PHY 203,Core II Natural Sciences,True,1,1,AGREEMENT
+PHY 204,Core II Natural Sciences,True,3,3,AGREEMENT
+PHY 211,Core II Natural Sciences,True,2,2,AGREEMENT
+PHY 213,Core II Natural Sciences,True,1,1,AGREEMENT
+PS 101,Core II Natural Sciences,True,1,1,AGREEMENT
+PS 101L,Core II Natural Sciences,True,1,1,AGREEMENT
+PSC 104,Core II Social Sciences,True,5,5,AGREEMENT
+PSC 105,Core II Social Sciences,True,1,1,AGREEMENT
+PSC 201,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+PSC 201,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+PSC 202,Core II Social Sciences,True,1,1,AGREEMENT
+PSC 207,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+PSC 209,Core II Social Sciences,True,1,1,AGREEMENT
+PSC 217,Core II Social Sciences,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+PSY 201,Core II Social Sciences,True,7,7,AGREEMENT
+PSY 201H,Core II Social Sciences,True,1,1,AGREEMENT
+PSY 223,Core II Social Sciences,True,5,5,AGREEMENT
+RST 205,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+RST 206,Core II Humanities,True,1,1,AGREEMENT
+RST 207,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+RST 220,Core II Humanities,True,1,1,AGREEMENT
+RST 225,Core II Humanities,True,1,1,AGREEMENT
+RST 250,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+SCLA 101,Core II Communication Studies,True,2,2,AGREEMENT
+SCLA 101H,Core II Communication Studies,True,1,1,AGREEMENT
+SCLA 102,Composition Core II,True,8,8,AGREEMENT
+SCLA 102,Core II Humanities,True,8,8,AGREEMENT
+SCLA 102H,Composition Core II,True,1,1,AGREEMENT
+SCLA 102H,Core II Humanities,False,1,1,TERM_TAGGED_NOT_ON_CURRENT_LIST
+SOC 200,Core II Social Sciences,True,8,8,AGREEMENT
+SOC 200H,Core II Social Sciences,True,1,1,AGREEMENT
+SPN 240,Core II Humanities,True,3,3,AGREEMENT
+SPN 245,Core II Humanities,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+STA 150,Core II Mathematics,True,3,3,AGREEMENT
+STA 150B,Core II Mathematics,True,4,4,AGREEMENT
+STA 150H,Core II Mathematics,True,0,0,OFFICIAL_NOT_OFFERED_THIS_TERM
+STA 150L,Core II Mathematics,True,6,6,AGREEMENT
+STA 225,Core II Mathematics,True,4,4,AGREEMENT
+THE 112,Core II Fine Arts,True,5,5,AGREEMENT

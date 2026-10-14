@@ -1,0 +1,1947 @@
+{
+  "program_title": "Music Industry, B.A.",
+  "catalog_year": "2026-2027",
+  "source_url": "https://catalog.marshall.edu/undergraduate/programs-az/arts-media/music/music-industry-ba/",
+  "scraped_at_utc": "2026-10-13T16:07:47.172173+00:00",
+  "stage": "raw_requirements_extraction_only",
+  "summary": {
+    "requirement_tables": 2,
+    "total_rows": 46,
+    "row_types": {
+      "column_header": 2,
+      "course_row": 23,
+      "credit_requirement": 12,
+      "section_header": 6,
+      "selection_instruction": 2,
+      "text_or_header": 1
+    },
+    "distinct_linked_course_codes": 23,
+    "rows_with_review_flags": 17
+  },
+  "rows": [
+    {
+      "table_index": 0,
+      "row_index": 0,
+      "kind": "column_header",
+      "row_classes": [
+        "hidden",
+        "noscript"
+      ],
+      "text": "Code Title Credit Hours",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "Credit Hours",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Code",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "Title",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "Credit Hours",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "non_numeric_credit_expression"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 1,
+      "kind": "section_header",
+      "row_classes": [
+        "even",
+        "areaheader",
+        "firstrow"
+      ],
+      "text": "Core Curriculum",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Core Curriculum",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 2,
+      "kind": "section_header",
+      "row_classes": [
+        "odd",
+        "areasubheader",
+        "undefined"
+      ],
+      "text": "Core 1: Critical Thinking",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Core 1: Critical Thinking",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 3,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "FYS 100 First Yr Sem Critical Thinking 3",
+      "code_expression": "FYS 100",
+      "course_codes": [
+        "FYS 100"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "FYS 100",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "FYS 100",
+              "url": "https://catalog.marshall.edu/search/?P=FYS%20100"
+            }
+          ]
+        },
+        {
+          "text": "First Yr Sem Critical Thinking",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 4,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CT Course ( MTH 121 Concepts and Applications (CT)) 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CT Course ( MTH 121 Concepts and Applications (CT))",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MTH 121",
+              "url": "https://catalog.marshall.edu/search/?P=MTH%20121"
+            }
+          ]
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 5,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CT Course 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CT Course",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 6,
+      "kind": "section_header",
+      "row_classes": [
+        "odd",
+        "areasubheader",
+        "undefined"
+      ],
+      "text": "Core 2",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Core 2",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 7,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "ENG 101 Beginning Composition 3",
+      "code_expression": "ENG 101",
+      "course_codes": [
+        "ENG 101"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "ENG 101",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "ENG 101",
+              "url": "https://catalog.marshall.edu/search/?P=ENG%20101"
+            }
+          ]
+        },
+        {
+          "text": "Beginning Composition",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 8,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "ENG 201 Advanced Composition 3",
+      "code_expression": "ENG 201",
+      "course_codes": [
+        "ENG 201"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "ENG 201",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "ENG 201",
+              "url": "https://catalog.marshall.edu/search/?P=ENG%20201"
+            }
+          ]
+        },
+        {
+          "text": "Advanced Composition",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 9,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CMM 103 Fund Speech-Communication 3",
+      "code_expression": "CMM 103",
+      "course_codes": [
+        "CMM 103"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CMM 103",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CMM 103",
+              "url": "https://catalog.marshall.edu/search/?P=CMM%20103"
+            }
+          ]
+        },
+        {
+          "text": "Fund Speech-Communication",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 10,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Core II Fine Arts ( MUS 142 Music in Society) 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Core II Fine Arts ( MUS 142 Music in Society)",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUS 142",
+              "url": "https://catalog.marshall.edu/search/?P=MUS%20142"
+            }
+          ]
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 11,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "even"
+      ],
+      "text": "Core II Humanities 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Core II Humanities",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 12,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Core II Mathematics ( MTH 121 Concepts and Applications (CT)) 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Core II Mathematics ( MTH 121 Concepts and Applications (CT))",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MTH 121",
+              "url": "https://catalog.marshall.edu/search/?P=MTH%20121"
+            }
+          ]
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 13,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "even"
+      ],
+      "text": "Core II Natural/Physical Science 4",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "4",
+      "credit_hours": 4,
+      "cells": [
+        {
+          "text": "Core II Natural/Physical Science",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "4",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 14,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Core II Social Science 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Core II Social Science",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 15,
+      "kind": "section_header",
+      "row_classes": [
+        "even",
+        "areasubheader",
+        "undefined"
+      ],
+      "text": "Additional University Requirements",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Additional University Requirements",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 16,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Writing Intensive 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Writing Intensive",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 17,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "even"
+      ],
+      "text": "Writing Intensive 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Writing Intensive",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 18,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Multicultural/International 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Multicultural/International",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 19,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "even",
+        "lastrow"
+      ],
+      "text": "Capstone ( MUSP 475 Music Industry Capstone) 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Capstone ( MUSP 475 Music Industry Capstone)",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 475",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20475"
+            }
+          ]
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 1,
+      "row_index": 0,
+      "kind": "column_header",
+      "row_classes": [
+        "hidden",
+        "noscript"
+      ],
+      "text": "Code Title Credit Hours",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "Credit Hours",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Code",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "Title",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "Credit Hours",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "non_numeric_credit_expression"
+      ]
+    },
+    {
+      "table_index": 1,
+      "row_index": 1,
+      "kind": "course_row",
+      "row_classes": [
+        "even",
+        "firstrow"
+      ],
+      "text": "MUS 142 Music in Society 3",
+      "code_expression": "MUS 142",
+      "course_codes": [
+        "MUS 142"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MUS 142",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUS 142",
+              "url": "https://catalog.marshall.edu/search/?P=MUS%20142"
+            }
+          ]
+        },
+        {
+          "text": "Music in Society",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 2,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MUSP 101 Basic Musicianship 3",
+      "code_expression": "MUSP 101",
+      "course_codes": [
+        "MUSP 101"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MUSP 101",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 101",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20101"
+            }
+          ]
+        },
+        {
+          "text": "Basic Musicianship",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 3,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "MUSP 110 The Professional Musician 1",
+      "code_expression": "MUSP 110",
+      "course_codes": [
+        "MUSP 110"
+      ],
+      "credit_text": "1",
+      "credit_hours": 1,
+      "cells": [
+        {
+          "text": "MUSP 110",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 110",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20110"
+            }
+          ]
+        },
+        {
+          "text": "The Professional Musician",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "1",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 4,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MUSP 111 Elementary Music Theory I 2",
+      "code_expression": "MUSP 111",
+      "course_codes": [
+        "MUSP 111"
+      ],
+      "credit_text": "2",
+      "credit_hours": 2,
+      "cells": [
+        {
+          "text": "MUSP 111",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 111",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20111"
+            }
+          ]
+        },
+        {
+          "text": "Elementary Music Theory I",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "2",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 5,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "MUSP 190 Aural Perceptions of Music Lit 2",
+      "code_expression": "MUSP 190",
+      "course_codes": [
+        "MUSP 190"
+      ],
+      "credit_text": "2",
+      "credit_hours": 2,
+      "cells": [
+        {
+          "text": "MUSP 190",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 190",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20190"
+            }
+          ]
+        },
+        {
+          "text": "Aural Perceptions of Music Lit",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "2",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 6,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MUSP 225 Intro to Music Industry 3",
+      "code_expression": "MUSP 225",
+      "course_codes": [
+        "MUSP 225"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MUSP 225",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 225",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20225"
+            }
+          ]
+        },
+        {
+          "text": "Intro to Music Industry",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 7,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "MUSP 226 Intro to Music Technology 3",
+      "code_expression": "MUSP 226",
+      "course_codes": [
+        "MUSP 226"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MUSP 226",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 226",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20226"
+            }
+          ]
+        },
+        {
+          "text": "Intro to Music Technology",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 8,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MUSP 250 Digital Recording I 3",
+      "code_expression": "MUSP 250",
+      "course_codes": [
+        "MUSP 250"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MUSP 250",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 250",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20250"
+            }
+          ]
+        },
+        {
+          "text": "Digital Recording I",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 9,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "MUSP 325 Music Entrepreneurship 3",
+      "code_expression": "MUSP 325",
+      "course_codes": [
+        "MUSP 325"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MUSP 325",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 325",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20325"
+            }
+          ]
+        },
+        {
+          "text": "Music Entrepreneurship",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 10,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MUSP 326 Music Industry Law 3",
+      "code_expression": "MUSP 326",
+      "course_codes": [
+        "MUSP 326"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MUSP 326",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 326",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20326"
+            }
+          ]
+        },
+        {
+          "text": "Music Industry Law",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 11,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "MUSP 327 Music Business I 3",
+      "code_expression": "MUSP 327",
+      "course_codes": [
+        "MUSP 327"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MUSP 327",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 327",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20327"
+            }
+          ]
+        },
+        {
+          "text": "Music Business I",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 12,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MUSP 475 Music Industry Capstone 3",
+      "code_expression": "MUSP 475",
+      "course_codes": [
+        "MUSP 475"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MUSP 475",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 475",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20475"
+            }
+          ]
+        },
+        {
+          "text": "Music Industry Capstone",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 13,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "MUSP 495 Music Internship 3",
+      "code_expression": "MUSP 495",
+      "course_codes": [
+        "MUSP 495"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MUSP 495",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 495",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20495"
+            }
+          ]
+        },
+        {
+          "text": "Music Internship",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 14,
+      "kind": "selection_instruction",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Choose four (4) credits from the following: 4",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "4",
+      "credit_hours": 4,
+      "cells": [
+        {
+          "text": "Choose four (4) credits from the following:",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "4",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "selection_options_need_grouping"
+      ]
+    },
+    {
+      "table_index": 1,
+      "row_index": 15,
+      "kind": "text_or_header",
+      "row_classes": [
+        "even"
+      ],
+      "text": "MUSA 1XX 1",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "MUSA 1XX 1",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 1,
+      "row_index": 16,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MUSP 121 Class Piano I",
+      "code_expression": "MUSP 121",
+      "course_codes": [
+        "MUSP 121"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "MUSP 121",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 121",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20121"
+            }
+          ]
+        },
+        {
+          "text": "Class Piano I",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 17,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "MUSP 126 Class Voice",
+      "code_expression": "MUSP 126",
+      "course_codes": [
+        "MUSP 126"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "MUSP 126",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 126",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20126"
+            }
+          ]
+        },
+        {
+          "text": "Class Voice",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 18,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MUSP 127 Class Guitar",
+      "code_expression": "MUSP 127",
+      "course_codes": [
+        "MUSP 127"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "MUSP 127",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUSP 127",
+              "url": "https://catalog.marshall.edu/search/?P=MUSP%20127"
+            }
+          ]
+        },
+        {
+          "text": "Class Guitar",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 19,
+      "kind": "selection_instruction",
+      "row_classes": [
+        "even"
+      ],
+      "text": "Choose six (6) credits from the following: 6",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "6",
+      "credit_hours": 6,
+      "cells": [
+        {
+          "text": "Choose six (6) credits from the following:",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "6",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "selection_options_need_grouping"
+      ]
+    },
+    {
+      "table_index": 1,
+      "row_index": 20,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MUS 200 Introduction to World Music",
+      "code_expression": "MUS 200",
+      "course_codes": [
+        "MUS 200"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "MUS 200",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUS 200",
+              "url": "https://catalog.marshall.edu/search/?P=MUS%20200"
+            }
+          ]
+        },
+        {
+          "text": "Introduction to World Music",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 21,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "MUS 227 History of Popular Music",
+      "code_expression": "MUS 227",
+      "course_codes": [
+        "MUS 227"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "MUS 227",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUS 227",
+              "url": "https://catalog.marshall.edu/search/?P=MUS%20227"
+            }
+          ]
+        },
+        {
+          "text": "History of Popular Music",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 22,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MUS 250 History of Jazz",
+      "code_expression": "MUS 250",
+      "course_codes": [
+        "MUS 250"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "MUS 250",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MUS 250",
+              "url": "https://catalog.marshall.edu/search/?P=MUS%20250"
+            }
+          ]
+        },
+        {
+          "text": "History of Jazz",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 23,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "even"
+      ],
+      "text": "Music Ensembles (MUSE 4XX) 4",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "4",
+      "credit_hours": 4,
+      "cells": [
+        {
+          "text": "Music Ensembles (MUSE 4XX)",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "4",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 1,
+      "row_index": 24,
+      "kind": "section_header",
+      "row_classes": [
+        "odd",
+        "areaheader"
+      ],
+      "text": "Total Music Industry Major Requirements Credit Hours 52",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "52",
+      "credit_hours": 52,
+      "cells": [
+        {
+          "text": "Total Music Industry Major Requirements Credit Hours",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "52",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 1,
+      "row_index": 25,
+      "kind": "section_header",
+      "row_classes": [
+        "even",
+        "areasubheader",
+        "undefined",
+        "lastrow"
+      ],
+      "text": "Emphasis Area Requirements 43",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "43",
+      "credit_hours": 43,
+      "cells": [
+        {
+          "text": "Emphasis Area Requirements",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "43",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    }
+  ]
+}

@@ -1,0 +1,2322 @@
+{
+  "program_title": "Computer Science, B.S.",
+  "catalog_year": "2026-2027",
+  "source_url": "https://catalog.marshall.edu/undergraduate/programs-az/engineering-computer-sciences/computer-science/computer-science-bs/",
+  "source_stage": "interpreted_draft_not_approved_for_seeding",
+  "stage": "resolved_draft_not_approved_for_seeding",
+  "approved_for_seeding": false,
+  "summary": {
+    "source_rules": 39,
+    "ready_rules": 29,
+    "needs_review_rules": 10,
+    "unsupported_rules": 0,
+    "section_group_nodes": 5,
+    "compound_option_nodes": 5,
+    "all_nodes": 49,
+    "current_core_ii_mappings": {
+      "matched": 4,
+      "category_only": 3,
+      "partial_lab": 1
+    }
+  },
+  "nodes": [
+    {
+      "node_id": "group:8b850a5d6a94ad0f",
+      "parent_node_id": null,
+      "name": "Core Curriculum",
+      "source_kind": "SECTION_GROUP",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [],
+      "attribute_names": [],
+      "status": "STRUCTURAL",
+      "review_flags": [],
+      "section_path": [
+        "Core Curriculum"
+      ],
+      "source": {},
+      "metadata": {}
+    },
+    {
+      "node_id": "group:ba33c64732318b92",
+      "parent_node_id": "group:8b850a5d6a94ad0f",
+      "name": "Core 1: Critical Thinking",
+      "source_kind": "SECTION_GROUP",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [],
+      "attribute_names": [],
+      "status": "STRUCTURAL",
+      "review_flags": [],
+      "section_path": [
+        "Core Curriculum",
+        "Core 1: Critical Thinking"
+      ],
+      "source": {},
+      "metadata": {}
+    },
+    {
+      "node_id": "rule:t0_row_0003",
+      "parent_node_id": "group:ba33c64732318b92",
+      "name": "FYS 100 First Yr Sem Critical Thinking",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "FYS 100"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Core Curriculum",
+        "Core 1: Critical Thinking"
+      ],
+      "source": {
+        "rule_id": "t0_row_0003",
+        "table_index": 0,
+        "source_rows": [
+          3
+        ],
+        "source_row_ids": [
+          "t0_r3"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0004",
+      "parent_node_id": "group:ba33c64732318b92",
+      "name": "MTH 229 Calculus/Analytic Geom I (CT)",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "MTH 229"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Core Curriculum",
+        "Core 1: Critical Thinking"
+      ],
+      "source": {
+        "rule_id": "t0_row_0004",
+        "table_index": 0,
+        "source_rows": [
+          4
+        ],
+        "source_row_ids": [
+          "t0_r4"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 5,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0005",
+      "parent_node_id": "group:ba33c64732318b92",
+      "name": "Critical Thinking Course",
+      "source_kind": "CREDIT_REQUIREMENT_DRAFT",
+      "db_requirement_type_candidate": "MIN_CREDITS",
+      "minimum_courses": null,
+      "minimum_credits": 3,
+      "course_codes": [],
+      "attribute_names": [],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "eligibility_requires_explicit_resolution"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 1: Critical Thinking"
+      ],
+      "source": {
+        "rule_id": "t0_row_0005",
+        "table_index": 0,
+        "source_rows": [
+          5
+        ],
+        "source_row_ids": [
+          "t0_r5"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": null,
+        "credit_slots": [
+          3
+        ],
+        "original_review_flags": [
+          "credit_requirement_eligibility_unmapped"
+        ],
+        "referenced_course_codes": [],
+        "course_patterns": []
+      }
+    },
+    {
+      "node_id": "group:9d3ede577f40db87",
+      "parent_node_id": "group:8b850a5d6a94ad0f",
+      "name": "Core 2",
+      "source_kind": "SECTION_GROUP",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [],
+      "attribute_names": [],
+      "status": "STRUCTURAL",
+      "review_flags": [],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "source": {},
+      "metadata": {}
+    },
+    {
+      "node_id": "rule:t0_row_0007",
+      "parent_node_id": "group:9d3ede577f40db87",
+      "name": "ENG 101 Beginning Composition",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "ENG 101"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "source": {
+        "rule_id": "t0_row_0007",
+        "table_index": 0,
+        "source_rows": [
+          7
+        ],
+        "source_row_ids": [
+          "t0_r7"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0008",
+      "parent_node_id": "group:9d3ede577f40db87",
+      "name": "ENG 201 Advanced Composition",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "ENG 201"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "source": {
+        "rule_id": "t0_row_0008",
+        "table_index": 0,
+        "source_rows": [
+          8
+        ],
+        "source_row_ids": [
+          "t0_r8"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0009",
+      "parent_node_id": "group:9d3ede577f40db87",
+      "name": "CMM 103 Fund Speech-Communication",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CMM 103"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "source": {
+        "rule_id": "t0_row_0009",
+        "table_index": 0,
+        "source_rows": [
+          9
+        ],
+        "source_row_ids": [
+          "t0_r9"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0010",
+      "parent_node_id": "group:9d3ede577f40db87",
+      "name": "MTH 229 Calculus/Analytic Geom I (CT)",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "MTH 229"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "source": {
+        "rule_id": "t0_row_0010",
+        "table_index": 0,
+        "source_rows": [
+          10
+        ],
+        "source_row_ids": [
+          "t0_r10"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 5,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0011",
+      "parent_node_id": "group:9d3ede577f40db87",
+      "name": "Sci w/Lab Core II Physical/Natural Science",
+      "source_kind": "CREDIT_REQUIREMENT_DRAFT",
+      "db_requirement_type_candidate": "MIN_CREDITS",
+      "minimum_courses": null,
+      "minimum_credits": 4,
+      "course_codes": [],
+      "attribute_names": [
+        "Core II Natural Sciences"
+      ],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "catalog_year_applicability_unverified",
+        "lab_eligibility_unverified"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "source": {
+        "rule_id": "t0_row_0011",
+        "table_index": 0,
+        "source_rows": [
+          11
+        ],
+        "source_row_ids": [
+          "t0_r11"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": null,
+        "credit_slots": [
+          4
+        ],
+        "original_review_flags": [
+          "credit_requirement_eligibility_unmapped"
+        ],
+        "referenced_course_codes": [],
+        "course_patterns": [],
+        "attribute_resolution": {
+          "scope": "current_official_course_listing_only",
+          "attribute_match_mode": "ANY",
+          "source_url": "https://mubert.marshall.edu/coreIIcourses.php",
+          "observed_at_utc": "2026-10-13T17:04:26.870198+00:00",
+          "catalog_year_applicability_verified": false,
+          "additional_lab_eligibility_unverified": true
+        }
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0012",
+      "parent_node_id": "group:9d3ede577f40db87",
+      "name": "Core II Humanities",
+      "source_kind": "CREDIT_REQUIREMENT_DRAFT",
+      "db_requirement_type_candidate": "MIN_CREDITS",
+      "minimum_courses": null,
+      "minimum_credits": 3,
+      "course_codes": [],
+      "attribute_names": [
+        "Core II Humanities"
+      ],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "catalog_year_applicability_unverified"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "source": {
+        "rule_id": "t0_row_0012",
+        "table_index": 0,
+        "source_rows": [
+          12
+        ],
+        "source_row_ids": [
+          "t0_r12"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": null,
+        "credit_slots": [
+          3
+        ],
+        "original_review_flags": [
+          "credit_requirement_eligibility_unmapped"
+        ],
+        "referenced_course_codes": [],
+        "course_patterns": [],
+        "attribute_resolution": {
+          "scope": "current_official_course_listing_only",
+          "attribute_match_mode": "ANY",
+          "source_url": "https://mubert.marshall.edu/coreIIcourses.php",
+          "observed_at_utc": "2026-10-13T17:04:26.870198+00:00",
+          "catalog_year_applicability_verified": false,
+          "additional_lab_eligibility_unverified": false
+        }
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0013",
+      "parent_node_id": "group:9d3ede577f40db87",
+      "name": "Core II Social Studies",
+      "source_kind": "CREDIT_REQUIREMENT_DRAFT",
+      "db_requirement_type_candidate": "MIN_CREDITS",
+      "minimum_courses": null,
+      "minimum_credits": 3,
+      "course_codes": [],
+      "attribute_names": [
+        "Core II Social Sciences"
+      ],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "catalog_year_applicability_unverified"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "source": {
+        "rule_id": "t0_row_0013",
+        "table_index": 0,
+        "source_rows": [
+          13
+        ],
+        "source_row_ids": [
+          "t0_r13"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": null,
+        "credit_slots": [
+          3
+        ],
+        "original_review_flags": [
+          "credit_requirement_eligibility_unmapped"
+        ],
+        "referenced_course_codes": [],
+        "course_patterns": [],
+        "attribute_resolution": {
+          "scope": "current_official_course_listing_only",
+          "attribute_match_mode": "ANY",
+          "source_url": "https://mubert.marshall.edu/coreIIcourses.php",
+          "observed_at_utc": "2026-10-13T17:04:26.870198+00:00",
+          "catalog_year_applicability_verified": false,
+          "additional_lab_eligibility_unverified": false
+        }
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0014",
+      "parent_node_id": "group:9d3ede577f40db87",
+      "name": "Core II Fine Arts",
+      "source_kind": "CREDIT_REQUIREMENT_DRAFT",
+      "db_requirement_type_candidate": "MIN_CREDITS",
+      "minimum_courses": null,
+      "minimum_credits": 3,
+      "course_codes": [],
+      "attribute_names": [
+        "Core II Fine Arts"
+      ],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "catalog_year_applicability_unverified"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "source": {
+        "rule_id": "t0_row_0014",
+        "table_index": 0,
+        "source_rows": [
+          14
+        ],
+        "source_row_ids": [
+          "t0_r14"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": null,
+        "credit_slots": [
+          3
+        ],
+        "original_review_flags": [
+          "credit_requirement_eligibility_unmapped"
+        ],
+        "referenced_course_codes": [],
+        "course_patterns": [],
+        "attribute_resolution": {
+          "scope": "current_official_course_listing_only",
+          "attribute_match_mode": "ANY",
+          "source_url": "https://mubert.marshall.edu/coreIIcourses.php",
+          "observed_at_utc": "2026-10-13T17:04:26.870198+00:00",
+          "catalog_year_applicability_verified": false,
+          "additional_lab_eligibility_unverified": false
+        }
+      }
+    },
+    {
+      "node_id": "group:aa17fe52dd09d1b1",
+      "parent_node_id": "group:8b850a5d6a94ad0f",
+      "name": "Additional Univeristy Requirements",
+      "source_kind": "SECTION_GROUP",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [],
+      "attribute_names": [],
+      "status": "STRUCTURAL",
+      "review_flags": [],
+      "section_path": [
+        "Core Curriculum",
+        "Additional Univeristy Requirements"
+      ],
+      "source": {},
+      "metadata": {}
+    },
+    {
+      "node_id": "rule:t0_row_0016",
+      "parent_node_id": "group:aa17fe52dd09d1b1",
+      "name": "Writing Intensive",
+      "source_kind": "CREDIT_REQUIREMENT_DRAFT",
+      "db_requirement_type_candidate": "MIN_CREDITS",
+      "minimum_courses": null,
+      "minimum_credits": 6,
+      "course_codes": [],
+      "attribute_names": [],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "repeated_credit_slots_need_policy_review",
+        "eligibility_requires_explicit_resolution"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Additional Univeristy Requirements"
+      ],
+      "source": {
+        "rule_id": "t0_row_0016",
+        "table_index": 0,
+        "source_rows": [
+          16,
+          17
+        ],
+        "source_row_ids": [
+          "t0_r16",
+          "t0_r17"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": null,
+        "credit_slots": [
+          3,
+          3
+        ],
+        "original_review_flags": [
+          "credit_requirement_eligibility_unmapped",
+          "repeated_credit_slots_need_policy_review"
+        ],
+        "referenced_course_codes": [],
+        "course_patterns": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0018",
+      "parent_node_id": "group:aa17fe52dd09d1b1",
+      "name": "Multicultural or International",
+      "source_kind": "CREDIT_REQUIREMENT_DRAFT",
+      "db_requirement_type_candidate": "MIN_CREDITS",
+      "minimum_courses": null,
+      "minimum_credits": 3,
+      "course_codes": [],
+      "attribute_names": [],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "eligibility_requires_explicit_resolution"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Additional Univeristy Requirements"
+      ],
+      "source": {
+        "rule_id": "t0_row_0018",
+        "table_index": 0,
+        "source_rows": [
+          18
+        ],
+        "source_row_ids": [
+          "t0_r18"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": null,
+        "credit_slots": [
+          3
+        ],
+        "original_review_flags": [
+          "credit_requirement_eligibility_unmapped"
+        ],
+        "referenced_course_codes": [],
+        "course_patterns": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0019",
+      "parent_node_id": "group:aa17fe52dd09d1b1",
+      "name": "CS 490 Senior Project",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 490"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Core Curriculum",
+        "Additional Univeristy Requirements"
+      ],
+      "source": {
+        "rule_id": "t0_row_0019",
+        "table_index": 0,
+        "source_rows": [
+          19
+        ],
+        "source_row_ids": [
+          "t0_r19"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "group:44df193fb0ff8a7a",
+      "parent_node_id": null,
+      "name": "Major-Specific",
+      "source_kind": "SECTION_GROUP",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [],
+      "attribute_names": [],
+      "status": "STRUCTURAL",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {},
+      "metadata": {}
+    },
+    {
+      "node_id": "rule:t0_row_0021",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "MTH 220 Discrete Structures",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "MTH 220"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0021",
+        "table_index": 0,
+        "source_rows": [
+          21
+        ],
+        "source_row_ids": [
+          "t0_r21"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0022",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "MTH 229 Calculus/Analytic Geom I (CT)",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "MTH 229"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0022",
+        "table_index": 0,
+        "source_rows": [
+          22
+        ],
+        "source_row_ids": [
+          "t0_r22"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 5,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0023",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "MTH 230 Calculus/Analytic Geom II",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "MTH 230"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0023",
+        "table_index": 0,
+        "source_rows": [
+          23
+        ],
+        "source_row_ids": [
+          "t0_r23"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 4,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0024",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "MTH 329 Elementary Linear Algebra",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "MTH 329"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0024",
+        "table_index": 0,
+        "source_rows": [
+          24
+        ],
+        "source_row_ids": [
+          "t0_r24"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0025",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "STA 345 Applied Prob and Stat",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "STA 345"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0025",
+        "table_index": 0,
+        "source_rows": [
+          25
+        ],
+        "source_row_ids": [
+          "t0_r25"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0026",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 110 Computer Science I",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 110"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0026",
+        "table_index": 0,
+        "source_rows": [
+          26
+        ],
+        "source_row_ids": [
+          "t0_r26"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0027",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 120 Computer Science II",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 120"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0027",
+        "table_index": 0,
+        "source_rows": [
+          27
+        ],
+        "source_row_ids": [
+          "t0_r27"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0028",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 210 Data Structures and Algorithms",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 210"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0028",
+        "table_index": 0,
+        "source_rows": [
+          28
+        ],
+        "source_row_ids": [
+          "t0_r28"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0029",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 215 Adv Data Struct and Algorithms",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 215"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0029",
+        "table_index": 0,
+        "source_rows": [
+          29
+        ],
+        "source_row_ids": [
+          "t0_r29"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0030",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 300 Programming Languages",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 300"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0030",
+        "table_index": 0,
+        "source_rows": [
+          30
+        ],
+        "source_row_ids": [
+          "t0_r30"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0031",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 305 Software Engineering",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 305"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0031",
+        "table_index": 0,
+        "source_rows": [
+          31
+        ],
+        "source_row_ids": [
+          "t0_r31"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0032",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 310 Software Engineering II",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 310"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0032",
+        "table_index": 0,
+        "source_rows": [
+          32
+        ],
+        "source_row_ids": [
+          "t0_r32"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0033",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 320 Internetworking",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 320"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0033",
+        "table_index": 0,
+        "source_rows": [
+          33
+        ],
+        "source_row_ids": [
+          "t0_r33"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0034",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 330 Operating Systems",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 330"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0034",
+        "table_index": 0,
+        "source_rows": [
+          34
+        ],
+        "source_row_ids": [
+          "t0_r34"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0035",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 360 Automata and Formal Languages",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 360"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0035",
+        "table_index": 0,
+        "source_rows": [
+          35
+        ],
+        "source_row_ids": [
+          "t0_r35"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0036",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 402 Computer Architecture",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 402"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0036",
+        "table_index": 0,
+        "source_rows": [
+          36
+        ],
+        "source_row_ids": [
+          "t0_r36"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0037",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 410 Database Engineering",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 410"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0037",
+        "table_index": 0,
+        "source_rows": [
+          37
+        ],
+        "source_row_ids": [
+          "t0_r37"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0038",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 430 Cyber Security",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 430"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0038",
+        "table_index": 0,
+        "source_rows": [
+          38
+        ],
+        "source_row_ids": [
+          "t0_r38"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0039",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS 490 Senior Project",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 490"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0039",
+        "table_index": 0,
+        "source_rows": [
+          39
+        ],
+        "source_row_ids": [
+          "t0_r39"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0040",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "ENGR 221 Engineering Economy",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "ENGR 221"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0040",
+        "table_index": 0,
+        "source_rows": [
+          40
+        ],
+        "source_row_ids": [
+          "t0_r40"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0041",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "ENG 354 Scientific & Tech Writing",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "ENG 354"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0041",
+        "table_index": 0,
+        "source_rows": [
+          41
+        ],
+        "source_row_ids": [
+          "t0_r41"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0042",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "MGT 320 Principles of Management",
+      "source_kind": "REQUIRED_COURSE",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "MGT 320"
+      ],
+      "attribute_names": [],
+      "status": "READY",
+      "review_flags": [],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0042",
+        "table_index": 0,
+        "source_rows": [
+          42
+        ],
+        "source_row_ids": [
+          "t0_r42"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 3,
+        "credit_slots": [],
+        "original_review_flags": []
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0044",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "CS Electives",
+      "source_kind": "CHOOSE_N",
+      "db_requirement_type_candidate": "CHOOSE_N",
+      "minimum_courses": 2,
+      "minimum_credits": null,
+      "course_codes": [
+        "CS 315",
+        "CS 370",
+        "CS 404",
+        "CS 405",
+        "CS 425",
+        "CS 435",
+        "CS 440",
+        "CS 455",
+        "CS 480",
+        "CS 481",
+        "CS 482",
+        "CS 483"
+      ],
+      "attribute_names": [],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "catalog_credit_threshold_needs_confirmation"
+      ],
+      "section_path": [
+        "Major-Specific",
+        "CS Electives"
+      ],
+      "source": {
+        "rule_id": "t0_row_0044",
+        "table_index": 0,
+        "source_rows": [
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56
+        ],
+        "source_row_ids": [
+          "t0_r44",
+          "t0_r45",
+          "t0_r46",
+          "t0_r47",
+          "t0_r48",
+          "t0_r49",
+          "t0_r50",
+          "t0_r51",
+          "t0_r52",
+          "t0_r53",
+          "t0_r54",
+          "t0_r55",
+          "t0_r56"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 6,
+        "credit_slots": [],
+        "original_review_flags": [],
+        "options": [
+          {
+            "kind": "SINGLE_COURSE",
+            "course_codes": [
+              "CS 315"
+            ],
+            "code_expression": "CS 315",
+            "description": "CS 315 Software Quality Assurance",
+            "review_flags": [],
+            "source_row": 45,
+            "source_option": {
+              "kind": "SINGLE_COURSE",
+              "course_codes": [
+                "CS 315"
+              ],
+              "code_expression": "CS 315",
+              "description": "CS 315 Software Quality Assurance",
+              "declared_credit_hours": null,
+              "source_row": 45,
+              "review_flags": []
+            }
+          },
+          {
+            "kind": "SINGLE_COURSE",
+            "course_codes": [
+              "CS 370"
+            ],
+            "code_expression": "CS 370",
+            "description": "CS 370 Computer Graphics",
+            "review_flags": [],
+            "source_row": 46,
+            "source_option": {
+              "kind": "SINGLE_COURSE",
+              "course_codes": [
+                "CS 370"
+              ],
+              "code_expression": "CS 370",
+              "description": "CS 370 Computer Graphics",
+              "declared_credit_hours": null,
+              "source_row": 46,
+              "review_flags": []
+            }
+          },
+          {
+            "kind": "SINGLE_COURSE",
+            "course_codes": [
+              "CS 404"
+            ],
+            "code_expression": "CS 404",
+            "description": "CS 404 High Performance Computing",
+            "review_flags": [],
+            "source_row": 47,
+            "source_option": {
+              "kind": "SINGLE_COURSE",
+              "course_codes": [
+                "CS 404"
+              ],
+              "code_expression": "CS 404",
+              "description": "CS 404 High Performance Computing",
+              "declared_credit_hours": null,
+              "source_row": 47,
+              "review_flags": []
+            }
+          },
+          {
+            "kind": "SINGLE_COURSE",
+            "course_codes": [
+              "CS 405"
+            ],
+            "code_expression": "CS 405",
+            "description": "CS 405 Computing for Bioinformatics",
+            "review_flags": [],
+            "source_row": 48,
+            "source_option": {
+              "kind": "SINGLE_COURSE",
+              "course_codes": [
+                "CS 405"
+              ],
+              "code_expression": "CS 405",
+              "description": "CS 405 Computing for Bioinformatics",
+              "declared_credit_hours": null,
+              "source_row": 48,
+              "review_flags": []
+            }
+          },
+          {
+            "kind": "SINGLE_COURSE",
+            "course_codes": [
+              "CS 425"
+            ],
+            "code_expression": "CS 425",
+            "description": "CS 425 Computational Intelligence",
+            "review_flags": [],
+            "source_row": 49,
+            "source_option": {
+              "kind": "SINGLE_COURSE",
+              "course_codes": [
+                "CS 425"
+              ],
+              "code_expression": "CS 425",
+              "description": "CS 425 Computational Intelligence",
+              "declared_credit_hours": null,
+              "source_row": 49,
+              "review_flags": []
+            }
+          },
+          {
+            "kind": "SINGLE_COURSE",
+            "course_codes": [
+              "CS 435"
+            ],
+            "code_expression": "CS 435",
+            "description": "CS 435 Cyber Risk",
+            "review_flags": [],
+            "source_row": 50,
+            "source_option": {
+              "kind": "SINGLE_COURSE",
+              "course_codes": [
+                "CS 435"
+              ],
+              "code_expression": "CS 435",
+              "description": "CS 435 Cyber Risk",
+              "declared_credit_hours": null,
+              "source_row": 50,
+              "review_flags": []
+            }
+          },
+          {
+            "kind": "SINGLE_COURSE",
+            "course_codes": [
+              "CS 440"
+            ],
+            "code_expression": "CS 440",
+            "description": "CS 440 Digital Image Processing",
+            "review_flags": [],
+            "source_row": 51,
+            "source_option": {
+              "kind": "SINGLE_COURSE",
+              "course_codes": [
+                "CS 440"
+              ],
+              "code_expression": "CS 440",
+              "description": "CS 440 Digital Image Processing",
+              "declared_credit_hours": null,
+              "source_row": 51,
+              "review_flags": []
+            }
+          },
+          {
+            "kind": "SINGLE_COURSE",
+            "course_codes": [
+              "CS 455"
+            ],
+            "code_expression": "CS 455",
+            "description": "CS 455 Systems Engineering",
+            "review_flags": [],
+            "source_row": 52,
+            "source_option": {
+              "kind": "SINGLE_COURSE",
+              "course_codes": [
+                "CS 455"
+              ],
+              "code_expression": "CS 455",
+              "description": "CS 455 Systems Engineering",
+              "declared_credit_hours": null,
+              "source_row": 52,
+              "review_flags": []
+            }
+          },
+          {
+            "kind": "SINGLE_COURSE",
+            "course_codes": [
+              "CS 480"
+            ],
+            "code_expression": "CS 480",
+            "description": "CS 480 Special Topics",
+            "review_flags": [],
+            "source_row": 53,
+            "source_option": {
+              "kind": "SINGLE_COURSE",
+              "course_codes": [
+                "CS 480"
+              ],
+              "code_expression": "CS 480",
+              "description": "CS 480 Special Topics",
+              "declared_credit_hours": null,
+              "source_row": 53,
+              "review_flags": []
+            }
+          },
+          {
+            "kind": "SINGLE_COURSE",
+            "course_codes": [
+              "CS 481"
+            ],
+            "code_expression": "CS 481",
+            "description": "CS 481 Special Topics",
+            "review_flags": [],
+            "source_row": 54,
+            "source_option": {
+              "kind": "SINGLE_COURSE",
+              "course_codes": [
+                "CS 481"
+              ],
+              "code_expression": "CS 481",
+              "description": "CS 481 Special Topics",
+              "declared_credit_hours": null,
+              "source_row": 54,
+              "review_flags": []
+            }
+          },
+          {
+            "kind": "SINGLE_COURSE",
+            "course_codes": [
+              "CS 482"
+            ],
+            "code_expression": "CS 482",
+            "description": "CS 482 Special Topics",
+            "review_flags": [],
+            "source_row": 55,
+            "source_option": {
+              "kind": "SINGLE_COURSE",
+              "course_codes": [
+                "CS 482"
+              ],
+              "code_expression": "CS 482",
+              "description": "CS 482 Special Topics",
+              "declared_credit_hours": null,
+              "source_row": 55,
+              "review_flags": []
+            }
+          },
+          {
+            "kind": "SINGLE_COURSE",
+            "course_codes": [
+              "CS 483"
+            ],
+            "code_expression": "CS 483",
+            "description": "CS 483 Special Topics",
+            "review_flags": [],
+            "source_row": 56,
+            "source_option": {
+              "kind": "SINGLE_COURSE",
+              "course_codes": [
+                "CS 483"
+              ],
+              "code_expression": "CS 483",
+              "description": "CS 483 Special Topics",
+              "declared_credit_hours": null,
+              "source_row": 56,
+              "review_flags": []
+            }
+          }
+        ],
+        "instruction": "Select two of the following:"
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0058",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "Science w/ Lab",
+      "source_kind": "CHOOSE_N",
+      "db_requirement_type_candidate": "CHOOSE_N",
+      "minimum_courses": 3,
+      "minimum_credits": null,
+      "course_codes": [],
+      "attribute_names": [],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "compound_options_require_group_evaluation",
+        "shared_courses_across_options_need_allocation_rule",
+        "some_options_require_review",
+        "catalog_credit_threshold_needs_confirmation"
+      ],
+      "section_path": [
+        "Major-Specific",
+        "Science w/ Lab"
+      ],
+      "source": {
+        "rule_id": "t0_row_0058",
+        "table_index": 0,
+        "source_rows": [
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ],
+        "source_row_ids": [
+          "t0_r58",
+          "t0_r59",
+          "t0_r60",
+          "t0_r61",
+          "t0_r62",
+          "t0_r63"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": 12,
+        "credit_slots": [],
+        "original_review_flags": [
+          "compound_options_require_group_evaluation",
+          "shared_courses_across_options_need_allocation_rule",
+          "some_options_require_review"
+        ],
+        "compound_option_groups": true,
+        "shared_course_codes_across_options": {
+          "PHY 202": 2
+        },
+        "options": [
+          {
+            "kind": "ALL_OF",
+            "course_codes": [
+              "BSC 120",
+              "BSC 120L"
+            ],
+            "code_expression": "BSC 120 & BSC 120L",
+            "description": "BSC 120 & BSC 120L Principles of Biology I and Principles of Biology I Lab (or above)",
+            "review_flags": [
+              "or_above_equivalents_not_enumerated",
+              "special_qualification_text"
+            ],
+            "source_row": 59,
+            "source_option": {
+              "kind": "ALL_OF",
+              "course_codes": [
+                "BSC 120",
+                "BSC 120L"
+              ],
+              "code_expression": "BSC 120 & BSC 120L",
+              "description": "BSC 120 & BSC 120L Principles of Biology I and Principles of Biology I Lab (or above)",
+              "declared_credit_hours": null,
+              "source_row": 59,
+              "review_flags": [
+                "or_above_equivalents_not_enumerated",
+                "special_qualification_text"
+              ]
+            }
+          },
+          {
+            "kind": "ALL_OF",
+            "course_codes": [
+              "CHM 211",
+              "CHM 217"
+            ],
+            "code_expression": "CHM 211 & CHM 217",
+            "description": "CHM 211 & CHM 217 Principles of Chemistry I and Principles of Chem Lab I (or above)",
+            "review_flags": [
+              "or_above_equivalents_not_enumerated",
+              "special_qualification_text"
+            ],
+            "source_row": 60,
+            "source_option": {
+              "kind": "ALL_OF",
+              "course_codes": [
+                "CHM 211",
+                "CHM 217"
+              ],
+              "code_expression": "CHM 211 & CHM 217",
+              "description": "CHM 211 & CHM 217 Principles of Chemistry I and Principles of Chem Lab I (or above)",
+              "declared_credit_hours": null,
+              "source_row": 60,
+              "review_flags": [
+                "or_above_equivalents_not_enumerated",
+                "special_qualification_text"
+              ]
+            }
+          },
+          {
+            "kind": "ALL_OF",
+            "course_codes": [
+              "GLY 200",
+              "GLY 210L"
+            ],
+            "code_expression": "GLY 200 & GLY 210L",
+            "description": "GLY 200 & GLY 210L The Dynamic Earth and Earth Materials Lab (or above)",
+            "review_flags": [
+              "or_above_equivalents_not_enumerated",
+              "special_qualification_text"
+            ],
+            "source_row": 61,
+            "source_option": {
+              "kind": "ALL_OF",
+              "course_codes": [
+                "GLY 200",
+                "GLY 210L"
+              ],
+              "code_expression": "GLY 200 & GLY 210L",
+              "description": "GLY 200 & GLY 210L The Dynamic Earth and Earth Materials Lab (or above)",
+              "declared_credit_hours": null,
+              "source_row": 61,
+              "review_flags": [
+                "or_above_equivalents_not_enumerated",
+                "special_qualification_text"
+              ]
+            }
+          },
+          {
+            "kind": "ALL_OF",
+            "course_codes": [
+              "PHY 201",
+              "PHY 202"
+            ],
+            "code_expression": "PHY 201 & PHY 202",
+            "description": "PHY 201 & PHY 202 College Physics I and General Physics I Laboratory (or above)",
+            "review_flags": [
+              "or_above_equivalents_not_enumerated",
+              "special_qualification_text"
+            ],
+            "source_row": 62,
+            "source_option": {
+              "kind": "ALL_OF",
+              "course_codes": [
+                "PHY 201",
+                "PHY 202"
+              ],
+              "code_expression": "PHY 201 & PHY 202",
+              "description": "PHY 201 & PHY 202 College Physics I and General Physics I Laboratory (or above)",
+              "declared_credit_hours": null,
+              "source_row": 62,
+              "review_flags": [
+                "or_above_equivalents_not_enumerated",
+                "special_qualification_text"
+              ]
+            }
+          },
+          {
+            "kind": "ALL_OF",
+            "course_codes": [
+              "PHY 211",
+              "PHY 202"
+            ],
+            "code_expression": "PHY 211 & PHY 202",
+            "description": "PHY 211 & PHY 202 University Physics I and General Physics I Laboratory (or above)",
+            "review_flags": [
+              "or_above_equivalents_not_enumerated",
+              "special_qualification_text"
+            ],
+            "source_row": 63,
+            "source_option": {
+              "kind": "ALL_OF",
+              "course_codes": [
+                "PHY 211",
+                "PHY 202"
+              ],
+              "code_expression": "PHY 211 & PHY 202",
+              "description": "PHY 211 & PHY 202 University Physics I and General Physics I Laboratory (or above)",
+              "declared_credit_hours": null,
+              "source_row": 63,
+              "review_flags": [
+                "or_above_equivalents_not_enumerated",
+                "special_qualification_text"
+              ]
+            }
+          }
+        ],
+        "instruction": "Select three of the following with labs:"
+      }
+    },
+    {
+      "node_id": "option:t0_row_0058:1",
+      "parent_node_id": "rule:t0_row_0058",
+      "name": "BSC 120 & BSC 120L",
+      "source_kind": "CHOICE_OPTION",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "BSC 120",
+        "BSC 120L"
+      ],
+      "attribute_names": [],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "or_above_equivalents_not_enumerated",
+        "special_qualification_text"
+      ],
+      "section_path": [
+        "Major-Specific",
+        "Science w/ Lab"
+      ],
+      "source": {
+        "rule_id": "t0_row_0058",
+        "source_row": 59
+      },
+      "metadata": {
+        "option_kind": "ALL_OF",
+        "source_option": {
+          "kind": "ALL_OF",
+          "course_codes": [
+            "BSC 120",
+            "BSC 120L"
+          ],
+          "code_expression": "BSC 120 & BSC 120L",
+          "description": "BSC 120 & BSC 120L Principles of Biology I and Principles of Biology I Lab (or above)",
+          "declared_credit_hours": null,
+          "source_row": 59,
+          "review_flags": [
+            "or_above_equivalents_not_enumerated",
+            "special_qualification_text"
+          ]
+        }
+      }
+    },
+    {
+      "node_id": "option:t0_row_0058:2",
+      "parent_node_id": "rule:t0_row_0058",
+      "name": "CHM 211 & CHM 217",
+      "source_kind": "CHOICE_OPTION",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "CHM 211",
+        "CHM 217"
+      ],
+      "attribute_names": [],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "or_above_equivalents_not_enumerated",
+        "special_qualification_text"
+      ],
+      "section_path": [
+        "Major-Specific",
+        "Science w/ Lab"
+      ],
+      "source": {
+        "rule_id": "t0_row_0058",
+        "source_row": 60
+      },
+      "metadata": {
+        "option_kind": "ALL_OF",
+        "source_option": {
+          "kind": "ALL_OF",
+          "course_codes": [
+            "CHM 211",
+            "CHM 217"
+          ],
+          "code_expression": "CHM 211 & CHM 217",
+          "description": "CHM 211 & CHM 217 Principles of Chemistry I and Principles of Chem Lab I (or above)",
+          "declared_credit_hours": null,
+          "source_row": 60,
+          "review_flags": [
+            "or_above_equivalents_not_enumerated",
+            "special_qualification_text"
+          ]
+        }
+      }
+    },
+    {
+      "node_id": "option:t0_row_0058:3",
+      "parent_node_id": "rule:t0_row_0058",
+      "name": "GLY 200 & GLY 210L",
+      "source_kind": "CHOICE_OPTION",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "GLY 200",
+        "GLY 210L"
+      ],
+      "attribute_names": [],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "or_above_equivalents_not_enumerated",
+        "special_qualification_text"
+      ],
+      "section_path": [
+        "Major-Specific",
+        "Science w/ Lab"
+      ],
+      "source": {
+        "rule_id": "t0_row_0058",
+        "source_row": 61
+      },
+      "metadata": {
+        "option_kind": "ALL_OF",
+        "source_option": {
+          "kind": "ALL_OF",
+          "course_codes": [
+            "GLY 200",
+            "GLY 210L"
+          ],
+          "code_expression": "GLY 200 & GLY 210L",
+          "description": "GLY 200 & GLY 210L The Dynamic Earth and Earth Materials Lab (or above)",
+          "declared_credit_hours": null,
+          "source_row": 61,
+          "review_flags": [
+            "or_above_equivalents_not_enumerated",
+            "special_qualification_text"
+          ]
+        }
+      }
+    },
+    {
+      "node_id": "option:t0_row_0058:4",
+      "parent_node_id": "rule:t0_row_0058",
+      "name": "PHY 201 & PHY 202",
+      "source_kind": "CHOICE_OPTION",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "PHY 201",
+        "PHY 202"
+      ],
+      "attribute_names": [],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "or_above_equivalents_not_enumerated",
+        "special_qualification_text"
+      ],
+      "section_path": [
+        "Major-Specific",
+        "Science w/ Lab"
+      ],
+      "source": {
+        "rule_id": "t0_row_0058",
+        "source_row": 62
+      },
+      "metadata": {
+        "option_kind": "ALL_OF",
+        "source_option": {
+          "kind": "ALL_OF",
+          "course_codes": [
+            "PHY 201",
+            "PHY 202"
+          ],
+          "code_expression": "PHY 201 & PHY 202",
+          "description": "PHY 201 & PHY 202 College Physics I and General Physics I Laboratory (or above)",
+          "declared_credit_hours": null,
+          "source_row": 62,
+          "review_flags": [
+            "or_above_equivalents_not_enumerated",
+            "special_qualification_text"
+          ]
+        }
+      }
+    },
+    {
+      "node_id": "option:t0_row_0058:5",
+      "parent_node_id": "rule:t0_row_0058",
+      "name": "PHY 211 & PHY 202",
+      "source_kind": "CHOICE_OPTION",
+      "db_requirement_type_candidate": "ALL",
+      "minimum_courses": null,
+      "minimum_credits": null,
+      "course_codes": [
+        "PHY 211",
+        "PHY 202"
+      ],
+      "attribute_names": [],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "or_above_equivalents_not_enumerated",
+        "special_qualification_text"
+      ],
+      "section_path": [
+        "Major-Specific",
+        "Science w/ Lab"
+      ],
+      "source": {
+        "rule_id": "t0_row_0058",
+        "source_row": 63
+      },
+      "metadata": {
+        "option_kind": "ALL_OF",
+        "source_option": {
+          "kind": "ALL_OF",
+          "course_codes": [
+            "PHY 211",
+            "PHY 202"
+          ],
+          "code_expression": "PHY 211 & PHY 202",
+          "description": "PHY 211 & PHY 202 University Physics I and General Physics I Laboratory (or above)",
+          "declared_credit_hours": null,
+          "source_row": 63,
+          "review_flags": [
+            "or_above_equivalents_not_enumerated",
+            "special_qualification_text"
+          ]
+        }
+      }
+    },
+    {
+      "node_id": "rule:t0_row_0064",
+      "parent_node_id": "group:44df193fb0ff8a7a",
+      "name": "Free Elective",
+      "source_kind": "CREDIT_REQUIREMENT_DRAFT",
+      "db_requirement_type_candidate": "MIN_CREDITS",
+      "minimum_courses": null,
+      "minimum_credits": 8,
+      "course_codes": [],
+      "attribute_names": [],
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "repeated_credit_slots_need_policy_review",
+        "eligibility_requires_explicit_resolution"
+      ],
+      "section_path": [
+        "Major-Specific"
+      ],
+      "source": {
+        "rule_id": "t0_row_0064",
+        "table_index": 0,
+        "source_rows": [
+          64,
+          65,
+          66
+        ],
+        "source_row_ids": [
+          "t0_r64",
+          "t0_r65",
+          "t0_r66"
+        ]
+      },
+      "metadata": {
+        "catalog_declared_credits": null,
+        "credit_slots": [
+          3,
+          3,
+          2
+        ],
+        "original_review_flags": [
+          "credit_requirement_eligibility_unmapped",
+          "repeated_credit_slots_need_policy_review"
+        ],
+        "referenced_course_codes": [],
+        "course_patterns": []
+      }
+    }
+  ],
+  "review_queue": [
+    {
+      "rule_id": "t0_row_0005",
+      "name": "Critical Thinking Course",
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "eligibility_requires_explicit_resolution"
+      ],
+      "node_id": "rule:t0_row_0005"
+    },
+    {
+      "rule_id": "t0_row_0011",
+      "name": "Sci w/Lab Core II Physical/Natural Science",
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "catalog_year_applicability_unverified",
+        "lab_eligibility_unverified"
+      ],
+      "node_id": "rule:t0_row_0011"
+    },
+    {
+      "rule_id": "t0_row_0012",
+      "name": "Core II Humanities",
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "catalog_year_applicability_unverified"
+      ],
+      "node_id": "rule:t0_row_0012"
+    },
+    {
+      "rule_id": "t0_row_0013",
+      "name": "Core II Social Studies",
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "catalog_year_applicability_unverified"
+      ],
+      "node_id": "rule:t0_row_0013"
+    },
+    {
+      "rule_id": "t0_row_0014",
+      "name": "Core II Fine Arts",
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "catalog_year_applicability_unverified"
+      ],
+      "node_id": "rule:t0_row_0014"
+    },
+    {
+      "rule_id": "t0_row_0016",
+      "name": "Writing Intensive",
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "repeated_credit_slots_need_policy_review",
+        "eligibility_requires_explicit_resolution"
+      ],
+      "node_id": "rule:t0_row_0016"
+    },
+    {
+      "rule_id": "t0_row_0018",
+      "name": "Multicultural or International",
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "eligibility_requires_explicit_resolution"
+      ],
+      "node_id": "rule:t0_row_0018"
+    },
+    {
+      "rule_id": "t0_row_0044",
+      "name": "CS Electives",
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "catalog_credit_threshold_needs_confirmation"
+      ],
+      "node_id": "rule:t0_row_0044"
+    },
+    {
+      "rule_id": "t0_row_0058",
+      "name": "Science w/ Lab",
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "compound_options_require_group_evaluation",
+        "shared_courses_across_options_need_allocation_rule",
+        "some_options_require_review",
+        "catalog_credit_threshold_needs_confirmation"
+      ],
+      "node_id": "rule:t0_row_0058"
+    },
+    {
+      "rule_id": "t0_row_0064",
+      "name": "Free Elective",
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "repeated_credit_slots_need_policy_review",
+        "eligibility_requires_explicit_resolution"
+      ],
+      "node_id": "rule:t0_row_0064"
+    }
+  ],
+  "source_program_review_flags": [],
+  "source_unlabeled_table_indices": [],
+  "warnings": [
+    "No rule is approved for production degree auditing by this file.",
+    "Attribute eligibility and historical catalog-year applicability require verification.",
+    "Count credits only once toward overall degree totals, even if rules overlap.",
+    "Lecture/lab choices require group-aware allocation and verified equivalents."
+  ]
+}

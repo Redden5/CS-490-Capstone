@@ -1,0 +1,1013 @@
+{
+  "source_url": "https://mubert.marshall.edu/coreIIcourses.php",
+  "scraped_at_utc": "2026-10-13T17:04:26.870198+00:00",
+  "stage": "unverified_current_core_ii_listing",
+  "catalog_year": null,
+  "notes": [
+    "This source does not specify historical eligibility or a catalog-year effective period.",
+    "Do not automatically apply this current list to earlier completed courses or approve degree-audit requirements.",
+    "An individual course can occur in more than one Core II category.",
+    "Asterisk symbols on the source denote online availability, not Core II eligibility; they are not imported as attributes."
+  ],
+  "summary": {
+    "category_count": 7,
+    "category_course_links": 187,
+    "distinct_course_codes": 184,
+    "source_course_links_seen": 187,
+    "by_category": {
+      "Composition": 7,
+      "Communications": 5,
+      "Fine Arts": 10,
+      "Humanities": 59,
+      "Math": 19,
+      "Natural/Physical Science": 45,
+      "Social Science": 42
+    }
+  },
+  "categories": [
+    {
+      "category": "Composition",
+      "attribute_name": "Composition Core II",
+      "listed_category_credits": 6,
+      "courses": [
+        {
+          "course_code": "ENG 101",
+          "course_title": "English Composition I",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=101"
+        },
+        {
+          "course_code": "ENG 101P",
+          "course_title": "Beginning Composition Plus",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=101P"
+        },
+        {
+          "course_code": "ENG 200H",
+          "course_title": "Texting the World (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=200H"
+        },
+        {
+          "course_code": "ENG 201",
+          "course_title": "Advanced Composition",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=201"
+        },
+        {
+          "course_code": "ENG 201H",
+          "course_title": "English Comp Honors",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=201H"
+        },
+        {
+          "course_code": "SCLA 102",
+          "course_title": "Transformative Texts ENG",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=SCLA&crse=102"
+        },
+        {
+          "course_code": "SCLA 102H",
+          "course_title": "Transformative Texts ENG",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=SCLA&crse=102H"
+        }
+      ]
+    },
+    {
+      "category": "Communications",
+      "attribute_name": "Core II Communication Studies",
+      "listed_category_credits": 3,
+      "courses": [
+        {
+          "course_code": "CMM 103",
+          "course_title": "Fund Speech-Communication",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CMM&crse=103"
+        },
+        {
+          "course_code": "CMM 104H",
+          "course_title": "Honors in Speech Comm",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CMM&crse=104H"
+        },
+        {
+          "course_code": "CMM 207",
+          "course_title": "Bus & Prof Communication",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CMM&crse=207"
+        },
+        {
+          "course_code": "SCLA 101",
+          "course_title": "Transformative Texts CMM (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=SCLA&crse=101"
+        },
+        {
+          "course_code": "SCLA 101H",
+          "course_title": "Transformative Texts CMM (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=SCLA&crse=101H"
+        }
+      ]
+    },
+    {
+      "category": "Fine Arts",
+      "attribute_name": "Core II Fine Arts",
+      "listed_category_credits": 3,
+      "courses": [
+        {
+          "course_code": "ART 112",
+          "course_title": "Intro To Visual Art",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ART&crse=112"
+        },
+        {
+          "course_code": "ART 112H",
+          "course_title": "Intro to Visual Art Honors",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ART&crse=112H"
+        },
+        {
+          "course_code": "ART 201",
+          "course_title": "History of Art I (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ART&crse=201"
+        },
+        {
+          "course_code": "ART 202",
+          "course_title": "History of Art II (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ART&crse=202"
+        },
+        {
+          "course_code": "MUS 142",
+          "course_title": "Music in Society",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MUS&crse=142"
+        },
+        {
+          "course_code": "MUS 142H",
+          "course_title": "Music in Society Honors",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MUS&crse=142H"
+        },
+        {
+          "course_code": "MUS 200",
+          "course_title": "Introduction to World Music",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MUS&crse=200"
+        },
+        {
+          "course_code": "MUS 210",
+          "course_title": "Intro to Electronic Music (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MUS&crse=210"
+        },
+        {
+          "course_code": "MUS 227",
+          "course_title": "History of Popular Music",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MUS&crse=227"
+        },
+        {
+          "course_code": "THE 112",
+          "course_title": "Theatre Appreciation",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=THE&crse=112"
+        }
+      ]
+    },
+    {
+      "category": "Humanities",
+      "attribute_name": "Core II Humanities",
+      "listed_category_credits": 3,
+      "courses": [
+        {
+          "course_code": "CL 210",
+          "course_title": "Love/War Ancient World (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CL&crse=210"
+        },
+        {
+          "course_code": "CL 230",
+          "course_title": "Greek & Roman Epic",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CL&crse=230"
+        },
+        {
+          "course_code": "CL 231",
+          "course_title": "Women in Greek & Roman Lit",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CL&crse=231"
+        },
+        {
+          "course_code": "CL 232",
+          "course_title": "Greek & Roman Drama (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CL&crse=232"
+        },
+        {
+          "course_code": "CL 233",
+          "course_title": "Greek & Roman Historians (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CL&crse=233"
+        },
+        {
+          "course_code": "CL 234",
+          "course_title": "Greek & Roman Poetry (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CL&crse=234"
+        },
+        {
+          "course_code": "CL 236",
+          "course_title": "Murder in Ancient World (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CL&crse=236"
+        },
+        {
+          "course_code": "CL 237",
+          "course_title": "Lit in the Time of Nero (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CL&crse=237"
+        },
+        {
+          "course_code": "CL 250",
+          "course_title": "Studies in Humanities (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CL&crse=250"
+        },
+        {
+          "course_code": "CMM 205",
+          "course_title": "Pop Culture Rhetoric",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CMM&crse=205"
+        },
+        {
+          "course_code": "CMM 239",
+          "course_title": "Dev & Appreciation of Film",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CMM&crse=239"
+        },
+        {
+          "course_code": "DH 201",
+          "course_title": "Intro to Digital Humanities",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=DH&crse=201"
+        },
+        {
+          "course_code": "ENG 200",
+          "course_title": "Texting the World (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=200"
+        },
+        {
+          "course_code": "ENG 200H",
+          "course_title": "Texting the World (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=200H"
+        },
+        {
+          "course_code": "ENG 203",
+          "course_title": "Appalachian Literature",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=203"
+        },
+        {
+          "course_code": "ENG 205",
+          "course_title": "Popular Literature (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=205"
+        },
+        {
+          "course_code": "ENG 206",
+          "course_title": "Good Plays",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=206"
+        },
+        {
+          "course_code": "ENG 207",
+          "course_title": "Good Essays",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=207"
+        },
+        {
+          "course_code": "ENG 209",
+          "course_title": "Literature of Fantasy",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=209"
+        },
+        {
+          "course_code": "ENG 210",
+          "course_title": "Autobiography",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=210"
+        },
+        {
+          "course_code": "ENG 211",
+          "course_title": "Science Fiction",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=211"
+        },
+        {
+          "course_code": "ENG 212",
+          "course_title": "Sports Literature",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=212"
+        },
+        {
+          "course_code": "ENG 213",
+          "course_title": "Good Poems",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=213"
+        },
+        {
+          "course_code": "ENG 214",
+          "course_title": "Intro to Comics",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=214"
+        },
+        {
+          "course_code": "ENG 215",
+          "course_title": "Good Novels",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=215"
+        },
+        {
+          "course_code": "ENG 220",
+          "course_title": "The Political Novel",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=220"
+        },
+        {
+          "course_code": "ENG 221",
+          "course_title": "Postcolonial Literature",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=221"
+        },
+        {
+          "course_code": "ENG 225",
+          "course_title": "Southern Literature",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=225"
+        },
+        {
+          "course_code": "ENG 231",
+          "course_title": "Good Stories",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=231"
+        },
+        {
+          "course_code": "ENG 232",
+          "course_title": "Good Films",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=232"
+        },
+        {
+          "course_code": "ENG 235",
+          "course_title": "Crime and Sensation Literature",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=235"
+        },
+        {
+          "course_code": "ENG 236",
+          "course_title": "Forbidden Literature",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=236"
+        },
+        {
+          "course_code": "ENG 240",
+          "course_title": "African American Literatures",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=240"
+        },
+        {
+          "course_code": "ENG 241",
+          "course_title": "Ethnic Literatures",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=241"
+        },
+        {
+          "course_code": "ENG 242",
+          "course_title": "Women Writers",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=242"
+        },
+        {
+          "course_code": "ENG 263",
+          "course_title": "Intro Digital Literary Studies",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ENG&crse=263"
+        },
+        {
+          "course_code": "FRN 240",
+          "course_title": "French Society & Life",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=FRN&crse=240"
+        },
+        {
+          "course_code": "GEO 207",
+          "course_title": "Biblical Geography",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GEO&crse=207"
+        },
+        {
+          "course_code": "GER 240",
+          "course_title": "German Society & Life",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GER&crse=240"
+        },
+        {
+          "course_code": "JMC 101",
+          "course_title": "Media Literacy",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=JMC&crse=101"
+        },
+        {
+          "course_code": "JPN 240",
+          "course_title": "Japanese Culture (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=JPN&crse=240"
+        },
+        {
+          "course_code": "JPN 245",
+          "course_title": "Modern Japanese Lit (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=JPN&crse=245"
+        },
+        {
+          "course_code": "JPN 250",
+          "course_title": "Japanese Anime & Manga (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=JPN&crse=250"
+        },
+        {
+          "course_code": "PHL 200",
+          "course_title": "Intro Phil Ancient Period (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHL&crse=200"
+        },
+        {
+          "course_code": "PHL 200H",
+          "course_title": "Intro Phil Ancient-Honors",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHL&crse=200H"
+        },
+        {
+          "course_code": "PHL 201",
+          "course_title": "Intro Phil Modern Period (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHL&crse=201"
+        },
+        {
+          "course_code": "PHL 203",
+          "course_title": "Philosophy & Human Exist (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHL&crse=203"
+        },
+        {
+          "course_code": "PHL 204",
+          "course_title": "AI and Ethics",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHL&crse=204"
+        },
+        {
+          "course_code": "PHL 250",
+          "course_title": "Studies in Humanities (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHL&crse=250"
+        },
+        {
+          "course_code": "PSC 201",
+          "course_title": "Politics, Media, and Culture",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PSC&crse=201"
+        },
+        {
+          "course_code": "RST 205",
+          "course_title": "Religious Trads of West",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=RST&crse=205"
+        },
+        {
+          "course_code": "RST 206",
+          "course_title": "Religious Traditions Asia",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=RST&crse=206"
+        },
+        {
+          "course_code": "RST 207",
+          "course_title": "Biblical Geography",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=RST&crse=207"
+        },
+        {
+          "course_code": "RST 220",
+          "course_title": "Lit of Old Testament",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=RST&crse=220"
+        },
+        {
+          "course_code": "RST 225",
+          "course_title": "Lit of New Testament",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=RST&crse=225"
+        },
+        {
+          "course_code": "RST 250",
+          "course_title": "Studies in Humanities (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=RST&crse=250"
+        },
+        {
+          "course_code": "SCLA 102",
+          "course_title": "Transformative Texts ENG",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=SCLA&crse=102"
+        },
+        {
+          "course_code": "SPN 240",
+          "course_title": "Hispanic Culture (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=SPN&crse=240"
+        },
+        {
+          "course_code": "SPN 245",
+          "course_title": "Chicano/a Identities (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=SPN&crse=245"
+        }
+      ]
+    },
+    {
+      "category": "Math",
+      "attribute_name": "Core II Mathematics",
+      "listed_category_credits": 3,
+      "courses": [
+        {
+          "course_code": "MTH 121",
+          "course_title": "Concepts and Applications (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=121"
+        },
+        {
+          "course_code": "MTH 121B",
+          "course_title": "Cncpts & Apps-Expanded (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=121B"
+        },
+        {
+          "course_code": "MTH 122",
+          "course_title": "Plane Trigonometry",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=122"
+        },
+        {
+          "course_code": "MTH 127",
+          "course_title": "College Algebra-Expanded",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=127"
+        },
+        {
+          "course_code": "MTH 130",
+          "course_title": "College Algebra",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=130"
+        },
+        {
+          "course_code": "MTH 132",
+          "course_title": "Precalculus with Sci Applica",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=132"
+        },
+        {
+          "course_code": "MTH 140",
+          "course_title": "Applied Calculus",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=140"
+        },
+        {
+          "course_code": "MTH 140H",
+          "course_title": "Applied Calculus Honors",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=140H"
+        },
+        {
+          "course_code": "MTH 160",
+          "course_title": "Applied Math Reasoning (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=160"
+        },
+        {
+          "course_code": "MTH 220",
+          "course_title": "Discrete Structures",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=220"
+        },
+        {
+          "course_code": "MTH 229",
+          "course_title": "Calculus/Analytic Geom I (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=229"
+        },
+        {
+          "course_code": "MTH 229H",
+          "course_title": "Calculus I Honors (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=229H"
+        },
+        {
+          "course_code": "MTH 230",
+          "course_title": "Calculus/Analytic Geom II",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=230"
+        },
+        {
+          "course_code": "MTH 231",
+          "course_title": "Calculus/Analytic Geom III",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=MTH&crse=231"
+        },
+        {
+          "course_code": "STA 150",
+          "course_title": "Foundations of Statistics (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=STA&crse=150"
+        },
+        {
+          "course_code": "STA 150B",
+          "course_title": "Foundations of Stats-Expd (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=STA&crse=150B"
+        },
+        {
+          "course_code": "STA 150H",
+          "course_title": "Found of Stats - Honors (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=STA&crse=150H"
+        },
+        {
+          "course_code": "STA 150L",
+          "course_title": "Foundations of Statistics Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=STA&crse=150L"
+        },
+        {
+          "course_code": "STA 225",
+          "course_title": "Introductory Statistics (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=STA&crse=225"
+        }
+      ]
+    },
+    {
+      "category": "Natural/Physical Science",
+      "attribute_name": "Core II Natural Sciences",
+      "listed_category_credits": 4,
+      "courses": [
+        {
+          "course_code": "BSC 104",
+          "course_title": "Introduction to Biology",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=104"
+        },
+        {
+          "course_code": "BSC 104L",
+          "course_title": "Introduction to Biology Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=104L"
+        },
+        {
+          "course_code": "BSC 105",
+          "course_title": "Introduction to Biology",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=105"
+        },
+        {
+          "course_code": "BSC 105L",
+          "course_title": "Human Biology Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=105L"
+        },
+        {
+          "course_code": "BSC 120",
+          "course_title": "Principles of Biology",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=120"
+        },
+        {
+          "course_code": "BSC 120H",
+          "course_title": "Principles of Biology Honors",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=120H"
+        },
+        {
+          "course_code": "BSC 120L",
+          "course_title": "Principles of Biology I Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=120L"
+        },
+        {
+          "course_code": "BSC 121",
+          "course_title": "Principles of Biology",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=121"
+        },
+        {
+          "course_code": "BSC 121L",
+          "course_title": "Prin of Biology II Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=121L"
+        },
+        {
+          "course_code": "BSC 228",
+          "course_title": "Human Physiology",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=228"
+        },
+        {
+          "course_code": "BSC 228L",
+          "course_title": "Human Physiology Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=228L"
+        },
+        {
+          "course_code": "BSC 250",
+          "course_title": "Microbiol & Human Disease",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=250"
+        },
+        {
+          "course_code": "BSC 250L",
+          "course_title": "Microbio and Human Disease Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=BSC&crse=250L"
+        },
+        {
+          "course_code": "CHM 111",
+          "course_title": "Foundations of Chemistry",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CHM&crse=111"
+        },
+        {
+          "course_code": "CHM 112",
+          "course_title": "Foundations of Chemistry Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CHM&crse=112"
+        },
+        {
+          "course_code": "CHM 211",
+          "course_title": "Principles of Chemistry I",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CHM&crse=211"
+        },
+        {
+          "course_code": "CHM 212",
+          "course_title": "Principles Chemistry II",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CHM&crse=212"
+        },
+        {
+          "course_code": "CHM 217",
+          "course_title": "Principles of Chem Lab I",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CHM&crse=217"
+        },
+        {
+          "course_code": "CHM 218",
+          "course_title": "Principles of Chem Lab II",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CHM&crse=218"
+        },
+        {
+          "course_code": "FSC 224",
+          "course_title": "Intro to Forensic Science",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=FSC&crse=224"
+        },
+        {
+          "course_code": "GEO 101",
+          "course_title": "Physical Geography (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GEO&crse=101"
+        },
+        {
+          "course_code": "GEO 101L",
+          "course_title": "Physical Geography Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GEO&crse=101L"
+        },
+        {
+          "course_code": "GEO 230",
+          "course_title": "Intro to Meteorology (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GEO&crse=230"
+        },
+        {
+          "course_code": "GEO 230L",
+          "course_title": "Physical Meteorology Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GEO&crse=230L"
+        },
+        {
+          "course_code": "GLY 100",
+          "course_title": "Geologic Hazards & Resources",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GLY&crse=100"
+        },
+        {
+          "course_code": "GLY 150",
+          "course_title": "Intro Oceanography",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GLY&crse=150"
+        },
+        {
+          "course_code": "GLY 150L",
+          "course_title": "Intro Oceanography Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GLY&crse=150L"
+        },
+        {
+          "course_code": "GLY 200",
+          "course_title": "Physical Geology",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GLY&crse=200"
+        },
+        {
+          "course_code": "GLY 201",
+          "course_title": "Historical Geology",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GLY&crse=201"
+        },
+        {
+          "course_code": "GLY 210L",
+          "course_title": "Earth Materials Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GLY&crse=210L"
+        },
+        {
+          "course_code": "GLY 211L",
+          "course_title": "Historical Geology Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GLY&crse=211L"
+        },
+        {
+          "course_code": "NRE 111",
+          "course_title": "Living Systems",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=NRE&crse=111"
+        },
+        {
+          "course_code": "NRE 111L",
+          "course_title": "Living Systems Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=NRE&crse=111L"
+        },
+        {
+          "course_code": "PHY 101",
+          "course_title": "Conceptual Physics",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHY&crse=101"
+        },
+        {
+          "course_code": "PHY 101L",
+          "course_title": "Conceptual Physics Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHY&crse=101L"
+        },
+        {
+          "course_code": "PHY 102",
+          "course_title": "Sound & Light in Nature (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHY&crse=102"
+        },
+        {
+          "course_code": "PHY 102L",
+          "course_title": "Sound & Light in Nature Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHY&crse=102L"
+        },
+        {
+          "course_code": "PHY 201",
+          "course_title": "General Physics",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHY&crse=201"
+        },
+        {
+          "course_code": "PHY 202",
+          "course_title": "General Physics Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHY&crse=202"
+        },
+        {
+          "course_code": "PHY 203",
+          "course_title": "General Physics",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHY&crse=203"
+        },
+        {
+          "course_code": "PHY 204",
+          "course_title": "General Physics Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHY&crse=204"
+        },
+        {
+          "course_code": "PHY 211",
+          "course_title": "Principles of Physics",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHY&crse=211"
+        },
+        {
+          "course_code": "PHY 213",
+          "course_title": "Principles of Physics",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PHY&crse=213"
+        },
+        {
+          "course_code": "PS 101",
+          "course_title": "Introductory Astronomy (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PS&crse=101"
+        },
+        {
+          "course_code": "PS 101L",
+          "course_title": "Introductory Astronomy Lab",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PS&crse=101L"
+        }
+      ]
+    },
+    {
+      "category": "Social Science",
+      "attribute_name": "Core II Social Sciences",
+      "listed_category_credits": 3,
+      "courses": [
+        {
+          "course_code": "ANT 201",
+          "course_title": "Cultural Anthropology (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ANT&crse=201"
+        },
+        {
+          "course_code": "ANT 201H",
+          "course_title": "Cultural Anthropol Honors (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=ANT&crse=201H"
+        },
+        {
+          "course_code": "CJ 200",
+          "course_title": "Intro to Criminal Justice",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CJ&crse=200"
+        },
+        {
+          "course_code": "CJ 211",
+          "course_title": "Intro to Law Enforcement",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CJ&crse=211"
+        },
+        {
+          "course_code": "CJ 221",
+          "course_title": "Intro to Criminal Courts",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CJ&crse=221"
+        },
+        {
+          "course_code": "CJ 231",
+          "course_title": "Intro to Corrections",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CJ&crse=231"
+        },
+        {
+          "course_code": "CMM 213",
+          "course_title": "Fund Interpersonal Com",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=CMM&crse=213"
+        },
+        {
+          "course_code": "EDF 201",
+          "course_title": "Ed Psych Developing Learner",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=EDF&crse=201"
+        },
+        {
+          "course_code": "EDF 218",
+          "course_title": "Educ Psych for K12 Classroom",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=EDF&crse=218"
+        },
+        {
+          "course_code": "GEO 100",
+          "course_title": "Intro to Human Geography (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GEO&crse=100"
+        },
+        {
+          "course_code": "GEO 203",
+          "course_title": "Economic Geography (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GEO&crse=203"
+        },
+        {
+          "course_code": "GEO 206",
+          "course_title": "Geography West Virginia",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GEO&crse=206"
+        },
+        {
+          "course_code": "GEO 222",
+          "course_title": "Global Environment Issues (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=GEO&crse=222"
+        },
+        {
+          "course_code": "HST 101",
+          "course_title": "Great Civs to 1300 (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=101"
+        },
+        {
+          "course_code": "HST 101H",
+          "course_title": "Great Civs to 1300 (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=101H"
+        },
+        {
+          "course_code": "HST 102",
+          "course_title": "World & West 1300-1850 (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=102"
+        },
+        {
+          "course_code": "HST 102H",
+          "course_title": "World & West 1300-1850 (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=102H"
+        },
+        {
+          "course_code": "HST 103",
+          "course_title": "The World Since 1850 (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=103"
+        },
+        {
+          "course_code": "HST 103H",
+          "course_title": "World Since 1850 Honors (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=103H"
+        },
+        {
+          "course_code": "HST 208",
+          "course_title": "The Developing World (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=208"
+        },
+        {
+          "course_code": "HST 210",
+          "course_title": "History in Action",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=210"
+        },
+        {
+          "course_code": "HST 219",
+          "course_title": "Ancient History",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=219"
+        },
+        {
+          "course_code": "HST 220",
+          "course_title": "European Hist Medieval",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=220"
+        },
+        {
+          "course_code": "HST 223",
+          "course_title": "Rise & Fall Nazi Germany",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=223"
+        },
+        {
+          "course_code": "HST 230",
+          "course_title": "American History to 1877 (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=230"
+        },
+        {
+          "course_code": "HST 231",
+          "course_title": "American Hist From 1877 (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=231"
+        },
+        {
+          "course_code": "HST 231H",
+          "course_title": "US Hist Since 1877-Honors",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=231H"
+        },
+        {
+          "course_code": "HST 250",
+          "course_title": "Women in US History",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=250"
+        },
+        {
+          "course_code": "HST 260",
+          "course_title": "Rise of Islam 570-1750",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=260"
+        },
+        {
+          "course_code": "HST 265",
+          "course_title": "Modern East Asia",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=HST&crse=265"
+        },
+        {
+          "course_code": "PSC 104",
+          "course_title": "Am Natl Govt & Politics (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PSC&crse=104"
+        },
+        {
+          "course_code": "PSC 105",
+          "course_title": "Fundamentals of Politics (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PSC&crse=105"
+        },
+        {
+          "course_code": "PSC 201",
+          "course_title": "Politics, Media, and Culture",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PSC&crse=201"
+        },
+        {
+          "course_code": "PSC 202",
+          "course_title": "Am State Govt & Politics",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PSC&crse=202"
+        },
+        {
+          "course_code": "PSC 207",
+          "course_title": "Comparative Politics (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PSC&crse=207"
+        },
+        {
+          "course_code": "PSC 209",
+          "course_title": "Fund Internatl Relations (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PSC&crse=209"
+        },
+        {
+          "course_code": "PSC 217",
+          "course_title": "The U.S. Constitution",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PSC&crse=217"
+        },
+        {
+          "course_code": "PSY 201",
+          "course_title": "General Psychology (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PSY&crse=201"
+        },
+        {
+          "course_code": "PSY 201H",
+          "course_title": "General Psychology-Honors (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PSY&crse=201H"
+        },
+        {
+          "course_code": "PSY 223",
+          "course_title": "Elem Behavioral Stat",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=PSY&crse=223"
+        },
+        {
+          "course_code": "SOC 200",
+          "course_title": "Introductory Sociology (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=SOC&crse=200"
+        },
+        {
+          "course_code": "SOC 200H",
+          "course_title": "Intro Sociology Honors (CT)",
+          "course_url": "https://mubert.marshall.edu/coursedescript.PHP?subj=SOC&crse=200H"
+        }
+      ]
+    }
+  ]
+}
