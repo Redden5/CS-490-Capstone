@@ -1,20 +1,18 @@
 """Convert parsed Marshall University degree requirements into a reviewable draft.
-
 This stage DOES NOT approve degree rules or write to Supabase.
-
 Usage from the repository root (PowerShell):
     python -m backend.scripts.resolve_requirements --input backend/scripts/data/degree_requirements/parsed/computer_science_bs_parsed.json
-
 Output goes to backend/scripts/data/degree_requirements/resolved/ by default.
-
 Design:
   * The resolver is program-agnostic: it uses the structured ``kind`` and
     ``section_path`` fields, not names of particular programs or courses.
   * Straightforward required courses become structurally READY rules.
   * Credit requirements stay NEEDS_REVIEW until their eligibility and
     institutional policies have been verified.
-  * Choice requirements remain NEEDS_REVIEW when minimum credits are only
-    catalog-declared, or any option/policy flags remain unresolved.
+  * Catalog-declared choice credit totals remain unconfirmed unless an operator
+    explicitly reviews and confirms a source rule's credit target.
+  * Confirmation preserves unrelated option/policy warnings and NEVER approves
+    a degree template for seeding or graduation audits.
   * Compound choices are represented by child ALL nodes for each option.
   * Optional shared Core II matching recognizes safe, institution-wide labels
     from an unversioned official listing while retaining review flags.
@@ -31,9 +29,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-
 ALLOWED_OPTION_KINDS = {"SINGLE_COURSE", "ALL_OF"}
-
 # Shared Marshall-wide labels (NOT degree-specific rules). Matching is exact
 # after case/whitespace normalization. Never infer from loose keywords.
 CORE_II_LABELS = {
@@ -50,6 +46,66 @@ CORE_II_LABELS = {
     "sci w/lab core ii physical/natural science": ("Core II Natural Sciences", True),
 }
 
+# Exact, shared university-wide requirement labels. These are *candidate*
+# mappings: the audit must still verify course memberships against Supabase
+# for the student's selected catalog year. Do not infer attributes from loose
+# text such as "science", "humanities", or "international" in a title.
+# The boolean means a lab condition remains to be checked separately.
+CATALOG_ATTRIBUTE_LABELS: dict[str, tuple[tuple[str, ...], bool]] = {
+    "critical thinking course": (("Critical Thinking",), False),
+    "critical thinking": (("Critical Thinking",), False),
+    "core ii humanities": (("Core II Humanities",), False),
+    "core ii social studies": (("Core II Social Sciences",), False),
+    "core ii social sciences": (("Core II Social Sciences",), False),
+    "core ii fine arts": (("Core II Fine Arts",), False),
+    "core ii natural sciences": (("Core II Natural Sciences",), False),
+    "sci w/lab core ii physical/natural science": (("Core II Natural Sciences",), True),
+    "multicultural or international": (("Multicultural", "International"), False),
+    "multicultural/international": (("Multicultural", "International"), False),
+    "multicultural or international course": (("Multicultural", "International"), False),
+}
+
+
+def apply_catalog_attribute_candidates(rule_nodes: list[dict[str, Any]]) -> dict[str, int]:
+    """Annotate exact-label candidates; never certify attribute eligibility.
+
+    Source-proven catalog-year memberships will be checked by the read-only
+    degree audit against courseattribute. A match here establishes only which
+    *kind* of classification the requirement is asking for.
+    """
+    matched = lab_pending = 0
+    for node in rule_nodes:
+        if node["source_kind"] != "CREDIT_REQUIREMENT_DRAFT":
+            continue
+        candidate = CATALOG_ATTRIBUTE_LABELS.get(normalize_heading(node["name"]))
+        if candidate is None:
+            continue
+        attributes, lab_required = candidate
+        if not positive_number(node["minimum_credits"]):
+            raise ResolutionError(f"{node['name']!r} lacks a positive credit minimum")
+
+        node["attribute_names"] = list(attributes)
+        node["metadata"]["attribute_resolution"] = {
+            "scope": "catalog_year_scoped_supabase_lookup_required",
+            "attribute_match_mode": "ANY",  # Multicultural OR International
+            "catalog_year_applicability_verified": False,
+            "additional_lab_eligibility_unverified": lab_required,
+        }
+        # Mapping identifies a category; it does not resolve the university's
+        # credit, grade, lab, catalog-policy, or overlap requirements.
+        flags = [f for f in node["review_flags"] if f not in {
+            "credit_requirement_eligibility_unmapped",
+            "eligibility_requires_explicit_resolution",
+            "catalog_year_applicability_unverified",
+        }]
+        flags.append("catalog_year_course_eligibility_lookup_required")
+        if lab_required:
+            flags.append("lab_eligibility_unverified")
+            lab_pending += 1
+        node["review_flags"] = list(dict.fromkeys(flags))
+        node["status"] = "NEEDS_REVIEW"
+        matched += 1
+    return {"matched": matched, "partial_lab": lab_pending}
 
 def list_current_core_ii_attributes(listing: dict[str, Any]) -> set[str]:
     if not isinstance(listing, dict):
@@ -198,24 +254,28 @@ def make_node(
     }
 
 
-def resolve(parsed: dict[str, Any], core_ii_listing: dict[str, Any] | None = None) -> dict[str, Any]:
+def resolve(
+    parsed: dict[str, Any],
+    core_ii_listing: dict[str, Any] | None = None,
+    confirmed_choice_credit_ids: set[str] | None = None,
+) -> dict[str, Any]:
     if not isinstance(parsed, dict) or not isinstance(parsed.get("requirements"), list):
         raise ResolutionError("Expected a JSON object with a 'requirements' array.")
     if not parsed.get("program_title") or not parsed.get("catalog_year"):
         raise ResolutionError("Missing 'program_title' or 'catalog_year'.")
     input_rules = parsed["requirements"]
+    confirmed_ids = set(confirmed_choice_credit_ids or ())
+    confirmed_choice_credit_targets = 0
     expected_count = parsed.get("summary", {}).get("interpreted_rules")
     if expected_count is not None and expected_count != len(input_rules):
         raise ResolutionError(
             f"Parser summary says {expected_count} rules but found {len(input_rules)}."
         )
-
     used_rule_ids: set[str] = set()
     groups: dict[tuple[str, ...], str] = {}
     nodes: list[dict[str, Any]] = []
     original_rule_nodes: list[dict[str, Any]] = []
     compound_option_count = 0
-
     for idx, rule in enumerate(input_rules, start=1):
         if not isinstance(rule, dict):
             raise ResolutionError(f"Requirement #{idx} is not a JSON object.")
@@ -225,8 +285,12 @@ def resolve(parsed: dict[str, Any], core_ii_listing: dict[str, Any] | None = Non
         if rule_id in used_rule_ids:
             raise ResolutionError(f"Duplicate rule_id: {rule_id}")
         used_rule_ids.add(rule_id)
-
         kind = rule.get("kind")
+        if rule_id in confirmed_ids and kind != "CHOOSE_N":
+            raise ResolutionError(
+                f"Cannot confirm choice credits for {rule_id}: "
+                f"source kind is {kind!r}, not CHOOSE_N."
+            )
         name = rule.get("name", "")
         if not isinstance(name, str) or not name.strip():
             raise ResolutionError(f"Rule {rule_id} lacks a name.")
@@ -234,7 +298,6 @@ def resolve(parsed: dict[str, Any], core_ii_listing: dict[str, Any] | None = Non
         if not isinstance(path, list) or any(not isinstance(x, str) for x in path):
             raise ResolutionError(f"Rule {rule_id} has an invalid section_path.")
         path = [x.strip() for x in path if x.strip()]
-
         # If an explicit choice group's final section label is the rule's own
         # name, don't create a redundant parent group with the same name.
         group_path = (
@@ -243,7 +306,6 @@ def resolve(parsed: dict[str, Any], core_ii_listing: dict[str, Any] | None = Non
             and normalize_heading(path[-1]) == normalize_heading(name)
             else path
         )
-
         parent_id: str | None = None
         for depth in range(1, len(group_path) + 1):
             prefix = tuple(group_path[:depth])
@@ -261,7 +323,6 @@ def resolve(parsed: dict[str, Any], core_ii_listing: dict[str, Any] | None = Non
                     )
                 )
             parent_id = groups[prefix]
-
         flags = distinct_flags(rule.get("review_flags"))
         course_codes: list[str] = []
         minimum_courses: int | None = None
@@ -275,7 +336,6 @@ def resolve(parsed: dict[str, Any], core_ii_listing: dict[str, Any] | None = Non
             "credit_slots": rule.get("credit_slots", []),
             "original_review_flags": rule.get("review_flags", []),
         }
-
         if kind == "REQUIRED_COURSE":
             db_type = "ALL"
             course_codes = unique_nonblank_strings(rule.get("course_codes", []))
@@ -283,7 +343,6 @@ def resolve(parsed: dict[str, Any], core_ii_listing: dict[str, Any] | None = Non
                 flags = distinct_flags(flags, ["required_course_must_reference_one_exact_course"])
             if rule.get("course_combination") != "SINGLE_COURSE":
                 flags = distinct_flags(flags, ["unsupported_required_course_combination"])
-
         elif kind == "CREDIT_REQUIREMENT_DRAFT":
             db_type = "MIN_CREDITS"
             minimum_credits = rule.get("total_listed_credits")
@@ -294,7 +353,6 @@ def resolve(parsed: dict[str, Any], core_ii_listing: dict[str, Any] | None = Non
             flags = distinct_flags(flags, ["eligibility_requires_explicit_resolution"])
             metadata["referenced_course_codes"] = rule.get("referenced_course_codes", [])
             metadata["course_patterns"] = rule.get("course_patterns", [])
-
         elif kind == "CHOOSE_N":
             db_type = "CHOOSE_N"
             minimum_courses = rule.get("minimum_choices")
@@ -305,9 +363,44 @@ def resolve(parsed: dict[str, Any], core_ii_listing: dict[str, Any] | None = Non
             if minimum_credits is not None and not positive_number(minimum_credits):
                 flags = distinct_flags(flags, ["invalid_minimum_credits"])
                 minimum_credits = None
-            if minimum_credits is None and positive_number(listed_credits):
-                # This often corresponds to the credit requirement in the
-                # catalog, but a human must confirm its interpretation.
+            if rule_id in confirmed_ids:
+                # Human confirmation applies ONLY to the group credit target.
+                # Do not promote substitution/overlap/qualification review flags.
+                if not positive_number(listed_credits):
+                    raise ResolutionError(
+                        f"Cannot confirm choice credits for {rule_id}: "
+                        "catalog_declared_credits is missing or nonpositive."
+                    )
+                if not isinstance(rule.get("instruction"), str) or not rule["instruction"].strip():
+                    raise ResolutionError(
+                        f"Cannot confirm choice credits for {rule_id}: "
+                        "selection instruction is missing."
+                    )
+                if minimum_credits is not None and minimum_credits != listed_credits:
+                    raise ResolutionError(
+                        f"Cannot confirm choice credits for {rule_id}: "
+                        f"parsed minimum {minimum_credits} disagrees with "
+                        f"catalog total {listed_credits}."
+                    )
+                if rule.get("minimum_credits") is not None and not positive_number(rule["minimum_credits"]):
+                    raise ResolutionError(
+                        f"Cannot confirm choice credits for {rule_id}: "
+                        "parsed minimum is invalid."
+                    )
+                minimum_credits = listed_credits
+                flags = [flag for flag in flags if flag != "catalog_credit_threshold_needs_confirmation"]
+                metadata["credit_threshold_resolution"] = {
+                    "basis": "explicit_confirmation_of_catalog_declared_group_credit_total",
+                    "source_rule_id": rule_id,
+                    "source_url": parsed.get("source_url"),
+                    "catalog_declared_credits": listed_credits,
+                    "confirmation_scope": "numeric_choice_group_credit_target_only",
+                    "other_policy_and_allocation_rules_verified": False,
+                }
+                confirmed_choice_credit_targets += 1
+            elif minimum_credits is None and positive_number(listed_credits):
+                # The group-level catalog number is evidence, but isn't yet
+                # an approved minimum-credit threshold for this parsed rule.
                 flags = distinct_flags(flags, ["catalog_credit_threshold_needs_confirmation"])
             raw_options = rule.get("options")
             if not isinstance(raw_options, list) or not raw_options:
@@ -378,11 +471,9 @@ def resolve(parsed: dict[str, Any], core_ii_listing: dict[str, Any] | None = Non
                 flags = distinct_flags(flags, ["minimum_choices_exceeds_options"])
             metadata["options"] = options
             metadata["instruction"] = rule.get("instruction")
-
         else:
             flags = distinct_flags(flags, ["unsupported_rule_kind"])
             db_type = None
-
         # A known reviewer flag never becomes silently approved. READY here
         # means a mechanically representable candidate, not policy approval.
         main_node = make_node(
@@ -407,17 +498,25 @@ def resolve(parsed: dict[str, Any], core_ii_listing: dict[str, Any] | None = Non
         nodes.append(main_node)
         original_rule_nodes.append(main_node)
         nodes.extend(child_option_nodes)
-
+    unknown_confirmations = confirmed_ids - used_rule_ids
+    if unknown_confirmations:
+        raise ResolutionError(
+            "Cannot confirm credits for unknown rule ID(s): "
+            + ", ".join(sorted(unknown_confirmations))
+        )
     # Every foreign key in this draft is an internal stable node ID. The
     # eventual seeder will map node IDs to DB-assigned BIGINT primary keys.
     all_ids = {n["node_id"] for n in nodes}
     for node in nodes:
         if node["parent_node_id"] and node["parent_node_id"] not in all_ids:
             raise ResolutionError(f"Orphan parent: {node['node_id']}")
-
     mapping_counts = {"matched": 0, "category_only": 0, "partial_lab": 0}
     if core_ii_listing is not None:
         mapping_counts = apply_current_core_ii_matches(original_rule_nodes, core_ii_listing)
+
+    # This supersedes unversioned Core II candidates when the same exact
+    # university-wide requirement name has a catalog-scoped classification.
+    catalog_mapping_counts = apply_catalog_attribute_candidates(original_rule_nodes)
 
     by_status = Counter(n["status"] for n in original_rule_nodes)
     review_queue = [
@@ -447,6 +546,8 @@ def resolve(parsed: dict[str, Any], core_ii_listing: dict[str, Any] | None = Non
             "compound_option_nodes": compound_option_count,
             "all_nodes": len(nodes),
             "current_core_ii_mappings": mapping_counts,
+            "catalog_attribute_candidate_mappings": catalog_mapping_counts,
+            "confirmed_choice_credit_targets": confirmed_choice_credit_targets,
         },
         "nodes": nodes,
         "review_queue": review_queue,
@@ -479,6 +580,11 @@ def main() -> int:
         "--core-ii-json", type=Path,
         help="Optional shared, current Core II listing for conservative category matching",
     )
+    parser.add_argument(
+        "--confirm-choice-credit-total", action="append", default=[], metavar="RULE_ID",
+        help=("Explicitly confirm the catalog-declared credit total of one reviewed "
+              "CHOOSE_N rule by its source rule_id; repeat for multiple rules."),
+    )
     parser.add_argument("--output", type=Path, help="Output file (default: adjacent resolved/ directory)")
     args = parser.parse_args()
     try:
@@ -488,16 +594,19 @@ def main() -> int:
         if args.core_ii_json:
             with args.core_ii_json.open("r", encoding="utf-8-sig") as handle:
                 core_ii_listing = json.load(handle)
-        result = resolve(parsed, core_ii_listing)
+        confirmed = args.confirm_choice_credit_total
+        if len(confirmed) != len(set(confirmed)):
+            raise ResolutionError("Duplicate --confirm-choice-credit-total rule IDs")
+        result = resolve(parsed, core_ii_listing, confirmed_choice_credit_ids=set(confirmed))
         output_path = args.output or default_output_path(args.input)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     except (OSError, json.JSONDecodeError, ResolutionError) as error:
         print(f"ERROR: {error}", file=sys.stderr)
         return 1
-
     stats = result["summary"]
     print(f"Program: {result['program_title']} ({result['catalog_year']})")
+    print(f"Explicitly confirmed choice credit targets: {stats['confirmed_choice_credit_targets']}")
     print(f"Source rules: {stats['source_rules']}")
     print(
         f"Rule status: READY={stats['ready_rules']}, "
@@ -508,13 +617,18 @@ def main() -> int:
         f"Hierarchy: {stats['section_group_nodes']} groups, "
         f"{stats['compound_option_nodes']} compound option nodes"
     )
+    candidate_stats = stats["catalog_attribute_candidate_mappings"]
+    print(
+        f"Catalog attribute candidate mappings: {candidate_stats['matched']} "
+        f"({candidate_stats['partial_lab']} require lab checks)"
+    )
     if args.core_ii_json:
         counts = stats["current_core_ii_mappings"]
         print(
             f"Current Core II mappings: {counts['matched']} "
             f"({counts['category_only']} category-only, {counts['partial_lab']} partial lab)"
         )
-        print("Historical catalog-year applicability verified: 0")
+        print("Historical catalog-year applicability verified by resolver: 0")
     if result["review_queue"]:
         print("Review queue:")
         for item in result["review_queue"]:

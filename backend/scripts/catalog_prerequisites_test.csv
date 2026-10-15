@@ -1,0 +1,38 @@
+course_code,field_label,requirement_text,source_url,catalog_year,catalog_level,observed_at_utc
+CS 105,pre-req,ACT Math with a score of 17 or SAT Verbal Before March 16 with a score of 400 or SAT MATH SECTION SCORE with a score of 440 or Placement Math After SP17 with a score of 101 or MTH 102 with a minimum grade of C or MTH 102B with a minimum grade of C or MTH 127 with a minimum grade of C or MTH 130 with a minimum grade of C or MTH 132 with a minimum grade of C or MTH 229 with a minimum grade of C or MTH 229H with a minimum grade of C.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 110,pre-req,ACT Math with a score of 24 or SAT Mathematics Before Mar. 16 with a score of 560 or SAT MATH SECTION SCORE with a score of 580 or MTH 127 or MTH 130 and MTH 132 (may be taken concurrently) or MTH 229 (may be taken concurrently) or MTH 229H (may be taken concurrently).,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 110,concurrent pr,MTH 132 or MTH 229 or MTH 229H,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 110H,pre-req,ACT Math with a score of 24 or SAT Mathematics Before Mar. 16 with a score of 560 or SAT MATH SECTION SCORE with a score of 580 or MTH 127 or MTH 130 and MTH 132 (may be taken concurrently) or MTH 129 (may be taken concurrently) or MTH 129H (may be taken concurrently).,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 110H,concurrent pr,MTH 132 or MTH 129 or MTH 129H,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 120,cr/pr,CS 110,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 120,pre-req,CS 110 with a minimum grade of D or CS 110H with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 205,pre-req,MTH 140 or MTH 229 (may be taken concurrently) or MTH 229H (may be taken concurrently).,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 205,concurrent pr,MTH 229 or MTH 229H,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 210,pre-req,CS 120 with a minimum grade of D and MTH 220 (may be taken concurrently) with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 210,concurrent pr,MTH 220,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 215,pre-req,CS 210 with a minimum grade of D and ( MTH 229 with a minimum grade of D or MTH 229H with a minimum grade of D) and MTH 220 (may be taken concurrently) with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 215,concurrent pr,MTH 220,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 300,pre-req,CS 210 with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 305,pre-req,MTH 220 and CS 210 and ENG 354 (may be taken concurrently).,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 305,concurrent pr,ENG 354,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 310,pre-req,CS 305 with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 315,pre-req,CS 310 and MTH 345.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 320,pre-req,CS 210 and ( MTH 229 or MTH 229H ).,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 330,pre-req,CS 210 .,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 351,pre-req,ENGR 217 with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 360,pre-req,MTH 220 and CS 210 .,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 370,pre-req,CS 210 with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 402,pre-req,CS 300 with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 404,pre-req,CS 402 .,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 405,pre-req,CS 215 .,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 410,pre-req,CS 210 with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 412,pre-req,CS 402 with a minimum grade of D or EE 340 with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 415,pre-req,CS 215 and CS 410 .,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 425,pre-req,CS 300 .,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 430,pre-req,CS 320 with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 435,pre-req,CS 430 with a minimum grade of D or CS 340 with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 440,pre-req,CS 210 and MTH 329 .,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 452,pre-req,( CS 215 and MTH 220 ).,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 455,pre-req,CS 330 and CS 340 and CS 350.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 475,pre-req,CS 300 with a minimum grade of D or CS 215 with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00
+CS 490,pre-req,CS 310 with a minimum grade of D and CS 410 with a minimum grade of D.,https://catalog.marshall.edu/undergraduate/courses-az/cs/,2026-2027,undergraduate,2026-10-15T04:38:38.411313+00:00

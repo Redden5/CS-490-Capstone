@@ -7,8 +7,8 @@
   "approved_for_seeding": false,
   "summary": {
     "source_rules": 39,
-    "ready_rules": 29,
-    "needs_review_rules": 10,
+    "ready_rules": 30,
+    "needs_review_rules": 9,
     "unsupported_rules": 0,
     "section_group_nodes": 5,
     "compound_option_nodes": 5,
@@ -17,7 +17,12 @@
       "matched": 4,
       "category_only": 3,
       "partial_lab": 1
-    }
+    },
+    "catalog_attribute_candidate_mappings": {
+      "matched": 6,
+      "partial_lab": 1
+    },
+    "confirmed_choice_credit_targets": 2
   },
   "nodes": [
     {
@@ -134,11 +139,12 @@
       "minimum_courses": null,
       "minimum_credits": 3,
       "course_codes": [],
-      "attribute_names": [],
+      "attribute_names": [
+        "Critical Thinking"
+      ],
       "status": "NEEDS_REVIEW",
       "review_flags": [
-        "credit_requirement_eligibility_unmapped",
-        "eligibility_requires_explicit_resolution"
+        "catalog_year_course_eligibility_lookup_required"
       ],
       "section_path": [
         "Core Curriculum",
@@ -163,7 +169,13 @@
           "credit_requirement_eligibility_unmapped"
         ],
         "referenced_course_codes": [],
-        "course_patterns": []
+        "course_patterns": [],
+        "attribute_resolution": {
+          "scope": "catalog_year_scoped_supabase_lookup_required",
+          "attribute_match_mode": "ANY",
+          "catalog_year_applicability_verified": false,
+          "additional_lab_eligibility_unverified": false
+        }
       }
     },
     {
@@ -335,8 +347,8 @@
       ],
       "status": "NEEDS_REVIEW",
       "review_flags": [
-        "catalog_year_applicability_unverified",
-        "lab_eligibility_unverified"
+        "lab_eligibility_unverified",
+        "catalog_year_course_eligibility_lookup_required"
       ],
       "section_path": [
         "Core Curriculum",
@@ -363,10 +375,8 @@
         "referenced_course_codes": [],
         "course_patterns": [],
         "attribute_resolution": {
-          "scope": "current_official_course_listing_only",
+          "scope": "catalog_year_scoped_supabase_lookup_required",
           "attribute_match_mode": "ANY",
-          "source_url": "https://mubert.marshall.edu/coreIIcourses.php",
-          "observed_at_utc": "2026-10-13T17:04:26.870198+00:00",
           "catalog_year_applicability_verified": false,
           "additional_lab_eligibility_unverified": true
         }
@@ -386,7 +396,7 @@
       ],
       "status": "NEEDS_REVIEW",
       "review_flags": [
-        "catalog_year_applicability_unverified"
+        "catalog_year_course_eligibility_lookup_required"
       ],
       "section_path": [
         "Core Curriculum",
@@ -413,10 +423,8 @@
         "referenced_course_codes": [],
         "course_patterns": [],
         "attribute_resolution": {
-          "scope": "current_official_course_listing_only",
+          "scope": "catalog_year_scoped_supabase_lookup_required",
           "attribute_match_mode": "ANY",
-          "source_url": "https://mubert.marshall.edu/coreIIcourses.php",
-          "observed_at_utc": "2026-10-13T17:04:26.870198+00:00",
           "catalog_year_applicability_verified": false,
           "additional_lab_eligibility_unverified": false
         }
@@ -436,7 +444,7 @@
       ],
       "status": "NEEDS_REVIEW",
       "review_flags": [
-        "catalog_year_applicability_unverified"
+        "catalog_year_course_eligibility_lookup_required"
       ],
       "section_path": [
         "Core Curriculum",
@@ -463,10 +471,8 @@
         "referenced_course_codes": [],
         "course_patterns": [],
         "attribute_resolution": {
-          "scope": "current_official_course_listing_only",
+          "scope": "catalog_year_scoped_supabase_lookup_required",
           "attribute_match_mode": "ANY",
-          "source_url": "https://mubert.marshall.edu/coreIIcourses.php",
-          "observed_at_utc": "2026-10-13T17:04:26.870198+00:00",
           "catalog_year_applicability_verified": false,
           "additional_lab_eligibility_unverified": false
         }
@@ -486,7 +492,7 @@
       ],
       "status": "NEEDS_REVIEW",
       "review_flags": [
-        "catalog_year_applicability_unverified"
+        "catalog_year_course_eligibility_lookup_required"
       ],
       "section_path": [
         "Core Curriculum",
@@ -513,10 +519,8 @@
         "referenced_course_codes": [],
         "course_patterns": [],
         "attribute_resolution": {
-          "scope": "current_official_course_listing_only",
+          "scope": "catalog_year_scoped_supabase_lookup_required",
           "attribute_match_mode": "ANY",
-          "source_url": "https://mubert.marshall.edu/coreIIcourses.php",
-          "observed_at_utc": "2026-10-13T17:04:26.870198+00:00",
           "catalog_year_applicability_verified": false,
           "additional_lab_eligibility_unverified": false
         }
@@ -596,11 +600,13 @@
       "minimum_courses": null,
       "minimum_credits": 3,
       "course_codes": [],
-      "attribute_names": [],
+      "attribute_names": [
+        "Multicultural",
+        "International"
+      ],
       "status": "NEEDS_REVIEW",
       "review_flags": [
-        "credit_requirement_eligibility_unmapped",
-        "eligibility_requires_explicit_resolution"
+        "catalog_year_course_eligibility_lookup_required"
       ],
       "section_path": [
         "Core Curriculum",
@@ -625,7 +631,13 @@
           "credit_requirement_eligibility_unmapped"
         ],
         "referenced_course_codes": [],
-        "course_patterns": []
+        "course_patterns": [],
+        "attribute_resolution": {
+          "scope": "catalog_year_scoped_supabase_lookup_required",
+          "attribute_match_mode": "ANY",
+          "catalog_year_applicability_verified": false,
+          "additional_lab_eligibility_unverified": false
+        }
       }
     },
     {
@@ -1413,7 +1425,7 @@
       "source_kind": "CHOOSE_N",
       "db_requirement_type_candidate": "CHOOSE_N",
       "minimum_courses": 2,
-      "minimum_credits": null,
+      "minimum_credits": 6,
       "course_codes": [
         "CS 315",
         "CS 370",
@@ -1429,10 +1441,8 @@
         "CS 483"
       ],
       "attribute_names": [],
-      "status": "NEEDS_REVIEW",
-      "review_flags": [
-        "catalog_credit_threshold_needs_confirmation"
-      ],
+      "status": "READY",
+      "review_flags": [],
       "section_path": [
         "Major-Specific",
         "CS Electives"
@@ -1475,6 +1485,14 @@
         "catalog_declared_credits": 6,
         "credit_slots": [],
         "original_review_flags": [],
+        "credit_threshold_resolution": {
+          "basis": "explicit_confirmation_of_catalog_declared_group_credit_total",
+          "source_rule_id": "t0_row_0044",
+          "source_url": "https://catalog.marshall.edu/undergraduate/programs-az/engineering-computer-sciences/computer-science/computer-science-bs/",
+          "catalog_declared_credits": 6,
+          "confirmation_scope": "numeric_choice_group_credit_target_only",
+          "other_policy_and_allocation_rules_verified": false
+        },
         "options": [
           {
             "kind": "SINGLE_COURSE",
@@ -1739,15 +1757,14 @@
       "source_kind": "CHOOSE_N",
       "db_requirement_type_candidate": "CHOOSE_N",
       "minimum_courses": 3,
-      "minimum_credits": null,
+      "minimum_credits": 12,
       "course_codes": [],
       "attribute_names": [],
       "status": "NEEDS_REVIEW",
       "review_flags": [
         "compound_options_require_group_evaluation",
         "shared_courses_across_options_need_allocation_rule",
-        "some_options_require_review",
-        "catalog_credit_threshold_needs_confirmation"
+        "some_options_require_review"
       ],
       "section_path": [
         "Major-Specific",
@@ -1781,6 +1798,14 @@
           "shared_courses_across_options_need_allocation_rule",
           "some_options_require_review"
         ],
+        "credit_threshold_resolution": {
+          "basis": "explicit_confirmation_of_catalog_declared_group_credit_total",
+          "source_rule_id": "t0_row_0058",
+          "source_url": "https://catalog.marshall.edu/undergraduate/programs-az/engineering-computer-sciences/computer-science/computer-science-bs/",
+          "catalog_declared_credits": 12,
+          "confirmation_scope": "numeric_choice_group_credit_target_only",
+          "other_policy_and_allocation_rules_verified": false
+        },
         "compound_option_groups": true,
         "shared_course_codes_across_options": {
           "PHY 202": 2
@@ -2215,8 +2240,7 @@
       "name": "Critical Thinking Course",
       "status": "NEEDS_REVIEW",
       "review_flags": [
-        "credit_requirement_eligibility_unmapped",
-        "eligibility_requires_explicit_resolution"
+        "catalog_year_course_eligibility_lookup_required"
       ],
       "node_id": "rule:t0_row_0005"
     },
@@ -2225,8 +2249,8 @@
       "name": "Sci w/Lab Core II Physical/Natural Science",
       "status": "NEEDS_REVIEW",
       "review_flags": [
-        "catalog_year_applicability_unverified",
-        "lab_eligibility_unverified"
+        "lab_eligibility_unverified",
+        "catalog_year_course_eligibility_lookup_required"
       ],
       "node_id": "rule:t0_row_0011"
     },
@@ -2235,7 +2259,7 @@
       "name": "Core II Humanities",
       "status": "NEEDS_REVIEW",
       "review_flags": [
-        "catalog_year_applicability_unverified"
+        "catalog_year_course_eligibility_lookup_required"
       ],
       "node_id": "rule:t0_row_0012"
     },
@@ -2244,7 +2268,7 @@
       "name": "Core II Social Studies",
       "status": "NEEDS_REVIEW",
       "review_flags": [
-        "catalog_year_applicability_unverified"
+        "catalog_year_course_eligibility_lookup_required"
       ],
       "node_id": "rule:t0_row_0013"
     },
@@ -2253,7 +2277,7 @@
       "name": "Core II Fine Arts",
       "status": "NEEDS_REVIEW",
       "review_flags": [
-        "catalog_year_applicability_unverified"
+        "catalog_year_course_eligibility_lookup_required"
       ],
       "node_id": "rule:t0_row_0014"
     },
@@ -2273,19 +2297,9 @@
       "name": "Multicultural or International",
       "status": "NEEDS_REVIEW",
       "review_flags": [
-        "credit_requirement_eligibility_unmapped",
-        "eligibility_requires_explicit_resolution"
+        "catalog_year_course_eligibility_lookup_required"
       ],
       "node_id": "rule:t0_row_0018"
-    },
-    {
-      "rule_id": "t0_row_0044",
-      "name": "CS Electives",
-      "status": "NEEDS_REVIEW",
-      "review_flags": [
-        "catalog_credit_threshold_needs_confirmation"
-      ],
-      "node_id": "rule:t0_row_0044"
     },
     {
       "rule_id": "t0_row_0058",
@@ -2294,8 +2308,7 @@
       "review_flags": [
         "compound_options_require_group_evaluation",
         "shared_courses_across_options_need_allocation_rule",
-        "some_options_require_review",
-        "catalog_credit_threshold_needs_confirmation"
+        "some_options_require_review"
       ],
       "node_id": "rule:t0_row_0058"
     },
