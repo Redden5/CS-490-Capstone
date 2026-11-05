@@ -50,6 +50,15 @@ function App() {
     };
   }, []);
 
+  async function handleSignOut() {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Error signing out:", error);
+      alert("Unable to sign out. Please try again.");
+    }
+  }
+
   if (loading) {
     return <p>Loading application...</p>;
   }
@@ -66,17 +75,7 @@ function App() {
         </Routes>
       ) : (
         <>
-          <Header />
-
-          <button
-            type="button"
-            onClick={async () => {
-              const { error } = await supabase.auth.signOut();
-              if (error) console.error(error);
-            }}
-          >
-            Sign Out
-          </button>
+          <Header onSignOut={handleSignOut}/>
 
           <Routes>
             <Route path="/" element={<Dashboard />} />
@@ -85,14 +84,8 @@ function App() {
             <Route path="/degree-audit" element={<DegreeAudit />} />
             <Route path="/planner" element={<Planner />} />
             <Route path="/advisor" element={<Advisor />} />
-            <Route
-              path="/login"
-              element={<Navigate to="/" replace />}
-            />
-            <Route
-              path="*"
-              element={<Navigate to="/" replace />}
-            />
+            <Route path="/login" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </>
       )}

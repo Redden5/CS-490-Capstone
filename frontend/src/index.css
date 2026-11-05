@@ -280,3 +280,69 @@ a:focus-visible {
     font-size: 26px;
   }
 }
+
+
+/* ======================================
+   HEADER SIGN OUT BUTTON
+====================================== */
+
+.header-sign-out {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  padding: 9px 16px;
+
+  background: #eaf7ee;
+  color: #176725;
+
+  border: 1px solid #b8ddc4;
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.header-sign-out:hover {
+  background: #d5efdc;
+  color: #005c22;
+  border-color: #8bc9a1;
+}
+
+.header-sign-out:active {
+  background: #c5e4c0;
+}
+
+.header-sign-out:focus-visible {
+  outline: 3px solid #008b2f;
+  outline-offset: 3px;
+}
+
+/* Space between navigation and sign out */
+.site-header .header-sign-out {
+  margin-left: 8px;
+}
+
+/* Tablet layout */
+@media (max-width: 900px) {
+  .site-header .header-sign-out {
+    margin-left: 0;
+  }
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
+  .header-sign-out {
+    min-height: 44px;
+    padding: 10px 16px;
+  }
+}

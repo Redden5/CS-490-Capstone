@@ -1,66 +1,74 @@
 
 import { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import "../styles/Login.css";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  async function handleLogin(e) {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+    async function handleLogin(e) {
+        e.preventDefault();
+        setLoading(true);
+        setError("");
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+        const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
 
-    if (error) {
-      setError(error.message);
+        if (error) {
+            setError(error.message);
+        }
+
+        setLoading(false);
     }
 
-    setLoading(false);
-  }
+    return (
+        <main className="login-page">
 
-  return (
-    <main className="login-page">
-      <h1>Student Login</h1>
-      <p>Sign in to your Course Advisor Assistant</p>
+            <div className="login-brand">
+                <span className="brand-mark" aria-hidden="true" />
+                <span className="brand-name">MARSHALL</span>
+                <span className="brand-title">Course Advisor</span>
+            </div>
 
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+            <h1>Student Login</h1>
+            <p>Sign in to your Course Advisor Assistant</p>
 
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+            <form onSubmit={handleLogin}>
+                <div>
+                    <label htmlFor="email">Email</label>
+                    <input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
 
-        {error && <p role="alert">{error}</p>}
+                <div>
+                    <label htmlFor="password">Password</label>
+                    <input
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Signing in..." : "Sign In"}
-        </button>
-      </form>
-    </main>
-  );
+                {error && <p role="alert">{error}</p>}
+
+                <button type="submit" disabled={loading}>
+                    {loading ? "Signing in..." : "Sign In"}
+                </button>
+            </form>
+        </main>
+    );
 }
 
 export default Login;

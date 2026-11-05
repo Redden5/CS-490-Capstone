@@ -136,8 +136,8 @@ function Courses() {
           onChange={(e) => setSearchInput(e.target.value)}
         />
 
-        <button type="submit">
-          Search
+        <button className="course-search-button"type="submit">
+          <span>Search</span>
         </button>
 
         <button
