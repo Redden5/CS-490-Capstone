@@ -8,7 +8,7 @@ const links = [
   { to: "/advisor", label: "AI Advisor" },
 ];
 
-function Header() {
+function Header({ onSignOut }) {
   return (
     <header className="site-header">
       <Link className="brand" to="/" aria-label="Marshall Course Advisor home">
@@ -24,6 +24,9 @@ function Header() {
             {label}
           </NavLink>
         ))}
+        <button className="header-sign-out" type="button" onClick={onSignOut}>
+          Sign Out
+        </button>
       </nav>
     </header>
   );

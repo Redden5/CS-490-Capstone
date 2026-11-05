@@ -1,0 +1,224 @@
+
+/* ======================================
+   LOGIN PAGE
+====================================== */
+
+.login-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: min(440px, calc(100% - 32px));
+  margin: 40px auto;
+  padding: 36px;
+
+  background: #ffffff;
+  border: 1px solid #dcebe1;
+  border-radius: 12px;
+
+  box-shadow: 0 8px 30px rgba(23, 43, 32, 0.06);
+}
+
+/* Login heading */
+
+.login-page h1 {
+  margin: 0 0 8px;
+
+  color: #172b20;
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.login-page > p {
+  margin: 0 0 28px;
+
+  color: #6b7971;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Login form */
+
+.login-page form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  width: 100%;
+}
+
+.login-page form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Input labels */
+
+.login-page label {
+  color: #26362c;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Email and password inputs */
+
+.login-page input {
+  width: 100%;
+  min-height: 45px;
+  padding: 11px 13px;
+
+  background: #ffffff;
+  color: #2d302b;
+
+  border: 1px solid #dcebe1;
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.login-page input::placeholder {
+  color: #9ca9a0;
+}
+
+.login-page input:hover {
+  border-color: #b8ddc4;
+}
+
+.login-page input:focus {
+  outline: none;
+  border-color: #00b638;
+  box-shadow: 0 0 0 3px rgba(0, 182, 56, 0.12);
+}
+
+/* Sign In button */
+
+.login-page button[type="submit"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 46px;
+  margin-top: 6px;
+  padding: 12px 20px;
+
+  background: #00b638;
+  color: #ffffff;
+
+  border: 1px solid #00b638;
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.login-page button[type="submit"]:hover:not(:disabled) {
+  background: #008b2f;
+  border-color: #008b2f;
+  transform: translateY(-1px);
+}
+
+.login-page button[type="submit"]:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.login-page button[type="submit"]:focus-visible {
+  outline: 3px solid #80c5a6;
+  outline-offset: 3px;
+}
+
+.login-page button[type="submit"]:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Authentication error */
+
+.login-page [role="alert"] {
+  margin: 0;
+  padding: 12px 14px;
+
+  color: #a12626;
+  background: #fff1f1;
+
+  border: 1px solid #f4caca;
+  border-radius: 7px;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Responsive styling */
+
+@media (max-width: 600px) {
+  .login-page {
+    width: calc(100% - 32px);
+    margin: 24px auto;
+    padding: 26px 20px;
+  }
+
+  .login-page h1 {
+    font-size: 25px;
+  }
+
+  .login-page input,
+  .login-page button[type="submit"] {
+    min-height: 44px;
+  }
+}
+
+
+/* Marshall branding on login page */
+
+.login-page .login-brand {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  width: 100%;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+
+  border-bottom: 1px solid #dcebe1;
+}
+
+.login-page .login-brand .brand-mark {
+  display: inline-block;
+  width: 29px;
+  height: 29px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  background: #00b638;
+}
+
+.login-page .login-brand .brand-name {
+  color: #00b638;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+.login-page .login-brand .brand-title {
+  color: #26362c;
+  font-size: 14px;
+  font-weight: 600;
+}
