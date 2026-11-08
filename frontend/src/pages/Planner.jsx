@@ -106,15 +106,29 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
   );
 }
 
-function SemesterColumn({ term }) {
+function SemesterColumn({ semesterId, terms, loadingTerms, termError }) {
+  const [termId, setTermId] = useState("");
+  const term = terms.find((item) => String(item.term_id) === termId);
+  const title = `Semester ${semesterId}`;
   const [courses, setCourses] = useState([]);
   const [picking, setPicking] = useState(false);
   const min = courses.reduce((sum, course) => sum + Number(course.min_credit_hours), 0);
   const max = courses.reduce((sum, course) => sum + Number(course.max_credit_hours), 0);
 
   return (
-    <section className="planner-semester-card" aria-label={term.term_name}>
-      <h2>{term.term_name}</h2>
+    <section className="planner-semester-card" aria-label={title}>
+      <h2>{title}</h2>
+      <label className="planner-term-label" htmlFor={`planner-term-${semesterId}`}>Term</label>
+      <select id={`planner-term-${semesterId}`} value={termId}
+        disabled={loadingTerms || termError || !terms.length || courses.length > 0}
+        aria-describedby={`planner-term-help-${semesterId}`}
+        onChange={(event) => setTermId(event.target.value)}>
+        <option value="">Choose a term</option>
+        {terms.map((item) => <option key={item.term_id} value={item.term_id}>{item.term_name}</option>)}
+      </select>
+      <p id={`planner-term-help-${semesterId}`} className="planner-term-help">
+        {courses.length ? "Remove courses before changing the term." : "Choose a term to search its course offerings."}
+      </p>
       <p>{creditLabel(min, max)} planned credits</p>
       {!courses.length && <p className="planner-empty">No courses added yet.</p>}
       <ul className="planner-course-list">
@@ -122,13 +136,17 @@ function SemesterColumn({ term }) {
           <li className="planner-course-slot planner-course-slot-filled" key={course.course_id}>
             <div className="planner-course-title"><strong>{course.course_code}</strong><span>{course.course_title}</span></div>
             <p>{creditLabel(course.min_credit_hours, course.max_credit_hours)} credits</p>
-            <button type="button" className="planner-remove-button" aria-label={`Remove ${course.course_code} from ${term.term_name}`}
+            <button type="button" className="planner-remove-button" aria-label={`Remove ${course.course_code} from ${title}`}
               onClick={() => setCourses(courses.filter((item) => item.course_id !== course.course_id))}>Remove</button>
           </li>
         ))}
       </ul>
-      <button className="planner-secondary-button" type="button" onClick={() => setPicking(true)}>Add Course</button>
-      {picking && <CoursePicker term={term} selected={courses} onClose={() => setPicking(false)}
+      <div className="planner-semester-actions">
+        <button className="planner-secondary-button" type="button" disabled={!term} onClick={() => setPicking(true)}>Add Course</button>
+        <button className="planner-primary-button" type="button" disabled aria-describedby={`planner-save-help-${semesterId}`}>Save Semester</button>
+      </div>
+      <p id={`planner-save-help-${semesterId}`} className="planner-term-help">Saving semesters is not available yet.</p>
+      {picking && term && <CoursePicker term={term} selected={courses} onClose={() => setPicking(false)}
         onSelect={(course) => setCourses((current) => current.some((item) => item.course_id === course.course_id) ? current : [...current, course])} />}
     </section>
   );
@@ -139,8 +157,7 @@ function Planner() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
-  const [termId, setTermId] = useState("");
-  const [semesters, setSemesters] = useState([]);
+  const [semesters, setSemesters] = useState([1]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -171,8 +188,6 @@ function Planner() {
     return () => controller.abort();
   }, [attempt]);
 
-  const availableTerms = terms.filter((term) => !semesters.some((semester) => semester.term_id === term.term_id));
-
   return (
     <main className="planner-page">
       <div className="planner-heading">
@@ -181,26 +196,14 @@ function Planner() {
       </div>
       <DashboardCard title="Semester Plan">
         <p>Your plan is temporary. Refreshing or leaving this page clears your selections.</p>
-        {loading ? <p role="status">Loading semesters…</p> : error ? (
-          <div role="alert"><p>Unable to load semesters.</p><button type="button" onClick={() => setAttempt(attempt + 1)}>Try again</button></div>
-        ) : !terms.length ? <p>No active semesters are listed.</p> : !availableTerms.length ? <p>All available semesters have been added.</p> : (
-          <form className="planner-plan-actions" onSubmit={(event) => {
-            event.preventDefault();
-            const term = availableTerms.find((item) => String(item.term_id) === termId);
-            if (term) { setSemesters([...semesters, term]); setTermId(""); }
-          }}>
-            <label htmlFor="planner-term">Semester</label>
-            <select id="planner-term" value={termId} onChange={(event) => setTermId(event.target.value)} required>
-              <option value="">Choose a semester</option>
-              {availableTerms.map((term) => <option key={term.term_id} value={term.term_id}>{term.term_name}</option>)}
-            </select>
-            <button className="planner-primary-button" type="submit" disabled={!termId}>Add Semester</button>
-          </form>
-        )}
+        <button className="planner-primary-button" type="button"
+          onClick={() => setSemesters((current) => [...current, current.length + 1])}>Add Semester</button>
+        {loading ? <p role="status">Loading available terms…</p> : error ? (
+          <div role="alert"><p>Unable to load terms.</p><button type="button" onClick={() => setAttempt(attempt + 1)}>Try again</button></div>
+        ) : !terms.length ? <p>No active terms are listed.</p> : null}
       </DashboardCard>
-      {!semesters.length && <p>Add a semester to begin planning.</p>}
       <div className="planner-semester-grid">
-        {semesters.map((term) => <SemesterColumn term={term} key={term.term_id} />)}
+        {semesters.map((id) => <SemesterColumn semesterId={id} terms={terms} loadingTerms={loading} termError={error} key={id} />)}
       </div>
     </main>
   );

@@ -218,3 +218,7 @@
   .planner-course-dialog { padding: 16px; }
   .planner-dialog-heading { align-items: flex-start; }
 }
+
+.planner-term-label { display: block; margin-bottom: 6px; font-weight: 600; }
+.planner-term-help { color: #53665b; font-size: 0.85rem; line-height: 1.5; }
+.planner-semester-actions { display: flex; flex-wrap: wrap; gap: 10px; }
