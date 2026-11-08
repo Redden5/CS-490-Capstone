@@ -29,10 +29,12 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
       setResult({ loading: true });
       try {
         // Query courses as the parent so multiple sections never duplicate a course.
+        const columns = "course_id, course_code, course_title, min_credit_hours, max_credit_hours";
         let query = supabase.from("course").select(
-          "course_id, course_code, course_title, min_credit_hours, max_credit_hours, coursesection!inner(term_id)",
+          term ? `${columns}, coursesection!inner(term_id)` : columns,
           { count: "exact" }
-        ).eq("coursesection.term_id", term.term_id);
+        );
+        if (term) query = query.eq("coursesection.term_id", term.term_id);
         const safeSearch = search.replace(/[^a-zA-Z0-9\s-]/g, "").trim();
         if (safeSearch) {
           query = query.or(`course_code.ilike.%${safeSearch}%,course_title.ilike.%${safeSearch}%`);
@@ -47,15 +49,15 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
     }
     load();
     return () => controller.abort();
-  }, [term.term_id, search, page, attempt]);
+  }, [term, search, page, attempt]);
 
   return (
     <dialog className="planner-course-dialog" ref={dialog} aria-labelledby="course-picker-title" onCancel={onClose}>
       <div className="planner-dialog-heading">
-        <h2 id="course-picker-title">Add course · {term.term_name}</h2>
+        <h2 id="course-picker-title">Add course · {term?.term_name || "All catalog courses"}</h2>
         <button type="button" className="planner-secondary-button" onClick={onClose}>Close</button>
       </div>
-      <p>Search courses with recorded offerings in this semester. Adding a course does not enroll you.</p>
+      <p>{term ? "Search courses with recorded offerings in this semester." : "Browse the course catalog. Semester availability has not been verified."} Adding a course does not enroll you.</p>
       <form className="planner-search" onSubmit={(event) => {
         event.preventDefault();
         setSearch(input.trim());
@@ -76,7 +78,7 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
         ) : (
           <>
             <p role="status">{result.total} courses found</p>
-            {!result.courses.length && <p>{search ? "No courses match your search in this semester." : "No course offerings are listed for this semester."}</p>}
+            {!result.courses.length && <p>{search ? "No courses match your search in this selection." : "No courses are listed for this selection."}</p>}
             <ul className="planner-picker-results">
               {result.courses.map((course) => {
                 const added = selected.some((item) => item.course_id === course.course_id);
@@ -107,7 +109,7 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
 }
 
 function SemesterColumn({ semesterId, terms, loadingTerms, termError }) {
-  const [termId, setTermId] = useState("");
+  const [termId, setTermId] = useState("catalog");
   const term = terms.find((item) => String(item.term_id) === termId);
   const title = `Semester ${semesterId}`;
   const [courses, setCourses] = useState([]);
@@ -118,16 +120,20 @@ function SemesterColumn({ semesterId, terms, loadingTerms, termError }) {
   return (
     <section className="planner-semester-card" aria-label={title}>
       <h2>{title}</h2>
-      <label className="planner-term-label" htmlFor={`planner-term-${semesterId}`}>Term</label>
+      <label className="planner-term-label" htmlFor={`planner-term-${semesterId}`}>Course availability</label>
       <select id={`planner-term-${semesterId}`} value={termId}
-        disabled={loadingTerms || termError || !terms.length || courses.length > 0}
+        disabled={courses.length > 0}
         aria-describedby={`planner-term-help-${semesterId}`}
         onChange={(event) => setTermId(event.target.value)}>
-        <option value="">Choose a term</option>
+        <option value="catalog">All catalog courses (no term)</option>
         {terms.map((item) => <option key={item.term_id} value={item.term_id}>{item.term_name}</option>)}
       </select>
       <p id={`planner-term-help-${semesterId}`} className="planner-term-help">
-        {courses.length ? "Remove courses before changing the term." : "Choose a term to search its course offerings."}
+        {courses.length ? "Remove courses before changing course availability." : loadingTerms
+          ? "Loading term options. You can browse the catalog now." : termError
+          ? "Term options could not be loaded. Catalog search is available." : !terms.length
+          ? "No active terms are available. Catalog courses may not be offered in your planned semester."
+          : "Choose a term to see its offerings, or browse the full catalog."}
       </p>
       <p>{creditLabel(min, max)} planned credits</p>
       {!courses.length && <p className="planner-empty">No courses added yet.</p>}
@@ -142,11 +148,11 @@ function SemesterColumn({ semesterId, terms, loadingTerms, termError }) {
         ))}
       </ul>
       <div className="planner-semester-actions">
-        <button className="planner-secondary-button" type="button" disabled={!term} onClick={() => setPicking(true)}>Add Course</button>
+        <button className="planner-secondary-button" type="button" onClick={() => setPicking(true)}>Add Course</button>
         <button className="planner-primary-button" type="button" disabled aria-describedby={`planner-save-help-${semesterId}`}>Save Semester</button>
       </div>
       <p id={`planner-save-help-${semesterId}`} className="planner-term-help">Saving semesters is not available yet.</p>
-      {picking && term && <CoursePicker term={term} selected={courses} onClose={() => setPicking(false)}
+      {picking && <CoursePicker term={term} selected={courses} onClose={() => setPicking(false)}
         onSelect={(course) => setCourses((current) => current.some((item) => item.course_id === course.course_id) ? current : [...current, course])} />}
     </section>
   );
@@ -200,7 +206,7 @@ function Planner() {
           onClick={() => setSemesters((current) => [...current, current.length + 1])}>Add Semester</button>
         {loading ? <p role="status">Loading available terms…</p> : error ? (
           <div role="alert"><p>Unable to load terms.</p><button type="button" onClick={() => setAttempt(attempt + 1)}>Try again</button></div>
-        ) : !terms.length ? <p>No active terms are listed.</p> : null}
+        ) : !terms.length ? <p>No active terms are listed. You can still add courses from the catalog; semester availability is unverified.</p> : null}
       </DashboardCard>
       <div className="planner-semester-grid">
         {semesters.map((id) => <SemesterColumn semesterId={id} terms={terms} loadingTerms={loading} termError={error} key={id} />)}
