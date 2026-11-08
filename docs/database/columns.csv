@@ -1,0 +1,113 @@
+table_name,column_name,data_type,udt_name,is_nullable,column_default
+attribute,attribute_id,bigint,int8,NO,null
+attribute,attribute_name,character varying,varchar,NO,null
+catalogyear,catalog_year_id,bigint,int8,NO,null
+catalogyear,catalog_label,character varying,varchar,NO,null
+catalogyear,start_year,smallint,int2,NO,null
+catalogyear,end_year,smallint,int2,NO,null
+catalogyear,active_status,boolean,bool,NO,true
+course,course_id,bigint,int8,NO,null
+course,course_code,character varying,varchar,NO,null
+course,subject_code,character varying,varchar,NO,null
+course,course_number,character varying,varchar,NO,null
+course,course_title,character varying,varchar,NO,null
+course,description,text,text,YES,null
+course,min_credit_hours,numeric,numeric,NO,null
+course,max_credit_hours,numeric,numeric,NO,null
+course,department_id,bigint,int8,YES,null
+course,active_status,boolean,bool,NO,true
+course,source_url,text,text,YES,null
+courseattribute,course_id,bigint,int8,NO,null
+courseattribute,attribute_id,bigint,int8,NO,null
+courseattribute,source_url,text,text,NO,null
+courseattribute,observed_at,timestamp with time zone,timestamptz,NO,now()
+courseattribute,catalog_year_id,bigint,int8,YES,null
+courserule,rule_id,bigint,int8,NO,null
+courserule,course_id,bigint,int8,NO,null
+courserule,rule_type,character varying,varchar,NO,null
+courserule,raw_text,text,text,YES,null
+courserule,machine_checkable,boolean,bool,NO,true
+coursesection,section_id,bigint,int8,NO,null
+coursesection,course_id,bigint,int8,NO,null
+coursesection,term_id,bigint,int8,NO,null
+coursesection,crn,character varying,varchar,YES,null
+coursesection,section_number,character varying,varchar,NO,null
+coursesection,instructor,character varying,varchar,YES,null
+coursesection,campus,character varying,varchar,YES,null
+coursesection,delivery_mode,character varying,varchar,YES,null
+coursesection,section_status,character varying,varchar,NO,'OPEN'::character varying
+coursesection,capacity,integer,int4,YES,null
+coursesection,enrolled,integer,int4,YES,null
+coursesection,source_url,text,text,YES,null
+degreerequirement,requirement_id,bigint,int8,NO,null
+degreerequirement,template_id,bigint,int8,NO,null
+degreerequirement,parent_requirement_id,bigint,int8,YES,null
+degreerequirement,requirement_name,character varying,varchar,NO,null
+degreerequirement,requirement_type,character varying,varchar,NO,null
+degreerequirement,minimum_courses,integer,int4,YES,null
+degreerequirement,minimum_credits,numeric,numeric,YES,null
+degreerequirement,minimum_grade,character varying,varchar,YES,null
+degreerequirement,description,text,text,YES,null
+degreerequirement,display_order,integer,int4,NO,0
+degreetemplate,template_id,bigint,int8,NO,null
+degreetemplate,program_id,bigint,int8,NO,null
+degreetemplate,catalog_year_id,bigint,int8,NO,null
+degreetemplate,total_credit_hours,numeric,numeric,YES,null
+degreetemplate,minimum_gpa,numeric,numeric,YES,null
+degreetemplate,active_status,boolean,bool,NO,true
+degreetemplate,source_url,text,text,YES,null
+department,department_id,bigint,int8,NO,null
+department,department_code,character varying,varchar,NO,null
+department,department_name,character varying,varchar,NO,null
+department,active_status,boolean,bool,NO,true
+documentchunk,chunk_id,bigint,int8,NO,null
+documentchunk,document_id,bigint,int8,NO,null
+documentchunk,chunk_index,integer,int4,NO,null
+documentchunk,content,text,text,NO,null
+documentchunk,metadata,jsonb,jsonb,YES,null
+program,program_id,bigint,int8,NO,null
+program,program_name,character varying,varchar,NO,null
+program,program_code,character varying,varchar,NO,null
+program,program_type,character varying,varchar,NO,null
+program,degree_type,character varying,varchar,YES,null
+program,department_id,bigint,int8,YES,null
+program,description,text,text,YES,null
+program,active_status,boolean,bool,NO,true
+requirementattribute,requirement_id,bigint,int8,NO,null
+requirementattribute,attribute_id,bigint,int8,NO,null
+requirementcourse,requirement_course_id,bigint,int8,NO,null
+requirementcourse,requirement_id,bigint,int8,NO,null
+requirementcourse,course_id,bigint,int8,NO,null
+ruleclause,clause_id,bigint,int8,NO,null
+ruleclause,rule_id,bigint,int8,NO,null
+ruleclause,clause_number,integer,int4,NO,null
+ruleclause,condition_text,text,text,YES,null
+rulecourse,rule_course_id,bigint,int8,NO,null
+rulecourse,clause_id,bigint,int8,NO,null
+rulecourse,required_course_id,bigint,int8,NO,null
+rulecourse,minimum_grade,character varying,varchar,YES,null
+rulecourse,concurrent_allowed,boolean,bool,NO,false
+sectionattribute,section_id,bigint,int8,NO,null
+sectionattribute,attribute_id,bigint,int8,NO,null
+sectionmeeting,meeting_id,bigint,int8,NO,null
+sectionmeeting,section_id,bigint,int8,NO,null
+sectionmeeting,day_of_week,smallint,int2,YES,null
+sectionmeeting,start_time,time without time zone,time,YES,null
+sectionmeeting,end_time,time without time zone,time,YES,null
+sectionmeeting,building,character varying,varchar,YES,null
+sectionmeeting,room,character varying,varchar,YES,null
+sectionmeeting,meeting_type,character varying,varchar,YES,'CLASS'::character varying
+sourcedocument,document_id,bigint,int8,NO,null
+sourcedocument,document_title,character varying,varchar,NO,null
+sourcedocument,source_url,text,text,NO,null
+sourcedocument,document_type,character varying,varchar,NO,null
+sourcedocument,catalog_year_id,bigint,int8,YES,null
+sourcedocument,last_checked,timestamp without time zone,timestamp,YES,null
+sourcedocument,content_hash,character varying,varchar,YES,null
+sourcedocument,active_status,boolean,bool,NO,true
+term,term_id,bigint,int8,NO,null
+term,term_name,character varying,varchar,NO,null
+term,term_code,character varying,varchar,NO,null
+term,start_date,date,date,YES,null
+term,end_date,date,date,YES,null
+term,active_status,boolean,bool,NO,true

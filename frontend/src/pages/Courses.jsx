@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient.js";
 import DashboardCard from "../components/DashboardCard.jsx";
 import "../styles/Courses.css";
@@ -10,8 +11,10 @@ function CourseRow({ course }) {
   return (
     <div className="course-result-row">
       <div className="course-result-title">
-        <strong>{course.course_code}</strong>
-        <span>{course.course_title}</span>
+        <Link to={`/courses/${course.course_id}`} state={{ fromCourses: true }}>
+          <strong>{course.course_code}</strong> — {course.course_title}
+          <span className="course-detail-link-label">View details →</span>
+        </Link>
       </div>
 
       <p>{course.description || "No description available."}</p>

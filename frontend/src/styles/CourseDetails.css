@@ -1,0 +1,93 @@
+.course-details-page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 40px 40px;
+  color: #26362c;
+  overflow-wrap: anywhere;
+}
+
+.course-back-link {
+  display: inline-block;
+  margin-bottom: 24px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: #006747;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.course-details-heading h1 {
+  margin: 4px 0 20px;
+  color: #183321;
+  font-size: clamp(1.6rem, 4vw, 2rem);
+}
+
+.course-details-heading > p {
+  color: #006747;
+  font-weight: 700;
+  margin: 0;
+}
+
+.course-details-page > .dashboard-card {
+  margin-top: 20px;
+}
+
+.course-details-page p,
+.course-details-page li {
+  line-height: 1.6;
+}
+
+.course-description {
+  white-space: pre-line;
+}
+
+.course-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin: 0;
+}
+
+.course-facts dt {
+  color: #53665b;
+  font-size: 0.9rem;
+}
+
+.course-facts dd {
+  margin: 5px 0 0;
+  font-weight: 600;
+}
+
+.course-sections {
+  display: grid;
+  gap: 16px;
+}
+
+.course-section {
+  padding: 16px;
+  background: #f0f7f3;
+  border-radius: 8px;
+}
+
+.course-section h3 {
+  margin: 0 0 16px;
+}
+
+.course-meetings {
+  padding-left: 20px;
+}
+
+.course-details-page button:focus-visible {
+  outline: 3px solid #008b2f;
+  outline-offset: 4px;
+}
+
+@media (max-width: 620px) {
+  .course-details-page {
+    padding: 22px 18px 30px;
+  }
+}

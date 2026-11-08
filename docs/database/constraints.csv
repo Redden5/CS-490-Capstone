@@ -1,0 +1,77 @@
+table_name,constraint_name,definition
+attribute,attribute_attribute_name_key,UNIQUE (attribute_name)
+attribute,attribute_pkey,PRIMARY KEY (attribute_id)
+catalogyear,catalogyear_label_unique,UNIQUE (catalog_label)
+catalogyear,catalogyear_pkey,PRIMARY KEY (catalog_year_id)
+catalogyear,catalogyear_valid_years,CHECK ((end_year >= start_year))
+course,course_code_unique,UNIQUE (course_code)
+course,course_department_fkey,FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE SET NULL
+course,course_max_credits_valid,CHECK ((max_credit_hours >= min_credit_hours))
+course,course_min_credits_nonnegative,CHECK ((min_credit_hours >= (0)::numeric))
+course,course_pkey,PRIMARY KEY (course_id)
+course,course_subject_number_unique,"UNIQUE (subject_code, course_number)"
+courseattribute,courseattribute_attribute_id_fkey,FOREIGN KEY (attribute_id) REFERENCES attribute(attribute_id) ON DELETE RESTRICT
+courseattribute,courseattribute_catalog_year_id_fkey,FOREIGN KEY (catalog_year_id) REFERENCES catalogyear(catalog_year_id)
+courseattribute,courseattribute_course_id_fkey,FOREIGN KEY (course_id) REFERENCES course(course_id) ON DELETE CASCADE
+courseattribute,courseattribute_pkey,"PRIMARY KEY (course_id, attribute_id, source_url)"
+courserule,courserule_course_fkey,FOREIGN KEY (course_id) REFERENCES course(course_id) ON DELETE CASCADE
+courserule,courserule_course_type_unique,"UNIQUE (course_id, rule_type)"
+courserule,courserule_pkey,PRIMARY KEY (rule_id)
+courserule,courserule_type_check,"CHECK (((rule_type)::text = ANY ((ARRAY['PREREQUISITE'::character varying, 'COREQUISITE'::character varying])::text[])))"
+coursesection,coursesection_capacity_check,CHECK (((capacity IS NULL) OR (capacity >= 0)))
+coursesection,coursesection_course_fkey,FOREIGN KEY (course_id) REFERENCES course(course_id) ON DELETE CASCADE
+coursesection,coursesection_enrolled_check,CHECK (((enrolled IS NULL) OR (enrolled >= 0)))
+coursesection,coursesection_enrollment_capacity_check,CHECK (((capacity IS NULL) OR (enrolled IS NULL) OR (enrolled <= capacity)))
+coursesection,coursesection_pkey,PRIMARY KEY (section_id)
+coursesection,coursesection_term_crn_unique,"UNIQUE (term_id, crn)"
+coursesection,coursesection_term_fkey,FOREIGN KEY (term_id) REFERENCES term(term_id) ON DELETE CASCADE
+degreerequirement,degreerequirement_minimum_courses_check,CHECK (((minimum_courses IS NULL) OR (minimum_courses > 0)))
+degreerequirement,degreerequirement_minimum_credits_check,CHECK (((minimum_credits IS NULL) OR (minimum_credits > (0)::numeric)))
+degreerequirement,degreerequirement_parent_fkey,FOREIGN KEY (parent_requirement_id) REFERENCES degreerequirement(requirement_id) ON DELETE CASCADE
+degreerequirement,degreerequirement_pkey,PRIMARY KEY (requirement_id)
+degreerequirement,degreerequirement_template_fkey,FOREIGN KEY (template_id) REFERENCES degreetemplate(template_id) ON DELETE CASCADE
+degreerequirement,degreerequirement_type_check,"CHECK (((requirement_type)::text = ANY ((ARRAY['ALL'::character varying, 'CHOOSE_N'::character varying, 'MIN_CREDITS'::character varying])::text[])))"
+degreerequirement,degreerequirement_type_values_check,CHECK ((((requirement_type)::text = 'ALL'::text) OR (((requirement_type)::text = 'CHOOSE_N'::text) AND (minimum_courses IS NOT NULL)) OR (((requirement_type)::text = 'MIN_CREDITS'::text) AND (minimum_credits IS NOT NULL))))
+degreetemplate,degreetemplate_catalog_year_fkey,FOREIGN KEY (catalog_year_id) REFERENCES catalogyear(catalog_year_id) ON DELETE RESTRICT
+degreetemplate,degreetemplate_pkey,PRIMARY KEY (template_id)
+degreetemplate,degreetemplate_positive_credits,CHECK (((total_credit_hours IS NULL) OR (total_credit_hours > (0)::numeric)))
+degreetemplate,degreetemplate_program_catalog_unique,"UNIQUE (program_id, catalog_year_id)"
+degreetemplate,degreetemplate_program_fkey,FOREIGN KEY (program_id) REFERENCES program(program_id) ON DELETE CASCADE
+degreetemplate,degreetemplate_valid_gpa,CHECK (((minimum_gpa IS NULL) OR ((minimum_gpa >= 0.00) AND (minimum_gpa <= 4.00))))
+department,department_code_unique,UNIQUE (department_code)
+department,department_pkey,PRIMARY KEY (department_id)
+documentchunk,documentchunk_document_fkey,FOREIGN KEY (document_id) REFERENCES sourcedocument(document_id) ON DELETE CASCADE
+documentchunk,documentchunk_index_check,CHECK ((chunk_index >= 0))
+documentchunk,documentchunk_pkey,PRIMARY KEY (chunk_id)
+documentchunk,documentchunk_unique,"UNIQUE (document_id, chunk_index)"
+program,program_code_unique,UNIQUE (program_code)
+program,program_department_fkey,FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE SET NULL
+program,program_pkey,PRIMARY KEY (program_id)
+requirementattribute,requirementattribute_attribute_fkey,FOREIGN KEY (attribute_id) REFERENCES attribute(attribute_id) ON DELETE RESTRICT
+requirementattribute,requirementattribute_pkey,"PRIMARY KEY (requirement_id, attribute_id)"
+requirementattribute,requirementattribute_requirement_fkey,FOREIGN KEY (requirement_id) REFERENCES degreerequirement(requirement_id) ON DELETE CASCADE
+requirementcourse,requirementcourse_course_fkey,FOREIGN KEY (course_id) REFERENCES course(course_id) ON DELETE CASCADE
+requirementcourse,requirementcourse_pkey,PRIMARY KEY (requirement_course_id)
+requirementcourse,requirementcourse_requirement_fkey,FOREIGN KEY (requirement_id) REFERENCES degreerequirement(requirement_id) ON DELETE CASCADE
+requirementcourse,requirementcourse_unique,"UNIQUE (requirement_id, course_id)"
+ruleclause,ruleclause_number_positive,CHECK ((clause_number > 0))
+ruleclause,ruleclause_pkey,PRIMARY KEY (clause_id)
+ruleclause,ruleclause_rule_fkey,FOREIGN KEY (rule_id) REFERENCES courserule(rule_id) ON DELETE CASCADE
+ruleclause,ruleclause_unique,"UNIQUE (rule_id, clause_number)"
+rulecourse,rulecourse_clause_fkey,FOREIGN KEY (clause_id) REFERENCES ruleclause(clause_id) ON DELETE CASCADE
+rulecourse,rulecourse_pkey,PRIMARY KEY (rule_course_id)
+rulecourse,rulecourse_required_course_fkey,FOREIGN KEY (required_course_id) REFERENCES course(course_id) ON DELETE CASCADE
+rulecourse,rulecourse_unique,"UNIQUE (clause_id, required_course_id)"
+sectionattribute,sectionattribute_attribute_fkey,FOREIGN KEY (attribute_id) REFERENCES attribute(attribute_id) ON DELETE CASCADE
+sectionattribute,sectionattribute_pkey,"PRIMARY KEY (section_id, attribute_id)"
+sectionattribute,sectionattribute_section_fkey,FOREIGN KEY (section_id) REFERENCES coursesection(section_id) ON DELETE CASCADE
+sectionmeeting,sectionmeeting_day_check,CHECK (((day_of_week IS NULL) OR ((day_of_week >= 1) AND (day_of_week <= 7))))
+sectionmeeting,sectionmeeting_pkey,PRIMARY KEY (meeting_id)
+sectionmeeting,sectionmeeting_section_fkey,FOREIGN KEY (section_id) REFERENCES coursesection(section_id) ON DELETE CASCADE
+sectionmeeting,sectionmeeting_time_check,CHECK (((start_time IS NULL) OR (end_time IS NULL) OR (end_time > start_time)))
+sourcedocument,sourcedocument_catalog_year_fkey,FOREIGN KEY (catalog_year_id) REFERENCES catalogyear(catalog_year_id) ON DELETE SET NULL
+sourcedocument,sourcedocument_pkey,PRIMARY KEY (document_id)
+sourcedocument,sourcedocument_url_unique,UNIQUE (source_url)
+term,term_code_unique,UNIQUE (term_code)
+term,term_pkey,PRIMARY KEY (term_id)
+term,term_valid_dates,CHECK (((start_date IS NULL) OR (end_date IS NULL) OR (end_date >= start_date)))
