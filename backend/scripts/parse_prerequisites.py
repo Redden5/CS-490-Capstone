@@ -30,7 +30,7 @@ from pathlib import Path
 from typing import Any
 
 
-COURSE_CODE_PATTERN = r"[A-Z][A-Z0-9&]{1,7}\s+\d{2,4}[A-Z0-9]?(?:-[A-Z0-9]+)?"
+COURSE_CODE_PATTERN = r"[A-Z][A-Z0-9&]{1,7}\s+\d{2,4}[A-Z0-9]*(?:-[A-Z0-9]+)?"
 LEXER = re.compile(
     rf"(?P<CONCURRENT>\(\s*may\s+be\s+taken\s+concurrently\s*\))"
     rf"|(?P<GRADE>\bwith\s+a\s+minimum\s+grade\s+of\s+[ABCDF][+-]?(?=\s|[).,;]|$))"
