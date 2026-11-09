@@ -19,8 +19,11 @@ import json
 import re
 import sys
 from collections import Counter
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
+
+from backend.services.prerequisite_evaluator import EvaluationInputError, _code as prerequisite_course_code
 
 COURSE_CODE_RE = re.compile(r"^([A-Z]{2,8})\s*([0-9]{1,4}[A-Z]?)$")
 SOURCE_RULE_KINDS = {"REQUIRED_COURSE", "CHOOSE_N", "CREDIT_REQUIREMENT_DRAFT"}
@@ -36,13 +39,18 @@ def canonical_course_code(raw: str) -> str:
         raise PreviewError(f"Expected a course-code string; got {raw!r}")
     match = COURSE_CODE_RE.fullmatch(raw.strip().upper())
     if not match:
-        raise PreviewError(f"Not an explicit course code: {raw!r}")
+        # Add parser-supported catalog suffixes/hyphens without removing any
+        # identity component or rejecting codes accepted by the legacy audit.
+        try:
+            return prerequisite_course_code(raw)
+        except EvaluationInputError as error:
+            raise PreviewError(f"Not an explicit course code: {raw!r}") from error
     return f"{match.group(1)} {match.group(2)}"
 
 
-def read_completed_courses(value: str | None, file_path: Path | None) -> list[str]:
-    """Accept comma-separated codes and/or a JSON list of exact codes."""
-    codes: list[str] = []
+def read_completed_coursework(value: str | None, file_path: Path | None) -> list[str | dict[str, Any]]:
+    """Preserve student attempts and optional grades; do not choose a repeat policy."""
+    codes: list = []
     if value:
         codes.extend(chunk.strip() for chunk in value.split(",") if chunk.strip())
     if file_path:
@@ -55,7 +63,36 @@ def read_completed_courses(value: str | None, file_path: Path | None) -> list[st
         if not isinstance(raw, list):
             raise PreviewError("Completed-course JSON must be a list or {'completed_courses': [...]}.")
         codes.extend(raw)
-    return sorted(set(canonical_course_code(code) for code in codes))
+    records = []
+    for entry in codes:
+        if isinstance(entry, str):
+            records.append(canonical_course_code(entry))
+        elif isinstance(entry, dict):
+            if set(entry) - {"course_code", "grade", "equivalency_verified"}:
+                raise PreviewError("Unsupported completed-course record fields")
+            code = canonical_course_code(entry.get("course_code"))
+            grade = entry.get("grade")
+            if grade is not None and not isinstance(grade, str):
+                raise PreviewError("Reported grade must be a string or null")
+            if "equivalency_verified" in entry and not isinstance(entry["equivalency_verified"], bool):
+                raise PreviewError("equivalency_verified must be boolean")
+            record = {**entry, "course_code": code}
+            if "grade" in entry:
+                record["grade"] = grade.strip().upper() if grade is not None else None
+            records.append(record)
+        else:
+            raise PreviewError("Each completed-course entry must be a code or record")
+    return records
+
+
+def coursework_codes(records: list[str | dict[str, Any]]) -> list[str]:
+    """Code-only projection for the unchanged degree-progress calculations."""
+    return sorted({entry if isinstance(entry, str) else entry["course_code"] for entry in records})
+
+
+def read_completed_courses(value: str | None, file_path: Path | None) -> list[str]:
+    """Backward-compatible code-only reader; richer evidence has a separate path."""
+    return coursework_codes(read_completed_coursework(value, file_path))
 
 
 
@@ -1361,11 +1398,114 @@ def _handoff_credit_progress(
     }
 
 
+PREREQUISITE_SCOPE_WARNING = (
+    "Grades affect prerequisite evidence only. The legacy degree preview still counts entered "
+    "course codes, including reported failures; this does not establish graduation credit."
+)
+
+
+def _create_prerequisite_client():
+    """Opt-in CLI boundary; the service never loads credentials or creates clients."""
+    from dotenv import load_dotenv
+    from backend.scripts.prerequisite_supabase import create_api_client
+
+    load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env", override=False)
+    return create_api_client()
+
+
+def fetch_planning_eligibility(handoff: dict[str, Any], coursework: list) -> dict[str, Any]:
+    """Read-only optional evidence. Expected availability failures keep the audit usable."""
+    from backend.services.planning_eligibility import (
+        evaluate_candidate_prerequisites, unavailable_candidate_prerequisites,
+        validate_candidate_evidence,
+    )
+
+    codes = [c["course_code"] for c in handoff["course_eligibility"]["courses"]]
+    year = handoff["degree"]["catalog_year"]
+    # Do not hide malformed input behind missing credentials/source artifacts.
+    validate_candidate_evidence(codes, coursework, catalog_year=year)
+    if not codes:
+        return evaluate_candidate_prerequisites(None, codes, coursework, catalog_year=year)
+    source_dir = Path(__file__).resolve().parent
+    try:
+        catalog = (source_dir / "courses.csv").read_bytes()
+        prerequisites = (source_dir / "catalog_prerequisites.csv").read_bytes()
+    except OSError:
+        return unavailable_candidate_prerequisites(
+            codes, coursework, catalog_year=year, reason="SOURCE_ARTIFACTS_UNAVAILABLE",
+        )
+    try:
+        client = _create_prerequisite_client()
+    except ImportError:
+        return unavailable_candidate_prerequisites(
+            codes, coursework, catalog_year=year, reason="PREREQUISITE_DEPENDENCIES_UNAVAILABLE",
+        )
+    except (OSError, ValueError, RuntimeError):
+        # Client factory errors are deliberately sanitized. Never serialize SDK
+        # exception messages or environment values into reports or console output.
+        return unavailable_candidate_prerequisites(
+            codes, coursework, catalog_year=year, reason="PREREQUISITE_CLIENT_UNAVAILABLE",
+        )
+    return evaluate_candidate_prerequisites(
+        client, codes, coursework, catalog_year=year,
+        source_catalog_csv=catalog, source_prerequisite_csv=prerequisites,
+    )
+
+
+def apply_prerequisite_results(handoff: dict[str, Any], results: dict[str, Any]) -> dict[str, Any]:
+    """Enrich a finalized v1 projection without changing degree-progress fields."""
+    expected = {c["course_code"] for c in handoff["course_eligibility"]["courses"]}
+    actual = {c["course_code"] for c in results["courses"]}
+    if (expected != actual or len(actual) != len(results["courses"])
+            or results["catalog_year"] != handoff["degree"]["catalog_year"]):
+        raise ValueError("Prerequisite results do not match the handoff candidates/year")
+    output = deepcopy(handoff)
+    output["schema_version"] = "2.0.0"
+    output["course_eligibility"] = deepcopy(results)
+    output["course_eligibility"]["candidate_scope"] = "EXPLICIT_DEGREE_REQUIREMENT_COURSES"
+    by_code = {c["course_code"]: c for c in results["courses"]}
+    entered = set(handoff["completed_course_codes_entered"])
+    for requirement in output["requirements"]:
+        candidates = set()
+        if requirement["kind"] == "REQUIRED_COURSE":
+            candidates.update(requirement.get("remaining_required_course_codes", []))
+        elif requirement["kind"] == "CHOOSE_N" and requirement["planning_disposition"] != "CANDIDATE_COMPLETE":
+            for option in requirement.get("course_options", []):
+                if not option["fully_entered"]:
+                    candidates.update(option["missing_codes_to_complete_option"])
+        candidates -= entered
+        complete = bool(candidates) and all(by_code[c]["loading"]["data_complete"] for c in candidates)
+        requirement["prerequisites_evaluated"] = complete
+        if candidates:
+            status = "COMPLETED" if complete else (
+                "UNAVAILABLE" if results["evaluation_status"] == "UNAVAILABLE" else "INCOMPLETE"
+            )
+        elif (requirement["kind"] == "CREDIT_REQUIREMENT_DRAFT"
+              and requirement["planning_disposition"] != "CANDIDATE_COMPLETE"
+              and requirement.get("attribute_filter", {}).get("attribute_names")
+              and not requirement["attribute_filter"].get("eligible_catalog_course_options_included", False)):
+            status = "CANDIDATES_NOT_ENUMERATED"
+        else:
+            status = "NOT_APPLICABLE"
+        requirement["prerequisite_evaluation_status"] = status
+    output["warnings"].extend([
+        PREREQUISITE_SCOPE_WARNING,
+        "Prerequisite MET is student-reported rule evidence, not registration approval. "
+        "missing_courses includes unused alternatives and must not be treated as mandatory coursework.",
+    ])
+    if results["evaluation_status"] in ("PARTIAL", "UNAVAILABLE"):
+        output["warnings"].append(
+            "Prerequisite evaluation is " + results["evaluation_status"]
+            + "; affected courses remain UNKNOWN. Inspect course_eligibility loading diagnostics."
+        )
+    return output
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, required=True, help="Resolved requirements JSON")
     parser.add_argument("--completed", help="Comma-separated course codes, e.g. 'CS 110,MTH 229'")
-    parser.add_argument("--completed-file", type=Path, help="JSON list of completed course codes")
+    parser.add_argument("--completed-file", type=Path, help="JSON list of course codes or {course_code, grade?} records")
     parser.add_argument(
         "--reported-credits",
         help='Student-reported credits for variable-credit courses, e.g. "CS 475=6"; requires --supabase-attributes',
@@ -1377,6 +1517,10 @@ def main() -> int:
     )
     parser.add_argument("--output", type=Path, help="Optional JSON preview report path")
     parser.add_argument(
+        "--evaluate-prerequisites", action="store_true",
+        help="Read catalog-year prerequisites for explicit candidates; emit evidence-only v2 planning output",
+    )
+    parser.add_argument(
         "--planning-output", type=Path,
         help="Optional preliminary JSON input contract for the schedule generator",
     )
@@ -1384,7 +1528,11 @@ def main() -> int:
     try:
         draft = load_json(args.input)
         core_ii_listing = load_json(args.core_ii_json) if args.core_ii_json else None
-        completed = read_completed_courses(args.completed, args.completed_file)
+        coursework = read_completed_coursework(args.completed, args.completed_file)
+        completed = coursework_codes(coursework)
+        if args.evaluate_prerequisites:
+            from backend.services.planning_eligibility import validate_candidate_evidence
+            validate_candidate_evidence([], coursework, catalog_year=draft.get("catalog_year"))
         reported_credits = parse_reported_credits(args.reported_credits)
         if reported_credits and not args.supabase_attributes:
             raise PreviewError("--reported-credits requires --supabase-attributes")
@@ -1395,8 +1543,14 @@ def main() -> int:
             if args.supabase_attributes else None
         )
         preview = evaluate_preview(draft, completed, core_ii_listing, evidence)
-        if args.planning_output:
+        if args.planning_output or args.evaluate_prerequisites:
             planning = build_planning_handoff(preview)
+            if args.evaluate_prerequisites:
+                original_warning_count = len(planning["warnings"])
+                planning = apply_prerequisite_results(planning, fetch_planning_eligibility(planning, coursework))
+                preview["course_eligibility"] = deepcopy(planning["course_eligibility"])
+                preview["warnings"].extend(planning["warnings"][original_warning_count:])
+        if args.planning_output:
             args.planning_output.parent.mkdir(parents=True, exist_ok=True)
             args.planning_output.write_text(
                 json.dumps(planning, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
@@ -1404,12 +1558,19 @@ def main() -> int:
         if args.output:
             args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_text(json.dumps(preview, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    except (PreviewError, OSError) as error:
+    except (PreviewError, EvaluationInputError, OSError) as error:
         print(f"ERROR: {error}", file=sys.stderr)
         return 1
     summary = preview["summary"]
     print(f"UNOFFICIAL DEGREE AUDIT PREVIEW — {preview['program_title']} ({preview['catalog_year']})")
     print(f"Completed course codes entered: {len(preview['completed_course_codes_entered'])}")
+    if args.evaluate_prerequisites:
+        eligibility = preview["course_eligibility"]
+        print(f"Prerequisite evidence: {eligibility['evaluation_status']} — "
+              + ", ".join(f"{state}: {count}" for state, count in eligibility["summary"].items()))
+        print(PREREQUISITE_SCOPE_WARNING)
+        if eligibility["evaluation_status"] in ("PARTIAL", "UNAVAILABLE"):
+            print("WARNING: Prerequisite evidence is incomplete or unavailable; affected courses remain UNKNOWN.")
     print(f"Required-course rule occurrences matched: {summary['ready_required_course_occurrences_matched']}")
     print(f"Required-course rule occurrences not entered: {summary['ready_required_course_occurrences_not_entered']}")
     print(f"Distinct explicitly required courses entered: {summary['unique_explicit_required_courses_entered']}/{summary['unique_explicit_required_courses']}")
