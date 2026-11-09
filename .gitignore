@@ -151,6 +151,7 @@ venv/
 .env
 __pycache__/
 *.pyc
+.test-deps/
 
 # Node dependencies
 node_modules/

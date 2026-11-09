@@ -1,0 +1,1464 @@
+{
+  "stage": "reviewable_prerequisite_parse_not_approved_for_seeding",
+  "generated_at_utc": "2026-10-15T04:51:51.811850+00:00",
+  "approved_for_seeding": false,
+  "logic_convention_for_future_relational_seeding": {
+    "across_ruleclause_rows": "OR",
+    "within_rulecourse_rows": "AND",
+    "note": "Convention proposal only; no records are inserted by this script."
+  },
+  "summary": {
+    "courses_with_enrollment_metadata": 30,
+    "raw_metadata_rows": 37,
+    "parseable_prerequisite_expressions": 27,
+    "ready_for_seed_review": 26,
+    "needs_review": 4,
+    "corroborated_concurrent_pr_courses": 6
+  },
+  "courses": [
+    {
+      "course_code": "CS 105",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "ACT Math with a score of 17 or SAT Verbal Before March 16 with a score of 400 or SAT MATH SECTION SCORE with a score of 440 or Placement Math After SP17 with a score of 101 or MTH 102 with a minimum grade of C or MTH 102B with a minimum grade of C or MTH 127 with a minimum grade of C or MTH 130 with a minimum grade of C or MTH 132 with a minimum grade of C or MTH 229 with a minimum grade of C or MTH 229H with a minimum grade of C.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "OR",
+        "children": [
+          {
+            "op": "UNSUPPORTED",
+            "raw_text": "ACT Math with a score of 17"
+          },
+          {
+            "op": "UNSUPPORTED",
+            "raw_text": "SAT Verbal Before March 16 with a score of 400"
+          },
+          {
+            "op": "UNSUPPORTED",
+            "raw_text": "SAT MATH SECTION SCORE with a score of 440"
+          },
+          {
+            "op": "UNSUPPORTED",
+            "raw_text": "Placement Math After SP17 with a score of 101"
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 102",
+            "minimum_grade": "C",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 102B",
+            "minimum_grade": "C",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 127",
+            "minimum_grade": "C",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 130",
+            "minimum_grade": "C",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 132",
+            "minimum_grade": "C",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 229",
+            "minimum_grade": "C",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 229H",
+            "minimum_grade": "C",
+            "concurrent_allowed": false
+          }
+        ]
+      },
+      "dnf_clauses": [],
+      "prerequisite_expression_machine_checkable": false,
+      "complete_enrollment_conditions_machine_checkable": false,
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "non_course_or_unrecognized_conditions"
+      ]
+    },
+    {
+      "course_code": "CS 110",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "ACT Math with a score of 24 or SAT Mathematics Before Mar. 16 with a score of 560 or SAT MATH SECTION SCORE with a score of 580 or MTH 127 or MTH 130 and MTH 132 (may be taken concurrently) or MTH 229 (may be taken concurrently) or MTH 229H (may be taken concurrently).",
+      "additional_metadata": [
+        {
+          "field_label": "concurrent pr",
+          "requirement_text": "MTH 132 or MTH 229 or MTH 229H"
+        }
+      ],
+      "additional_metadata_checks": [
+        {
+          "field_label": "concurrent pr",
+          "requirement_text": "MTH 132 or MTH 229 or MTH 229H",
+          "status": "CORROBORATES_INLINE_CONCURRENCY",
+          "listed_course_codes": [
+            "MTH 132",
+            "MTH 229",
+            "MTH 229H"
+          ],
+          "inline_concurrent_course_codes": [
+            "MTH 132",
+            "MTH 229",
+            "MTH 229H"
+          ],
+          "note": "No new conditions inferred: metadata course codes exactly match the primary expression's concurrency annotations"
+        }
+      ],
+      "prerequisite_expression": {
+        "op": "OR",
+        "children": [
+          {
+            "op": "UNSUPPORTED",
+            "raw_text": "ACT Math with a score of 24"
+          },
+          {
+            "op": "UNSUPPORTED",
+            "raw_text": "SAT Mathematics Before Mar. 16 with a score of 560"
+          },
+          {
+            "op": "UNSUPPORTED",
+            "raw_text": "SAT MATH SECTION SCORE with a score of 580"
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 127",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "AND",
+            "children": [
+              {
+                "op": "COURSE",
+                "course_code": "MTH 130",
+                "minimum_grade": null,
+                "concurrent_allowed": false
+              },
+              {
+                "op": "COURSE",
+                "course_code": "MTH 132",
+                "minimum_grade": null,
+                "concurrent_allowed": true
+              }
+            ]
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 229",
+            "minimum_grade": null,
+            "concurrent_allowed": true
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 229H",
+            "minimum_grade": null,
+            "concurrent_allowed": true
+          }
+        ]
+      },
+      "dnf_clauses": [],
+      "prerequisite_expression_machine_checkable": false,
+      "complete_enrollment_conditions_machine_checkable": false,
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "non_course_or_unrecognized_conditions"
+      ]
+    },
+    {
+      "course_code": "CS 110H",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "ACT Math with a score of 24 or SAT Mathematics Before Mar. 16 with a score of 560 or SAT MATH SECTION SCORE with a score of 580 or MTH 127 or MTH 130 and MTH 132 (may be taken concurrently) or MTH 129 (may be taken concurrently) or MTH 129H (may be taken concurrently).",
+      "additional_metadata": [
+        {
+          "field_label": "concurrent pr",
+          "requirement_text": "MTH 132 or MTH 129 or MTH 129H"
+        }
+      ],
+      "additional_metadata_checks": [
+        {
+          "field_label": "concurrent pr",
+          "requirement_text": "MTH 132 or MTH 129 or MTH 129H",
+          "status": "CORROBORATES_INLINE_CONCURRENCY",
+          "listed_course_codes": [
+            "MTH 129",
+            "MTH 129H",
+            "MTH 132"
+          ],
+          "inline_concurrent_course_codes": [
+            "MTH 129",
+            "MTH 129H",
+            "MTH 132"
+          ],
+          "note": "No new conditions inferred: metadata course codes exactly match the primary expression's concurrency annotations"
+        }
+      ],
+      "prerequisite_expression": {
+        "op": "OR",
+        "children": [
+          {
+            "op": "UNSUPPORTED",
+            "raw_text": "ACT Math with a score of 24"
+          },
+          {
+            "op": "UNSUPPORTED",
+            "raw_text": "SAT Mathematics Before Mar. 16 with a score of 560"
+          },
+          {
+            "op": "UNSUPPORTED",
+            "raw_text": "SAT MATH SECTION SCORE with a score of 580"
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 127",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "AND",
+            "children": [
+              {
+                "op": "COURSE",
+                "course_code": "MTH 130",
+                "minimum_grade": null,
+                "concurrent_allowed": false
+              },
+              {
+                "op": "COURSE",
+                "course_code": "MTH 132",
+                "minimum_grade": null,
+                "concurrent_allowed": true
+              }
+            ]
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 129",
+            "minimum_grade": null,
+            "concurrent_allowed": true
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 129H",
+            "minimum_grade": null,
+            "concurrent_allowed": true
+          }
+        ]
+      },
+      "dnf_clauses": [],
+      "prerequisite_expression_machine_checkable": false,
+      "complete_enrollment_conditions_machine_checkable": false,
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "non_course_or_unrecognized_conditions"
+      ]
+    },
+    {
+      "course_code": "CS 120",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 110 with a minimum grade of D or CS 110H with a minimum grade of D.",
+      "additional_metadata": [
+        {
+          "field_label": "cr/pr",
+          "requirement_text": "CS 110"
+        }
+      ],
+      "additional_metadata_checks": [
+        {
+          "field_label": "cr/pr",
+          "requirement_text": "CS 110",
+          "status": "NEEDS_REVIEW",
+          "reason": "CR/PR is not assumed equivalent to an ordinary prerequisite or to the '(may be taken concurrently)' annotation"
+        }
+      ],
+      "prerequisite_expression": {
+        "op": "OR",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 110",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "CS 110H",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 110",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ],
+        [
+          {
+            "course_code": "CS 110H",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": false,
+      "status": "NEEDS_REVIEW",
+      "review_flags": [
+        "cr_pr_semantics_not_interpreted"
+      ]
+    },
+    {
+      "course_code": "CS 205",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "MTH 140 or MTH 229 (may be taken concurrently) or MTH 229H (may be taken concurrently).",
+      "additional_metadata": [
+        {
+          "field_label": "concurrent pr",
+          "requirement_text": "MTH 229 or MTH 229H"
+        }
+      ],
+      "additional_metadata_checks": [
+        {
+          "field_label": "concurrent pr",
+          "requirement_text": "MTH 229 or MTH 229H",
+          "status": "CORROBORATES_INLINE_CONCURRENCY",
+          "listed_course_codes": [
+            "MTH 229",
+            "MTH 229H"
+          ],
+          "inline_concurrent_course_codes": [
+            "MTH 229",
+            "MTH 229H"
+          ],
+          "note": "No new conditions inferred: metadata course codes exactly match the primary expression's concurrency annotations"
+        }
+      ],
+      "prerequisite_expression": {
+        "op": "OR",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "MTH 140",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 229",
+            "minimum_grade": null,
+            "concurrent_allowed": true
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 229H",
+            "minimum_grade": null,
+            "concurrent_allowed": true
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "MTH 140",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ],
+        [
+          {
+            "course_code": "MTH 229",
+            "minimum_grade": null,
+            "concurrent_allowed": true
+          }
+        ],
+        [
+          {
+            "course_code": "MTH 229H",
+            "minimum_grade": null,
+            "concurrent_allowed": true
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 210",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 120 with a minimum grade of D and MTH 220 (may be taken concurrently) with a minimum grade of D.",
+      "additional_metadata": [
+        {
+          "field_label": "concurrent pr",
+          "requirement_text": "MTH 220"
+        }
+      ],
+      "additional_metadata_checks": [
+        {
+          "field_label": "concurrent pr",
+          "requirement_text": "MTH 220",
+          "status": "CORROBORATES_INLINE_CONCURRENCY",
+          "listed_course_codes": [
+            "MTH 220"
+          ],
+          "inline_concurrent_course_codes": [
+            "MTH 220"
+          ],
+          "note": "No new conditions inferred: metadata course codes exactly match the primary expression's concurrency annotations"
+        }
+      ],
+      "prerequisite_expression": {
+        "op": "AND",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 120",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 220",
+            "minimum_grade": "D",
+            "concurrent_allowed": true
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 120",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "MTH 220",
+            "minimum_grade": "D",
+            "concurrent_allowed": true
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 215",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 210 with a minimum grade of D and ( MTH 229 with a minimum grade of D or MTH 229H with a minimum grade of D) and MTH 220 (may be taken concurrently) with a minimum grade of D.",
+      "additional_metadata": [
+        {
+          "field_label": "concurrent pr",
+          "requirement_text": "MTH 220"
+        }
+      ],
+      "additional_metadata_checks": [
+        {
+          "field_label": "concurrent pr",
+          "requirement_text": "MTH 220",
+          "status": "CORROBORATES_INLINE_CONCURRENCY",
+          "listed_course_codes": [
+            "MTH 220"
+          ],
+          "inline_concurrent_course_codes": [
+            "MTH 220"
+          ],
+          "note": "No new conditions inferred: metadata course codes exactly match the primary expression's concurrency annotations"
+        }
+      ],
+      "prerequisite_expression": {
+        "op": "AND",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 210",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "OR",
+            "children": [
+              {
+                "op": "COURSE",
+                "course_code": "MTH 229",
+                "minimum_grade": "D",
+                "concurrent_allowed": false
+              },
+              {
+                "op": "COURSE",
+                "course_code": "MTH 229H",
+                "minimum_grade": "D",
+                "concurrent_allowed": false
+              }
+            ]
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 220",
+            "minimum_grade": "D",
+            "concurrent_allowed": true
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 210",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "MTH 220",
+            "minimum_grade": "D",
+            "concurrent_allowed": true
+          },
+          {
+            "course_code": "MTH 229",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ],
+        [
+          {
+            "course_code": "CS 210",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "MTH 220",
+            "minimum_grade": "D",
+            "concurrent_allowed": true
+          },
+          {
+            "course_code": "MTH 229H",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 300",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 210 with a minimum grade of D.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "COURSE",
+        "course_code": "CS 210",
+        "minimum_grade": "D",
+        "concurrent_allowed": false
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 210",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 305",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "MTH 220 and CS 210 and ENG 354 (may be taken concurrently).",
+      "additional_metadata": [
+        {
+          "field_label": "concurrent pr",
+          "requirement_text": "ENG 354"
+        }
+      ],
+      "additional_metadata_checks": [
+        {
+          "field_label": "concurrent pr",
+          "requirement_text": "ENG 354",
+          "status": "CORROBORATES_INLINE_CONCURRENCY",
+          "listed_course_codes": [
+            "ENG 354"
+          ],
+          "inline_concurrent_course_codes": [
+            "ENG 354"
+          ],
+          "note": "No new conditions inferred: metadata course codes exactly match the primary expression's concurrency annotations"
+        }
+      ],
+      "prerequisite_expression": {
+        "op": "AND",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "MTH 220",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "CS 210",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "ENG 354",
+            "minimum_grade": null,
+            "concurrent_allowed": true
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 210",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "ENG 354",
+            "minimum_grade": null,
+            "concurrent_allowed": true
+          },
+          {
+            "course_code": "MTH 220",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 310",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 305 with a minimum grade of D.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "COURSE",
+        "course_code": "CS 305",
+        "minimum_grade": "D",
+        "concurrent_allowed": false
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 305",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 315",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 310 and MTH 345.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "AND",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 310",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 345",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 310",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "MTH 345",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 320",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 210 and ( MTH 229 or MTH 229H ).",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "AND",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 210",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "OR",
+            "children": [
+              {
+                "op": "COURSE",
+                "course_code": "MTH 229",
+                "minimum_grade": null,
+                "concurrent_allowed": false
+              },
+              {
+                "op": "COURSE",
+                "course_code": "MTH 229H",
+                "minimum_grade": null,
+                "concurrent_allowed": false
+              }
+            ]
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 210",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "MTH 229",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ],
+        [
+          {
+            "course_code": "CS 210",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "MTH 229H",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 330",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 210 .",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "COURSE",
+        "course_code": "CS 210",
+        "minimum_grade": null,
+        "concurrent_allowed": false
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 210",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 351",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "ENGR 217 with a minimum grade of D.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "COURSE",
+        "course_code": "ENGR 217",
+        "minimum_grade": "D",
+        "concurrent_allowed": false
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "ENGR 217",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 360",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "MTH 220 and CS 210 .",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "AND",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "MTH 220",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "CS 210",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 210",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "MTH 220",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 370",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 210 with a minimum grade of D.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "COURSE",
+        "course_code": "CS 210",
+        "minimum_grade": "D",
+        "concurrent_allowed": false
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 210",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 402",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 300 with a minimum grade of D.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "COURSE",
+        "course_code": "CS 300",
+        "minimum_grade": "D",
+        "concurrent_allowed": false
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 300",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 404",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 402 .",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "COURSE",
+        "course_code": "CS 402",
+        "minimum_grade": null,
+        "concurrent_allowed": false
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 402",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 405",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 215 .",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "COURSE",
+        "course_code": "CS 215",
+        "minimum_grade": null,
+        "concurrent_allowed": false
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 215",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 410",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 210 with a minimum grade of D.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "COURSE",
+        "course_code": "CS 210",
+        "minimum_grade": "D",
+        "concurrent_allowed": false
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 210",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 412",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 402 with a minimum grade of D or EE 340 with a minimum grade of D.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "OR",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 402",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "EE 340",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 402",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ],
+        [
+          {
+            "course_code": "EE 340",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 415",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 215 and CS 410 .",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "AND",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 215",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "CS 410",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 215",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "CS 410",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 425",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 300 .",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "COURSE",
+        "course_code": "CS 300",
+        "minimum_grade": null,
+        "concurrent_allowed": false
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 300",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 430",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 320 with a minimum grade of D.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "COURSE",
+        "course_code": "CS 320",
+        "minimum_grade": "D",
+        "concurrent_allowed": false
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 320",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 435",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 430 with a minimum grade of D or CS 340 with a minimum grade of D.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "OR",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 430",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "CS 340",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 430",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ],
+        [
+          {
+            "course_code": "CS 340",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 440",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 210 and MTH 329 .",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "AND",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 210",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 329",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 210",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "MTH 329",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 452",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "( CS 215 and MTH 220 ).",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "AND",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 215",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "MTH 220",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 215",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "MTH 220",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 455",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 330 and CS 340 and CS 350.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "AND",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 330",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "CS 340",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "CS 350",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 330",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "CS 340",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "CS 350",
+            "minimum_grade": null,
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 475",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 300 with a minimum grade of D or CS 215 with a minimum grade of D.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "OR",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 300",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "CS 215",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 300",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ],
+        [
+          {
+            "course_code": "CS 215",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    },
+    {
+      "course_code": "CS 490",
+      "catalog_year": "2026-2027",
+      "source_url": "https://catalog.marshall.edu/undergraduate/courses-az/cs/",
+      "prerequisite_raw_text": "CS 310 with a minimum grade of D and CS 410 with a minimum grade of D.",
+      "additional_metadata": [],
+      "additional_metadata_checks": [],
+      "prerequisite_expression": {
+        "op": "AND",
+        "children": [
+          {
+            "op": "COURSE",
+            "course_code": "CS 310",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          },
+          {
+            "op": "COURSE",
+            "course_code": "CS 410",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      },
+      "dnf_clauses": [
+        [
+          {
+            "course_code": "CS 310",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          },
+          {
+            "course_code": "CS 410",
+            "minimum_grade": "D",
+            "concurrent_allowed": false
+          }
+        ]
+      ],
+      "prerequisite_expression_machine_checkable": true,
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
+    }
+  ],
+  "warnings": [
+    "This is a parser preview, not an official eligibility decision.",
+    "Matching Concurrent PR metadata only corroborates primary-expression concurrency annotations.",
+    "CR/PR, external tests, or unmatched additional metadata remain unresolved.",
+    "No prerequisite record does not mean a course has no enrollment restrictions.",
+    "Minimum grade, concurrent enrollment, and external test scores require appropriate student input.",
+    "No Supabase writes were performed."
+  ]
+}

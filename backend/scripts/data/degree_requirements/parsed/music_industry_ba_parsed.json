@@ -1,0 +1,970 @@
+{
+  "program_title": "Music Industry, B.A.",
+  "catalog_year": "2026-2027",
+  "source_url": "https://catalog.marshall.edu/undergraduate/programs-az/arts-media/music/music-industry-ba/",
+  "stage": "interpreted_draft_not_approved_for_seeding",
+  "summary": {
+    "input_rows": 46,
+    "interpreted_rules": 30,
+    "rule_types": {
+      "CHOOSE_CREDITS": 2,
+      "CREDIT_REQUIREMENT_DRAFT": 11,
+      "REQUIRED_COURSE": 17
+    },
+    "choice_groups": 2,
+    "review_queue_size": 13,
+    "section_summary_rows": 2
+  },
+  "requirements": [
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "FYS 100 First Yr Sem Critical Thinking",
+      "course_codes": [
+        "FYS 100"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t0_row_0003",
+      "table_index": 0,
+      "source_rows": [
+        3
+      ],
+      "source_row_ids": [
+        "t0_r3"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 1: Critical Thinking"
+      ]
+    },
+    {
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "name": "CT Course ( MTH 121 Concepts and Applications (CT))",
+      "credit_slots": [
+        3
+      ],
+      "total_listed_credits": 3,
+      "referenced_course_codes": [
+        "MTH 121"
+      ],
+      "course_patterns": [],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "embedded_course_references_require_semantic_review"
+      ],
+      "rule_id": "t0_row_0004",
+      "table_index": 0,
+      "source_rows": [
+        4
+      ],
+      "source_row_ids": [
+        "t0_r4"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 1: Critical Thinking"
+      ]
+    },
+    {
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "name": "CT Course",
+      "credit_slots": [
+        3
+      ],
+      "total_listed_credits": 3,
+      "referenced_course_codes": [],
+      "course_patterns": [],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped"
+      ],
+      "rule_id": "t0_row_0005",
+      "table_index": 0,
+      "source_rows": [
+        5
+      ],
+      "source_row_ids": [
+        "t0_r5"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 1: Critical Thinking"
+      ]
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "ENG 101 Beginning Composition",
+      "course_codes": [
+        "ENG 101"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t0_row_0007",
+      "table_index": 0,
+      "source_rows": [
+        7
+      ],
+      "source_row_ids": [
+        "t0_r7"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ]
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "ENG 201 Advanced Composition",
+      "course_codes": [
+        "ENG 201"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t0_row_0008",
+      "table_index": 0,
+      "source_rows": [
+        8
+      ],
+      "source_row_ids": [
+        "t0_r8"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ]
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "CMM 103 Fund Speech-Communication",
+      "course_codes": [
+        "CMM 103"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t0_row_0009",
+      "table_index": 0,
+      "source_rows": [
+        9
+      ],
+      "source_row_ids": [
+        "t0_r9"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ]
+    },
+    {
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "name": "Core II Fine Arts ( MUS 142 Music in Society)",
+      "credit_slots": [
+        3
+      ],
+      "total_listed_credits": 3,
+      "referenced_course_codes": [
+        "MUS 142"
+      ],
+      "course_patterns": [],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "embedded_course_references_require_semantic_review"
+      ],
+      "rule_id": "t0_row_0010",
+      "table_index": 0,
+      "source_rows": [
+        10
+      ],
+      "source_row_ids": [
+        "t0_r10"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ]
+    },
+    {
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "name": "Core II Humanities",
+      "credit_slots": [
+        3
+      ],
+      "total_listed_credits": 3,
+      "referenced_course_codes": [],
+      "course_patterns": [],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped"
+      ],
+      "rule_id": "t0_row_0011",
+      "table_index": 0,
+      "source_rows": [
+        11
+      ],
+      "source_row_ids": [
+        "t0_r11"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ]
+    },
+    {
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "name": "Core II Mathematics ( MTH 121 Concepts and Applications (CT))",
+      "credit_slots": [
+        3
+      ],
+      "total_listed_credits": 3,
+      "referenced_course_codes": [
+        "MTH 121"
+      ],
+      "course_patterns": [],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "embedded_course_references_require_semantic_review"
+      ],
+      "rule_id": "t0_row_0012",
+      "table_index": 0,
+      "source_rows": [
+        12
+      ],
+      "source_row_ids": [
+        "t0_r12"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ]
+    },
+    {
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "name": "Core II Natural/Physical Science",
+      "credit_slots": [
+        4
+      ],
+      "total_listed_credits": 4,
+      "referenced_course_codes": [],
+      "course_patterns": [],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped"
+      ],
+      "rule_id": "t0_row_0013",
+      "table_index": 0,
+      "source_rows": [
+        13
+      ],
+      "source_row_ids": [
+        "t0_r13"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ]
+    },
+    {
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "name": "Core II Social Science",
+      "credit_slots": [
+        3
+      ],
+      "total_listed_credits": 3,
+      "referenced_course_codes": [],
+      "course_patterns": [],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped"
+      ],
+      "rule_id": "t0_row_0014",
+      "table_index": 0,
+      "source_rows": [
+        14
+      ],
+      "source_row_ids": [
+        "t0_r14"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ]
+    },
+    {
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "name": "Writing Intensive",
+      "credit_slots": [
+        3,
+        3
+      ],
+      "total_listed_credits": 6,
+      "referenced_course_codes": [],
+      "course_patterns": [],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "repeated_credit_slots_need_policy_review"
+      ],
+      "rule_id": "t0_row_0016",
+      "table_index": 0,
+      "source_rows": [
+        16,
+        17
+      ],
+      "source_row_ids": [
+        "t0_r16",
+        "t0_r17"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Additional University Requirements"
+      ]
+    },
+    {
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "name": "Multicultural/International",
+      "credit_slots": [
+        3
+      ],
+      "total_listed_credits": 3,
+      "referenced_course_codes": [],
+      "course_patterns": [],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped"
+      ],
+      "rule_id": "t0_row_0018",
+      "table_index": 0,
+      "source_rows": [
+        18
+      ],
+      "source_row_ids": [
+        "t0_r18"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Additional University Requirements"
+      ]
+    },
+    {
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "name": "Capstone ( MUSP 475 Music Industry Capstone)",
+      "credit_slots": [
+        3
+      ],
+      "total_listed_credits": 3,
+      "referenced_course_codes": [
+        "MUSP 475"
+      ],
+      "course_patterns": [],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "embedded_course_references_require_semantic_review"
+      ],
+      "rule_id": "t0_row_0019",
+      "table_index": 0,
+      "source_rows": [
+        19
+      ],
+      "source_row_ids": [
+        "t0_r19"
+      ],
+      "section_path": [
+        "Core Curriculum",
+        "Additional University Requirements"
+      ]
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUS 142 Music in Society",
+      "course_codes": [
+        "MUS 142"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t1_row_0001",
+      "table_index": 1,
+      "source_rows": [
+        1
+      ],
+      "source_row_ids": [
+        "t1_r1"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUSP 101 Basic Musicianship",
+      "course_codes": [
+        "MUSP 101"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t1_row_0002",
+      "table_index": 1,
+      "source_rows": [
+        2
+      ],
+      "source_row_ids": [
+        "t1_r2"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUSP 110 The Professional Musician",
+      "course_codes": [
+        "MUSP 110"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 1,
+      "review_flags": [],
+      "rule_id": "t1_row_0003",
+      "table_index": 1,
+      "source_rows": [
+        3
+      ],
+      "source_row_ids": [
+        "t1_r3"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUSP 111 Elementary Music Theory I",
+      "course_codes": [
+        "MUSP 111"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 2,
+      "review_flags": [],
+      "rule_id": "t1_row_0004",
+      "table_index": 1,
+      "source_rows": [
+        4
+      ],
+      "source_row_ids": [
+        "t1_r4"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUSP 190 Aural Perceptions of Music Lit",
+      "course_codes": [
+        "MUSP 190"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 2,
+      "review_flags": [],
+      "rule_id": "t1_row_0005",
+      "table_index": 1,
+      "source_rows": [
+        5
+      ],
+      "source_row_ids": [
+        "t1_r5"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUSP 225 Intro to Music Industry",
+      "course_codes": [
+        "MUSP 225"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t1_row_0006",
+      "table_index": 1,
+      "source_rows": [
+        6
+      ],
+      "source_row_ids": [
+        "t1_r6"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUSP 226 Intro to Music Technology",
+      "course_codes": [
+        "MUSP 226"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t1_row_0007",
+      "table_index": 1,
+      "source_rows": [
+        7
+      ],
+      "source_row_ids": [
+        "t1_r7"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUSP 250 Digital Recording I",
+      "course_codes": [
+        "MUSP 250"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t1_row_0008",
+      "table_index": 1,
+      "source_rows": [
+        8
+      ],
+      "source_row_ids": [
+        "t1_r8"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUSP 325 Music Entrepreneurship",
+      "course_codes": [
+        "MUSP 325"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t1_row_0009",
+      "table_index": 1,
+      "source_rows": [
+        9
+      ],
+      "source_row_ids": [
+        "t1_r9"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUSP 326 Music Industry Law",
+      "course_codes": [
+        "MUSP 326"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t1_row_0010",
+      "table_index": 1,
+      "source_rows": [
+        10
+      ],
+      "source_row_ids": [
+        "t1_r10"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUSP 327 Music Business I",
+      "course_codes": [
+        "MUSP 327"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t1_row_0011",
+      "table_index": 1,
+      "source_rows": [
+        11
+      ],
+      "source_row_ids": [
+        "t1_r11"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUSP 475 Music Industry Capstone",
+      "course_codes": [
+        "MUSP 475"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t1_row_0012",
+      "table_index": 1,
+      "source_rows": [
+        12
+      ],
+      "source_row_ids": [
+        "t1_r12"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "REQUIRED_COURSE",
+      "name": "MUSP 495 Music Internship",
+      "course_codes": [
+        "MUSP 495"
+      ],
+      "course_combination": "SINGLE_COURSE",
+      "catalog_declared_credits": 3,
+      "review_flags": [],
+      "rule_id": "t1_row_0013",
+      "table_index": 1,
+      "source_rows": [
+        13
+      ],
+      "source_row_ids": [
+        "t1_r13"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "CHOOSE_CREDITS",
+      "name": "Choose four (4) credits from the following:",
+      "instruction": "Choose four (4) credits from the following:",
+      "minimum_choices": null,
+      "minimum_credits": 4,
+      "database_type_candidate": "MIN_CREDITS",
+      "catalog_declared_credits": 4,
+      "options": [
+        {
+          "kind": "COURSE_PATTERN",
+          "course_codes": [],
+          "course_pattern": "MUSA 1XX",
+          "code_expression": "MUSA 1XX",
+          "description": "MUSA 1XX 1",
+          "declared_credit_hours": null,
+          "source_row": 15,
+          "review_flags": [
+            "course_pattern_needs_catalog_resolution",
+            "trailing_number_may_be_footnote"
+          ]
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "MUSP 121"
+          ],
+          "code_expression": "MUSP 121",
+          "description": "MUSP 121 Class Piano I",
+          "declared_credit_hours": null,
+          "source_row": 16,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "MUSP 126"
+          ],
+          "code_expression": "MUSP 126",
+          "description": "MUSP 126 Class Voice",
+          "declared_credit_hours": null,
+          "source_row": 17,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "MUSP 127"
+          ],
+          "code_expression": "MUSP 127",
+          "description": "MUSP 127 Class Guitar",
+          "declared_credit_hours": null,
+          "source_row": 18,
+          "review_flags": []
+        }
+      ],
+      "review_flags": [
+        "credit_eligibility_needs_validation",
+        "some_options_require_review",
+        "wildcard_options_need_catalog_resolution"
+      ],
+      "rule_id": "t1_row_0014",
+      "table_index": 1,
+      "source_rows": [
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "source_row_ids": [
+        "t1_r14",
+        "t1_r15",
+        "t1_r16",
+        "t1_r17",
+        "t1_r18"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "CHOOSE_CREDITS",
+      "name": "Choose six (6) credits from the following:",
+      "instruction": "Choose six (6) credits from the following:",
+      "minimum_choices": null,
+      "minimum_credits": 6,
+      "database_type_candidate": "MIN_CREDITS",
+      "catalog_declared_credits": 6,
+      "options": [
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "MUS 200"
+          ],
+          "code_expression": "MUS 200",
+          "description": "MUS 200 Introduction to World Music",
+          "declared_credit_hours": null,
+          "source_row": 20,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "MUS 227"
+          ],
+          "code_expression": "MUS 227",
+          "description": "MUS 227 History of Popular Music",
+          "declared_credit_hours": null,
+          "source_row": 21,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "MUS 250"
+          ],
+          "code_expression": "MUS 250",
+          "description": "MUS 250 History of Jazz",
+          "declared_credit_hours": null,
+          "source_row": 22,
+          "review_flags": []
+        }
+      ],
+      "review_flags": [
+        "credit_eligibility_needs_validation"
+      ],
+      "rule_id": "t1_row_0019",
+      "table_index": 1,
+      "source_rows": [
+        19,
+        20,
+        21,
+        22
+      ],
+      "source_row_ids": [
+        "t1_r19",
+        "t1_r20",
+        "t1_r21",
+        "t1_r22"
+      ],
+      "section_path": []
+    },
+    {
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "name": "Music Ensembles (MUSE 4XX)",
+      "credit_slots": [
+        4
+      ],
+      "total_listed_credits": 4,
+      "referenced_course_codes": [],
+      "course_patterns": [
+        "MUSE 4XX"
+      ],
+      "review_flags": [
+        "course_pattern_needs_catalog_resolution",
+        "credit_requirement_eligibility_unmapped"
+      ],
+      "rule_id": "t1_row_0023",
+      "table_index": 1,
+      "source_rows": [
+        23
+      ],
+      "source_row_ids": [
+        "t1_r23"
+      ],
+      "section_path": []
+    }
+  ],
+  "review_queue": [
+    {
+      "rule_id": "t0_row_0004",
+      "name": "CT Course ( MTH 121 Concepts and Applications (CT))",
+      "source_row_ids": [
+        "t0_r4"
+      ],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "embedded_course_references_require_semantic_review"
+      ]
+    },
+    {
+      "rule_id": "t0_row_0005",
+      "name": "CT Course",
+      "source_row_ids": [
+        "t0_r5"
+      ],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped"
+      ]
+    },
+    {
+      "rule_id": "t0_row_0010",
+      "name": "Core II Fine Arts ( MUS 142 Music in Society)",
+      "source_row_ids": [
+        "t0_r10"
+      ],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "embedded_course_references_require_semantic_review"
+      ]
+    },
+    {
+      "rule_id": "t0_row_0011",
+      "name": "Core II Humanities",
+      "source_row_ids": [
+        "t0_r11"
+      ],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped"
+      ]
+    },
+    {
+      "rule_id": "t0_row_0012",
+      "name": "Core II Mathematics ( MTH 121 Concepts and Applications (CT))",
+      "source_row_ids": [
+        "t0_r12"
+      ],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "embedded_course_references_require_semantic_review"
+      ]
+    },
+    {
+      "rule_id": "t0_row_0013",
+      "name": "Core II Natural/Physical Science",
+      "source_row_ids": [
+        "t0_r13"
+      ],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped"
+      ]
+    },
+    {
+      "rule_id": "t0_row_0014",
+      "name": "Core II Social Science",
+      "source_row_ids": [
+        "t0_r14"
+      ],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped"
+      ]
+    },
+    {
+      "rule_id": "t0_row_0016",
+      "name": "Writing Intensive",
+      "source_row_ids": [
+        "t0_r16",
+        "t0_r17"
+      ],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "repeated_credit_slots_need_policy_review"
+      ]
+    },
+    {
+      "rule_id": "t0_row_0018",
+      "name": "Multicultural/International",
+      "source_row_ids": [
+        "t0_r18"
+      ],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped"
+      ]
+    },
+    {
+      "rule_id": "t0_row_0019",
+      "name": "Capstone ( MUSP 475 Music Industry Capstone)",
+      "source_row_ids": [
+        "t0_r19"
+      ],
+      "review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "embedded_course_references_require_semantic_review"
+      ]
+    },
+    {
+      "rule_id": "t1_row_0014",
+      "name": "Choose four (4) credits from the following:",
+      "source_row_ids": [
+        "t1_r14",
+        "t1_r15",
+        "t1_r16",
+        "t1_r17",
+        "t1_r18"
+      ],
+      "review_flags": [
+        "credit_eligibility_needs_validation",
+        "some_options_require_review",
+        "wildcard_options_need_catalog_resolution"
+      ]
+    },
+    {
+      "rule_id": "t1_row_0019",
+      "name": "Choose six (6) credits from the following:",
+      "source_row_ids": [
+        "t1_r19",
+        "t1_r20",
+        "t1_r21",
+        "t1_r22"
+      ],
+      "review_flags": [
+        "credit_eligibility_needs_validation"
+      ]
+    },
+    {
+      "rule_id": "t1_row_0023",
+      "name": "Music Ensembles (MUSE 4XX)",
+      "source_row_ids": [
+        "t1_r23"
+      ],
+      "review_flags": [
+        "course_pattern_needs_catalog_resolution",
+        "credit_requirement_eligibility_unmapped"
+      ]
+    }
+  ],
+  "section_summaries": [
+    {
+      "text": "Total Music Industry Major Requirements Credit Hours",
+      "credits": 52,
+      "source_row_id": "t1_r24",
+      "source_table_index": 1,
+      "requires_external_detail": false
+    },
+    {
+      "text": "Emphasis Area Requirements",
+      "credits": 43,
+      "source_row_id": "t1_r25",
+      "source_table_index": 1,
+      "requires_external_detail": true
+    }
+  ],
+  "program_review_flags": [
+    "emphasis_area_requirements_not_enumerated_here",
+    "some_requirement_tables_have_no_internal_headings"
+  ],
+  "unlabeled_table_indices": [
+    1
+  ],
+  "ignored_column_header_row_ids": [
+    "t0_r0",
+    "t1_r0"
+  ],
+  "structural_section_header_row_ids": [
+    "t0_r1",
+    "t0_r2",
+    "t0_r6",
+    "t0_r15",
+    "t1_r24",
+    "t1_r25"
+  ]
+}

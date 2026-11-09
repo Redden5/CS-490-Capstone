@@ -1,0 +1,5 @@
+# Offline parsing/validation/tests use only Python 3.12 standard library.
+# Install this optional driver only for an explicitly authorized database check/apply.
+psycopg[binary]>=3.2,<4
+# Optional Supabase API transport; never imported by offline or direct PG modes.
+supabase>=2.34.1,<3

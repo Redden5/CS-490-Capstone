@@ -1,0 +1,2992 @@
+{
+  "program_title": "Computer Science, B.S.",
+  "catalog_year": "2026-2027",
+  "source_url": "https://catalog.marshall.edu/undergraduate/programs-az/engineering-computer-sciences/computer-science/computer-science-bs/",
+  "scraped_at_utc": "2026-10-12T19:33:18.712560+00:00",
+  "stage": "raw_requirements_extraction_only",
+  "summary": {
+    "requirement_tables": 1,
+    "total_rows": 67,
+    "row_types": {
+      "column_header": 1,
+      "course_row": 46,
+      "credit_requirement": 11,
+      "section_header": 7,
+      "selection_instruction": 2
+    },
+    "distinct_linked_course_codes": 47,
+    "rows_with_review_flags": 19
+  },
+  "rows": [
+    {
+      "table_index": 0,
+      "row_index": 0,
+      "kind": "column_header",
+      "row_classes": [
+        "hidden",
+        "noscript"
+      ],
+      "text": "Code Title Credit Hours",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "Credit Hours",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Code",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "Title",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "Credit Hours",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "non_numeric_credit_expression"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 1,
+      "kind": "section_header",
+      "row_classes": [
+        "even",
+        "areaheader",
+        "firstrow"
+      ],
+      "text": "Core Curriculum",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Core Curriculum",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 2,
+      "kind": "section_header",
+      "row_classes": [
+        "odd",
+        "areasubheader",
+        "undefined"
+      ],
+      "text": "Core 1: Critical Thinking",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Core 1: Critical Thinking",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 3,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "FYS 100 First Yr Sem Critical Thinking 3",
+      "code_expression": "FYS 100",
+      "course_codes": [
+        "FYS 100"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "FYS 100",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "FYS 100",
+              "url": "https://catalog.marshall.edu/search/?P=FYS%20100"
+            }
+          ]
+        },
+        {
+          "text": "First Yr Sem Critical Thinking",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 4,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MTH 229 Calculus/Analytic Geom I (CT) 5",
+      "code_expression": "MTH 229",
+      "course_codes": [
+        "MTH 229"
+      ],
+      "credit_text": "5",
+      "credit_hours": 5,
+      "cells": [
+        {
+          "text": "MTH 229",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MTH 229",
+              "url": "https://catalog.marshall.edu/search/?P=MTH%20229"
+            }
+          ]
+        },
+        {
+          "text": "Calculus/Analytic Geom I (CT)",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "5",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 5,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "even"
+      ],
+      "text": "Critical Thinking Course 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Critical Thinking Course",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 6,
+      "kind": "section_header",
+      "row_classes": [
+        "odd",
+        "areasubheader",
+        "undefined"
+      ],
+      "text": "Core 2",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Core 2",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 7,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "ENG 101 Beginning Composition 3",
+      "code_expression": "ENG 101",
+      "course_codes": [
+        "ENG 101"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "ENG 101",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "ENG 101",
+              "url": "https://catalog.marshall.edu/search/?P=ENG%20101"
+            }
+          ]
+        },
+        {
+          "text": "Beginning Composition",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 8,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "ENG 201 Advanced Composition 3",
+      "code_expression": "ENG 201",
+      "course_codes": [
+        "ENG 201"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "ENG 201",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "ENG 201",
+              "url": "https://catalog.marshall.edu/search/?P=ENG%20201"
+            }
+          ]
+        },
+        {
+          "text": "Advanced Composition",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 9,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CMM 103 Fund Speech-Communication 3",
+      "code_expression": "CMM 103",
+      "course_codes": [
+        "CMM 103"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CMM 103",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CMM 103",
+              "url": "https://catalog.marshall.edu/search/?P=CMM%20103"
+            }
+          ]
+        },
+        {
+          "text": "Fund Speech-Communication",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 10,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MTH 229 Calculus/Analytic Geom I (CT) 5",
+      "code_expression": "MTH 229",
+      "course_codes": [
+        "MTH 229"
+      ],
+      "credit_text": "5",
+      "credit_hours": 5,
+      "cells": [
+        {
+          "text": "MTH 229",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MTH 229",
+              "url": "https://catalog.marshall.edu/search/?P=MTH%20229"
+            }
+          ]
+        },
+        {
+          "text": "Calculus/Analytic Geom I (CT)",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "5",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 11,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "even"
+      ],
+      "text": "Sci w/Lab Core II Physical/Natural Science 4",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "4",
+      "credit_hours": 4,
+      "cells": [
+        {
+          "text": "Sci w/Lab Core II Physical/Natural Science",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "4",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 12,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Core II Humanities 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Core II Humanities",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 13,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "even"
+      ],
+      "text": "Core II Social Studies 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Core II Social Studies",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 14,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Core II Fine Arts 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Core II Fine Arts",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 15,
+      "kind": "section_header",
+      "row_classes": [
+        "even",
+        "areasubheader",
+        "undefined"
+      ],
+      "text": "Additional Univeristy Requirements",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Additional Univeristy Requirements",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 16,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Writing Intensive 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Writing Intensive",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 17,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "even"
+      ],
+      "text": "Writing Intensive 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Writing Intensive",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 18,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Multicultural or International 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Multicultural or International",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 19,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 490 Senior Project 3",
+      "code_expression": "CS 490",
+      "course_codes": [
+        "CS 490"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 490",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 490",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20490"
+            }
+          ]
+        },
+        {
+          "text": "Senior Project",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 20,
+      "kind": "section_header",
+      "row_classes": [
+        "odd",
+        "areaheader"
+      ],
+      "text": "Major-Specific",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Major-Specific",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 21,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "MTH 220 Discrete Structures 3",
+      "code_expression": "MTH 220",
+      "course_codes": [
+        "MTH 220"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MTH 220",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MTH 220",
+              "url": "https://catalog.marshall.edu/search/?P=MTH%20220"
+            }
+          ]
+        },
+        {
+          "text": "Discrete Structures",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 22,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MTH 229 Calculus/Analytic Geom I (CT) 5",
+      "code_expression": "MTH 229",
+      "course_codes": [
+        "MTH 229"
+      ],
+      "credit_text": "5",
+      "credit_hours": 5,
+      "cells": [
+        {
+          "text": "MTH 229",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MTH 229",
+              "url": "https://catalog.marshall.edu/search/?P=MTH%20229"
+            }
+          ]
+        },
+        {
+          "text": "Calculus/Analytic Geom I (CT)",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "5",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 23,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "MTH 230 Calculus/Analytic Geom II 4",
+      "code_expression": "MTH 230",
+      "course_codes": [
+        "MTH 230"
+      ],
+      "credit_text": "4",
+      "credit_hours": 4,
+      "cells": [
+        {
+          "text": "MTH 230",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MTH 230",
+              "url": "https://catalog.marshall.edu/search/?P=MTH%20230"
+            }
+          ]
+        },
+        {
+          "text": "Calculus/Analytic Geom II",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "4",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 24,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MTH 329 Elementary Linear Algebra 3",
+      "code_expression": "MTH 329",
+      "course_codes": [
+        "MTH 329"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MTH 329",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MTH 329",
+              "url": "https://catalog.marshall.edu/search/?P=MTH%20329"
+            }
+          ]
+        },
+        {
+          "text": "Elementary Linear Algebra",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 25,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "STA 345 Applied Prob and Stat 3",
+      "code_expression": "STA 345",
+      "course_codes": [
+        "STA 345"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "STA 345",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "STA 345",
+              "url": "https://catalog.marshall.edu/search/?P=STA%20345"
+            }
+          ]
+        },
+        {
+          "text": "Applied Prob and Stat",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 26,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 110 Computer Science I 3",
+      "code_expression": "CS 110",
+      "course_codes": [
+        "CS 110"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 110",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 110",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20110"
+            }
+          ]
+        },
+        {
+          "text": "Computer Science I",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 27,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 120 Computer Science II 3",
+      "code_expression": "CS 120",
+      "course_codes": [
+        "CS 120"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 120",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 120",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20120"
+            }
+          ]
+        },
+        {
+          "text": "Computer Science II",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 28,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 210 Data Structures and Algorithms 3",
+      "code_expression": "CS 210",
+      "course_codes": [
+        "CS 210"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 210",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 210",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20210"
+            }
+          ]
+        },
+        {
+          "text": "Data Structures and Algorithms",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 29,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 215 Adv Data Struct and Algorithms 3",
+      "code_expression": "CS 215",
+      "course_codes": [
+        "CS 215"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 215",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 215",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20215"
+            }
+          ]
+        },
+        {
+          "text": "Adv Data Struct and Algorithms",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 30,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 300 Programming Languages 3",
+      "code_expression": "CS 300",
+      "course_codes": [
+        "CS 300"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 300",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 300",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20300"
+            }
+          ]
+        },
+        {
+          "text": "Programming Languages",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 31,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 305 Software Engineering 3",
+      "code_expression": "CS 305",
+      "course_codes": [
+        "CS 305"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 305",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 305",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20305"
+            }
+          ]
+        },
+        {
+          "text": "Software Engineering",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 32,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 310 Software Engineering II 3",
+      "code_expression": "CS 310",
+      "course_codes": [
+        "CS 310"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 310",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 310",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20310"
+            }
+          ]
+        },
+        {
+          "text": "Software Engineering II",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 33,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 320 Internetworking 3",
+      "code_expression": "CS 320",
+      "course_codes": [
+        "CS 320"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 320",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 320",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20320"
+            }
+          ]
+        },
+        {
+          "text": "Internetworking",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 34,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 330 Operating Systems 3",
+      "code_expression": "CS 330",
+      "course_codes": [
+        "CS 330"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 330",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 330",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20330"
+            }
+          ]
+        },
+        {
+          "text": "Operating Systems",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 35,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 360 Automata and Formal Languages 3",
+      "code_expression": "CS 360",
+      "course_codes": [
+        "CS 360"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 360",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 360",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20360"
+            }
+          ]
+        },
+        {
+          "text": "Automata and Formal Languages",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 36,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 402 Computer Architecture 3",
+      "code_expression": "CS 402",
+      "course_codes": [
+        "CS 402"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 402",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 402",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20402"
+            }
+          ]
+        },
+        {
+          "text": "Computer Architecture",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 37,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 410 Database Engineering 3",
+      "code_expression": "CS 410",
+      "course_codes": [
+        "CS 410"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 410",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 410",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20410"
+            }
+          ]
+        },
+        {
+          "text": "Database Engineering",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 38,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 430 Cyber Security 3",
+      "code_expression": "CS 430",
+      "course_codes": [
+        "CS 430"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 430",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 430",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20430"
+            }
+          ]
+        },
+        {
+          "text": "Cyber Security",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 39,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 490 Senior Project 3",
+      "code_expression": "CS 490",
+      "course_codes": [
+        "CS 490"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "CS 490",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 490",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20490"
+            }
+          ]
+        },
+        {
+          "text": "Senior Project",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 40,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "ENGR 221 Engineering Economy 3",
+      "code_expression": "ENGR 221",
+      "course_codes": [
+        "ENGR 221"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "ENGR 221",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "ENGR 221",
+              "url": "https://catalog.marshall.edu/search/?P=ENGR%20221"
+            }
+          ]
+        },
+        {
+          "text": "Engineering Economy",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 41,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "ENG 354 Scientific & Tech Writing 3",
+      "code_expression": "ENG 354",
+      "course_codes": [
+        "ENG 354"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "ENG 354",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "ENG 354",
+              "url": "https://catalog.marshall.edu/search/?P=ENG%20354"
+            }
+          ]
+        },
+        {
+          "text": "Scientific & Tech Writing",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 42,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "MGT 320 Principles of Management 3",
+      "code_expression": "MGT 320",
+      "course_codes": [
+        "MGT 320"
+      ],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "MGT 320",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "MGT 320",
+              "url": "https://catalog.marshall.edu/search/?P=MGT%20320"
+            }
+          ]
+        },
+        {
+          "text": "Principles of Management",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 43,
+      "kind": "section_header",
+      "row_classes": [
+        "even",
+        "areasubheader",
+        "undefined"
+      ],
+      "text": "CS Electives",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS Electives",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 44,
+      "kind": "selection_instruction",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Select two of the following: 6",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "6",
+      "credit_hours": 6,
+      "cells": [
+        {
+          "text": "Select two of the following:",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "6",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "selection_options_need_grouping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 45,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 315 Software Quality Assurance",
+      "code_expression": "CS 315",
+      "course_codes": [
+        "CS 315"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS 315",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 315",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20315"
+            }
+          ]
+        },
+        {
+          "text": "Software Quality Assurance",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 46,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 370 Computer Graphics",
+      "code_expression": "CS 370",
+      "course_codes": [
+        "CS 370"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS 370",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 370",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20370"
+            }
+          ]
+        },
+        {
+          "text": "Computer Graphics",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 47,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 404 High Performance Computing",
+      "code_expression": "CS 404",
+      "course_codes": [
+        "CS 404"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS 404",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 404",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20404"
+            }
+          ]
+        },
+        {
+          "text": "High Performance Computing",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 48,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 405 Computing for Bioinformatics",
+      "code_expression": "CS 405",
+      "course_codes": [
+        "CS 405"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS 405",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 405",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20405"
+            }
+          ]
+        },
+        {
+          "text": "Computing for Bioinformatics",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 49,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 425 Computational Intelligence",
+      "code_expression": "CS 425",
+      "course_codes": [
+        "CS 425"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS 425",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 425",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20425"
+            }
+          ]
+        },
+        {
+          "text": "Computational Intelligence",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 50,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 435 Cyber Risk",
+      "code_expression": "CS 435",
+      "course_codes": [
+        "CS 435"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS 435",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 435",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20435"
+            }
+          ]
+        },
+        {
+          "text": "Cyber Risk",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 51,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 440 Digital Image Processing",
+      "code_expression": "CS 440",
+      "course_codes": [
+        "CS 440"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS 440",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 440",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20440"
+            }
+          ]
+        },
+        {
+          "text": "Digital Image Processing",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 52,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 455 Systems Engineering",
+      "code_expression": "CS 455",
+      "course_codes": [
+        "CS 455"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS 455",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 455",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20455"
+            }
+          ]
+        },
+        {
+          "text": "Systems Engineering",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 53,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 480 Special Topics",
+      "code_expression": "CS 480",
+      "course_codes": [
+        "CS 480"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS 480",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 480",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20480"
+            }
+          ]
+        },
+        {
+          "text": "Special Topics",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 54,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 481 Special Topics",
+      "code_expression": "CS 481",
+      "course_codes": [
+        "CS 481"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS 481",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 481",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20481"
+            }
+          ]
+        },
+        {
+          "text": "Special Topics",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 55,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "CS 482 Special Topics",
+      "code_expression": "CS 482",
+      "course_codes": [
+        "CS 482"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS 482",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 482",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20482"
+            }
+          ]
+        },
+        {
+          "text": "Special Topics",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 56,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CS 483 Special Topics",
+      "code_expression": "CS 483",
+      "course_codes": [
+        "CS 483"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CS 483",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CS 483",
+              "url": "https://catalog.marshall.edu/search/?P=CS%20483"
+            }
+          ]
+        },
+        {
+          "text": "Special Topics",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 57,
+      "kind": "section_header",
+      "row_classes": [
+        "even",
+        "areasubheader",
+        "undefined"
+      ],
+      "text": "Science w/ Lab",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "Science w/ Lab",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": []
+    },
+    {
+      "table_index": 0,
+      "row_index": 58,
+      "kind": "selection_instruction",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Select three of the following with labs: 12",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "12",
+      "credit_hours": 12,
+      "cells": [
+        {
+          "text": "Select three of the following with labs:",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "12",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "selection_options_need_grouping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 59,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "BSC 120 & BSC 120L Principles of Biology I and Principles of Biology I Lab (or above)",
+      "code_expression": "BSC 120 & BSC 120L",
+      "course_codes": [
+        "BSC 120",
+        "BSC 120L"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "BSC 120 & BSC 120L",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "BSC 120",
+              "url": "https://catalog.marshall.edu/search/?P=BSC%20120"
+            },
+            {
+              "text": "BSC 120L",
+              "url": "https://catalog.marshall.edu/search/?P=BSC%20120L"
+            }
+          ]
+        },
+        {
+          "text": "Principles of Biology I and Principles of Biology I Lab (or above)",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "multiple_courses_in_one_row",
+        "special_qualification_text"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 60,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "CHM 211 & CHM 217 Principles of Chemistry I and Principles of Chem Lab I (or above)",
+      "code_expression": "CHM 211 & CHM 217",
+      "course_codes": [
+        "CHM 211",
+        "CHM 217"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "CHM 211 & CHM 217",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "CHM 211",
+              "url": "https://catalog.marshall.edu/search/?P=CHM%20211"
+            },
+            {
+              "text": "CHM 217",
+              "url": "https://catalog.marshall.edu/search/?P=CHM%20217"
+            }
+          ]
+        },
+        {
+          "text": "Principles of Chemistry I and Principles of Chem Lab I (or above)",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "multiple_courses_in_one_row",
+        "special_qualification_text"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 61,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "GLY 200 & GLY 210L The Dynamic Earth and Earth Materials Lab (or above)",
+      "code_expression": "GLY 200 & GLY 210L",
+      "course_codes": [
+        "GLY 200",
+        "GLY 210L"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "GLY 200 & GLY 210L",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "GLY 200",
+              "url": "https://catalog.marshall.edu/search/?P=GLY%20200"
+            },
+            {
+              "text": "GLY 210L",
+              "url": "https://catalog.marshall.edu/search/?P=GLY%20210L"
+            }
+          ]
+        },
+        {
+          "text": "The Dynamic Earth and Earth Materials Lab (or above)",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "multiple_courses_in_one_row",
+        "special_qualification_text"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 62,
+      "kind": "course_row",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "PHY 201 & PHY 202 College Physics I and General Physics I Laboratory (or above)",
+      "code_expression": "PHY 201 & PHY 202",
+      "course_codes": [
+        "PHY 201",
+        "PHY 202"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "PHY 201 & PHY 202",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "PHY 201",
+              "url": "https://catalog.marshall.edu/search/?P=PHY%20201"
+            },
+            {
+              "text": "PHY 202",
+              "url": "https://catalog.marshall.edu/search/?P=PHY%20202"
+            }
+          ]
+        },
+        {
+          "text": "College Physics I and General Physics I Laboratory (or above)",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "multiple_courses_in_one_row",
+        "special_qualification_text"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 63,
+      "kind": "course_row",
+      "row_classes": [
+        "even"
+      ],
+      "text": "PHY 211 & PHY 202 University Physics I and General Physics I Laboratory (or above)",
+      "code_expression": "PHY 211 & PHY 202",
+      "course_codes": [
+        "PHY 211",
+        "PHY 202"
+      ],
+      "credit_text": "",
+      "credit_hours": null,
+      "cells": [
+        {
+          "text": "PHY 211 & PHY 202",
+          "classes": [
+            "codecol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": [
+            {
+              "text": "PHY 211",
+              "url": "https://catalog.marshall.edu/search/?P=PHY%20211"
+            },
+            {
+              "text": "PHY 202",
+              "url": "https://catalog.marshall.edu/search/?P=PHY%20202"
+            }
+          ]
+        },
+        {
+          "text": "University Physics I and General Physics I Laboratory (or above)",
+          "classes": [],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "multiple_courses_in_one_row",
+        "special_qualification_text"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 64,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "odd"
+      ],
+      "text": "Free Elective 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Free Elective",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 65,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "even"
+      ],
+      "text": "Free Elective 3",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "3",
+      "credit_hours": 3,
+      "cells": [
+        {
+          "text": "Free Elective",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "3",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    },
+    {
+      "table_index": 0,
+      "row_index": 66,
+      "kind": "credit_requirement",
+      "row_classes": [
+        "odd",
+        "lastrow"
+      ],
+      "text": "Free Elective 2",
+      "code_expression": null,
+      "course_codes": [],
+      "credit_text": "2",
+      "credit_hours": 2,
+      "cells": [
+        {
+          "text": "Free Elective",
+          "classes": [],
+          "colspan": "2",
+          "rowspan": null,
+          "links": []
+        },
+        {
+          "text": "2",
+          "classes": [
+            "hourscol"
+          ],
+          "colspan": null,
+          "rowspan": null,
+          "links": []
+        }
+      ],
+      "review_flags": [
+        "requires_rule_mapping"
+      ]
+    }
+  ]
+}

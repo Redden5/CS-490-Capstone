@@ -1,0 +1,1416 @@
+{
+  "schema_version": "1.0.0",
+  "purpose": "SCHEDULE_GENERATOR_REQUIREMENT_INPUT_ONLY",
+  "degree": {
+    "program_title": "Computer Science, B.S.",
+    "catalog_year": "2026-2027"
+  },
+  "completed_course_codes_entered": [
+    "CS 315",
+    "CS 370",
+    "FYS 100",
+    "MTH 229",
+    "PHY 201",
+    "PHY 202",
+    "PHY 211",
+    "PSY 201"
+  ],
+  "distinct_course_credit_evidence": {
+    "known_credit_subtotal": 25.0,
+    "courses_without_known_credits": [],
+    "source": "student_reported_and_fixed_catalog_estimates_not_transcript_verified"
+  },
+  "requirements": [
+    {
+      "rule_id": "t0_row_0003",
+      "name": "FYS 100 First Yr Sem Critical Thinking",
+      "section_path": [
+        "Core Curriculum",
+        "Core 1: Critical Thinking"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": false,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "FYS 100",
+      "remaining_required_course_codes": [],
+      "planning_disposition": "CANDIDATE_COMPLETE"
+    },
+    {
+      "rule_id": "t0_row_0004",
+      "name": "MTH 229 Calculus/Analytic Geom I (CT)",
+      "section_path": [
+        "Core Curriculum",
+        "Core 1: Critical Thinking"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": false,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "MTH 229",
+      "remaining_required_course_codes": [],
+      "planning_disposition": "CANDIDATE_COMPLETE"
+    },
+    {
+      "rule_id": "t0_row_0005",
+      "name": "Critical Thinking Course",
+      "section_path": [
+        "Core Curriculum",
+        "Core 1: Critical Thinking"
+      ],
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "source_status": "NEEDS_REVIEW",
+      "candidate_progress_status": "CANDIDATE_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": false,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "attribute_filter": {
+        "attribute_names": [
+          "Critical Thinking"
+        ],
+        "match_mode": "ANY",
+        "catalog_year_classification_lookup_applied": true,
+        "catalog_year": "2026-2027",
+        "candidate_course_codes_entered": [
+          "PSY 201"
+        ],
+        "eligible_catalog_course_options_included": false
+      },
+      "credit_progress": {
+        "minimum_credits_interpreted": 3,
+        "candidate_known_credit_subtotal": 3.0,
+        "candidate_courses_without_known_credits": [],
+        "additional_credits_indicated_candidate": 0,
+        "earned_credits_transcript_verified": false
+      },
+      "same_group_course_slot_allocation": {
+        "policy": "MARSHALL_CORE_I_TWO_DISTINCT_CT_COURSES_PLUS_FYS",
+        "scope": "SAME_PARENT_SECTION_GROUP_ONLY",
+        "group_node_id": "group:ba33c64732318b92",
+        "reserved_explicit_sibling_courses": [
+          "FYS 100",
+          "MTH 229"
+        ],
+        "reserved_by_rule_ids": {
+          "FYS 100": [
+            "t0_row_0003"
+          ],
+          "MTH 229": [
+            "t0_row_0004"
+          ]
+        },
+        "excluded_candidate_course_codes": [
+          "MTH 229"
+        ],
+        "note": "First Year Seminar and each CT slot require distinct courses; overlap with Core II or major rules is evaluated separately."
+      },
+      "planning_disposition": "CANDIDATE_COMPLETE"
+    },
+    {
+      "rule_id": "t0_row_0007",
+      "name": "ENG 101 Beginning Composition",
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "ENG 101",
+      "remaining_required_course_codes": [
+        "ENG 101"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0008",
+      "name": "ENG 201 Advanced Composition",
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "ENG 201",
+      "remaining_required_course_codes": [
+        "ENG 201"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0009",
+      "name": "CMM 103 Fund Speech-Communication",
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CMM 103",
+      "remaining_required_course_codes": [
+        "CMM 103"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0010",
+      "name": "MTH 229 Calculus/Analytic Geom I (CT)",
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": false,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "MTH 229",
+      "remaining_required_course_codes": [],
+      "planning_disposition": "CANDIDATE_COMPLETE"
+    },
+    {
+      "rule_id": "t0_row_0011",
+      "name": "Sci w/Lab Core II Physical/Natural Science",
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "source_status": "NEEDS_REVIEW",
+      "candidate_progress_status": "SOURCE_NEEDS_REVIEW",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": null,
+      "remaining_policy_review_flags": [
+        "lab_eligibility_unverified"
+      ],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "attribute_filter": {
+        "attribute_names": [
+          "Core II Natural Sciences"
+        ],
+        "match_mode": "ANY",
+        "catalog_year_classification_lookup_applied": false,
+        "catalog_year": "2026-2027",
+        "candidate_course_codes_entered": [
+          "PHY 201",
+          "PHY 202",
+          "PHY 211"
+        ],
+        "eligible_catalog_course_options_included": false
+      },
+      "credit_progress": {
+        "minimum_credits_interpreted": 4,
+        "candidate_known_credit_subtotal": 8.0,
+        "candidate_courses_without_known_credits": [],
+        "additional_credits_indicated_candidate": null,
+        "earned_credits_transcript_verified": false
+      },
+      "planning_disposition": "REVIEW_REQUIRED"
+    },
+    {
+      "rule_id": "t0_row_0012",
+      "name": "Core II Humanities",
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "source_status": "NEEDS_REVIEW",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "attribute_filter": {
+        "attribute_names": [
+          "Core II Humanities"
+        ],
+        "match_mode": "ANY",
+        "catalog_year_classification_lookup_applied": true,
+        "catalog_year": "2026-2027",
+        "candidate_course_codes_entered": [],
+        "eligible_catalog_course_options_included": false
+      },
+      "credit_progress": {
+        "minimum_credits_interpreted": 3,
+        "candidate_known_credit_subtotal": 0,
+        "candidate_courses_without_known_credits": [],
+        "additional_credits_indicated_candidate": 3,
+        "earned_credits_transcript_verified": false
+      },
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0013",
+      "name": "Core II Social Studies",
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "source_status": "NEEDS_REVIEW",
+      "candidate_progress_status": "CANDIDATE_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": false,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "attribute_filter": {
+        "attribute_names": [
+          "Core II Social Sciences"
+        ],
+        "match_mode": "ANY",
+        "catalog_year_classification_lookup_applied": true,
+        "catalog_year": "2026-2027",
+        "candidate_course_codes_entered": [
+          "PSY 201"
+        ],
+        "eligible_catalog_course_options_included": false
+      },
+      "credit_progress": {
+        "minimum_credits_interpreted": 3,
+        "candidate_known_credit_subtotal": 3.0,
+        "candidate_courses_without_known_credits": [],
+        "additional_credits_indicated_candidate": 0,
+        "earned_credits_transcript_verified": false
+      },
+      "planning_disposition": "CANDIDATE_COMPLETE"
+    },
+    {
+      "rule_id": "t0_row_0014",
+      "name": "Core II Fine Arts",
+      "section_path": [
+        "Core Curriculum",
+        "Core 2"
+      ],
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "source_status": "NEEDS_REVIEW",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "attribute_filter": {
+        "attribute_names": [
+          "Core II Fine Arts"
+        ],
+        "match_mode": "ANY",
+        "catalog_year_classification_lookup_applied": true,
+        "catalog_year": "2026-2027",
+        "candidate_course_codes_entered": [],
+        "eligible_catalog_course_options_included": false
+      },
+      "credit_progress": {
+        "minimum_credits_interpreted": 3,
+        "candidate_known_credit_subtotal": 0,
+        "candidate_courses_without_known_credits": [],
+        "additional_credits_indicated_candidate": 3,
+        "earned_credits_transcript_verified": false
+      },
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0016",
+      "name": "Writing Intensive",
+      "section_path": [
+        "Core Curriculum",
+        "Additional Univeristy Requirements"
+      ],
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "source_status": "NEEDS_REVIEW",
+      "candidate_progress_status": "SOURCE_NEEDS_REVIEW",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": null,
+      "remaining_policy_review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "eligibility_requires_explicit_resolution",
+        "repeated_credit_slots_need_policy_review"
+      ],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "attribute_filter": {
+        "attribute_names": [],
+        "match_mode": "ANY",
+        "catalog_year_classification_lookup_applied": false,
+        "catalog_year": "2026-2027",
+        "candidate_course_codes_entered": [],
+        "eligible_catalog_course_options_included": false
+      },
+      "credit_progress": {
+        "minimum_credits_interpreted": 6,
+        "candidate_known_credit_subtotal": null,
+        "candidate_courses_without_known_credits": [],
+        "additional_credits_indicated_candidate": null,
+        "earned_credits_transcript_verified": false
+      },
+      "planning_disposition": "REVIEW_REQUIRED"
+    },
+    {
+      "rule_id": "t0_row_0018",
+      "name": "Multicultural or International",
+      "section_path": [
+        "Core Curriculum",
+        "Additional Univeristy Requirements"
+      ],
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "source_status": "NEEDS_REVIEW",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "attribute_filter": {
+        "attribute_names": [
+          "Multicultural",
+          "International"
+        ],
+        "match_mode": "ANY",
+        "catalog_year_classification_lookup_applied": true,
+        "catalog_year": "2026-2027",
+        "candidate_course_codes_entered": [],
+        "eligible_catalog_course_options_included": false
+      },
+      "credit_progress": {
+        "minimum_credits_interpreted": 3,
+        "candidate_known_credit_subtotal": 0,
+        "candidate_courses_without_known_credits": [],
+        "additional_credits_indicated_candidate": 3,
+        "earned_credits_transcript_verified": false
+      },
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0019",
+      "name": "CS 490 Senior Project",
+      "section_path": [
+        "Core Curriculum",
+        "Additional Univeristy Requirements"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 490",
+      "remaining_required_course_codes": [
+        "CS 490"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0021",
+      "name": "MTH 220 Discrete Structures",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "MTH 220",
+      "remaining_required_course_codes": [
+        "MTH 220"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0022",
+      "name": "MTH 229 Calculus/Analytic Geom I (CT)",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": false,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "MTH 229",
+      "remaining_required_course_codes": [],
+      "planning_disposition": "CANDIDATE_COMPLETE"
+    },
+    {
+      "rule_id": "t0_row_0023",
+      "name": "MTH 230 Calculus/Analytic Geom II",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "MTH 230",
+      "remaining_required_course_codes": [
+        "MTH 230"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0024",
+      "name": "MTH 329 Elementary Linear Algebra",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "MTH 329",
+      "remaining_required_course_codes": [
+        "MTH 329"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0025",
+      "name": "STA 345 Applied Prob and Stat",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "STA 345",
+      "remaining_required_course_codes": [
+        "STA 345"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0026",
+      "name": "CS 110 Computer Science I",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 110",
+      "remaining_required_course_codes": [
+        "CS 110"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0027",
+      "name": "CS 120 Computer Science II",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 120",
+      "remaining_required_course_codes": [
+        "CS 120"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0028",
+      "name": "CS 210 Data Structures and Algorithms",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 210",
+      "remaining_required_course_codes": [
+        "CS 210"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0029",
+      "name": "CS 215 Adv Data Struct and Algorithms",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 215",
+      "remaining_required_course_codes": [
+        "CS 215"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0030",
+      "name": "CS 300 Programming Languages",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 300",
+      "remaining_required_course_codes": [
+        "CS 300"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0031",
+      "name": "CS 305 Software Engineering",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 305",
+      "remaining_required_course_codes": [
+        "CS 305"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0032",
+      "name": "CS 310 Software Engineering II",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 310",
+      "remaining_required_course_codes": [
+        "CS 310"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0033",
+      "name": "CS 320 Internetworking",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 320",
+      "remaining_required_course_codes": [
+        "CS 320"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0034",
+      "name": "CS 330 Operating Systems",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 330",
+      "remaining_required_course_codes": [
+        "CS 330"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0035",
+      "name": "CS 360 Automata and Formal Languages",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 360",
+      "remaining_required_course_codes": [
+        "CS 360"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0036",
+      "name": "CS 402 Computer Architecture",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 402",
+      "remaining_required_course_codes": [
+        "CS 402"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0037",
+      "name": "CS 410 Database Engineering",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 410",
+      "remaining_required_course_codes": [
+        "CS 410"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0038",
+      "name": "CS 430 Cyber Security",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 430",
+      "remaining_required_course_codes": [
+        "CS 430"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0039",
+      "name": "CS 490 Senior Project",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "CS 490",
+      "remaining_required_course_codes": [
+        "CS 490"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0040",
+      "name": "ENGR 221 Engineering Economy",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "ENGR 221",
+      "remaining_required_course_codes": [
+        "ENGR 221"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0041",
+      "name": "ENG 354 Scientific & Tech Writing",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "ENG 354",
+      "remaining_required_course_codes": [
+        "ENG 354"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0042",
+      "name": "MGT 320 Principles of Management",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "REQUIRED_COURSE",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_NOT_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": true,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "required_course_code": "MGT 320",
+      "remaining_required_course_codes": [
+        "MGT 320"
+      ],
+      "planning_disposition": "CANDIDATE_COURSEWORK_REMAINING"
+    },
+    {
+      "rule_id": "t0_row_0044",
+      "name": "CS Electives",
+      "section_path": [
+        "Major-Specific",
+        "CS Electives"
+      ],
+      "kind": "CHOOSE_N",
+      "source_status": "READY",
+      "candidate_progress_status": "CANDIDATE_MET",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": false,
+      "remaining_policy_review_flags": [],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "choice_progress": {
+        "required_choices": 2,
+        "fully_entered_options": 2,
+        "maximum_nonoverlapping_choices_entered": 2,
+        "choices_remaining_candidate": 0,
+        "exact_within_group_allocation": true
+      },
+      "course_options": [
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "CS 315"
+          ],
+          "already_entered_codes": [
+            "CS 315"
+          ],
+          "missing_codes_to_complete_option": [],
+          "fully_entered": true,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "CS 370"
+          ],
+          "already_entered_codes": [
+            "CS 370"
+          ],
+          "missing_codes_to_complete_option": [],
+          "fully_entered": true,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "CS 404"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "CS 404"
+          ],
+          "fully_entered": false,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "CS 405"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "CS 405"
+          ],
+          "fully_entered": false,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "CS 425"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "CS 425"
+          ],
+          "fully_entered": false,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "CS 435"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "CS 435"
+          ],
+          "fully_entered": false,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "CS 440"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "CS 440"
+          ],
+          "fully_entered": false,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "CS 455"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "CS 455"
+          ],
+          "fully_entered": false,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "CS 480"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "CS 480"
+          ],
+          "fully_entered": false,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "CS 481"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "CS 481"
+          ],
+          "fully_entered": false,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "CS 482"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "CS 482"
+          ],
+          "fully_entered": false,
+          "review_flags": []
+        },
+        {
+          "kind": "SINGLE_COURSE",
+          "course_codes": [
+            "CS 483"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "CS 483"
+          ],
+          "fully_entered": false,
+          "review_flags": []
+        }
+      ],
+      "credit_progress": {
+        "minimum_credits_interpreted": 6,
+        "candidate_known_credit_subtotal": 6.0,
+        "candidate_courses_without_known_credits": [],
+        "additional_credits_indicated_candidate": 0,
+        "earned_credits_transcript_verified": false
+      },
+      "planning_disposition": "CANDIDATE_COMPLETE"
+    },
+    {
+      "rule_id": "t0_row_0058",
+      "name": "Science w/ Lab",
+      "section_path": [
+        "Major-Specific",
+        "Science w/ Lab"
+      ],
+      "kind": "CHOOSE_N",
+      "source_status": "NEEDS_REVIEW",
+      "candidate_progress_status": "SOURCE_NEEDS_REVIEW",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": null,
+      "remaining_policy_review_flags": [
+        "compound_options_require_group_evaluation",
+        "shared_courses_across_options_need_allocation_rule",
+        "some_options_require_review"
+      ],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "choice_progress": {
+        "required_choices": 3,
+        "fully_entered_options": 2,
+        "maximum_nonoverlapping_choices_entered": 1,
+        "choices_remaining_candidate": 2,
+        "exact_within_group_allocation": true
+      },
+      "course_options": [
+        {
+          "kind": "ALL_OF",
+          "course_codes": [
+            "BSC 120",
+            "BSC 120L"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "BSC 120",
+            "BSC 120L"
+          ],
+          "fully_entered": false,
+          "review_flags": [
+            "or_above_equivalents_not_enumerated",
+            "special_qualification_text"
+          ]
+        },
+        {
+          "kind": "ALL_OF",
+          "course_codes": [
+            "CHM 211",
+            "CHM 217"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "CHM 211",
+            "CHM 217"
+          ],
+          "fully_entered": false,
+          "review_flags": [
+            "or_above_equivalents_not_enumerated",
+            "special_qualification_text"
+          ]
+        },
+        {
+          "kind": "ALL_OF",
+          "course_codes": [
+            "GLY 200",
+            "GLY 210L"
+          ],
+          "already_entered_codes": [],
+          "missing_codes_to_complete_option": [
+            "GLY 200",
+            "GLY 210L"
+          ],
+          "fully_entered": false,
+          "review_flags": [
+            "or_above_equivalents_not_enumerated",
+            "special_qualification_text"
+          ]
+        },
+        {
+          "kind": "ALL_OF",
+          "course_codes": [
+            "PHY 201",
+            "PHY 202"
+          ],
+          "already_entered_codes": [
+            "PHY 201",
+            "PHY 202"
+          ],
+          "missing_codes_to_complete_option": [],
+          "fully_entered": true,
+          "review_flags": [
+            "or_above_equivalents_not_enumerated",
+            "special_qualification_text"
+          ]
+        },
+        {
+          "kind": "ALL_OF",
+          "course_codes": [
+            "PHY 211",
+            "PHY 202"
+          ],
+          "already_entered_codes": [
+            "PHY 202",
+            "PHY 211"
+          ],
+          "missing_codes_to_complete_option": [],
+          "fully_entered": true,
+          "review_flags": [
+            "or_above_equivalents_not_enumerated",
+            "special_qualification_text"
+          ]
+        }
+      ],
+      "credit_progress": {
+        "minimum_credits_interpreted": 12,
+        "candidate_known_credit_subtotal": 5.0,
+        "candidate_courses_without_known_credits": [],
+        "additional_credits_indicated_candidate": null,
+        "earned_credits_transcript_verified": false
+      },
+      "planning_disposition": "REVIEW_REQUIRED"
+    },
+    {
+      "rule_id": "t0_row_0064",
+      "name": "Free Elective",
+      "section_path": [
+        "Major-Specific"
+      ],
+      "kind": "CREDIT_REQUIREMENT_DRAFT",
+      "source_status": "NEEDS_REVIEW",
+      "candidate_progress_status": "SOURCE_NEEDS_REVIEW",
+      "transcript_verification_status": "UNVERIFIED",
+      "additional_coursework_indicated": null,
+      "remaining_policy_review_flags": [
+        "credit_requirement_eligibility_unmapped",
+        "eligibility_requires_explicit_resolution",
+        "repeated_credit_slots_need_policy_review"
+      ],
+      "prerequisites_evaluated": false,
+      "offered_sections_evaluated": false,
+      "attribute_filter": {
+        "attribute_names": [],
+        "match_mode": "ANY",
+        "catalog_year_classification_lookup_applied": false,
+        "catalog_year": "2026-2027",
+        "candidate_course_codes_entered": [],
+        "eligible_catalog_course_options_included": false
+      },
+      "credit_progress": {
+        "minimum_credits_interpreted": 8,
+        "candidate_known_credit_subtotal": null,
+        "candidate_courses_without_known_credits": [],
+        "additional_credits_indicated_candidate": null,
+        "earned_credits_transcript_verified": false
+      },
+      "planning_disposition": "REVIEW_REQUIRED"
+    }
+  ],
+  "summary": {
+    "candidate_met_rule_occurrences": 7,
+    "candidate_not_met_rule_occurrences": 28,
+    "source_review_rule_occurrences": 4,
+    "insufficient_evidence_rule_occurrences": 0,
+    "missing_explicitly_required_course_codes_distinct": [
+      "CMM 103",
+      "CS 110",
+      "CS 120",
+      "CS 210",
+      "CS 215",
+      "CS 300",
+      "CS 305",
+      "CS 310",
+      "CS 320",
+      "CS 330",
+      "CS 360",
+      "CS 402",
+      "CS 410",
+      "CS 430",
+      "CS 490",
+      "ENG 101",
+      "ENG 201",
+      "ENG 354",
+      "ENGR 221",
+      "MGT 320",
+      "MTH 220",
+      "MTH 230",
+      "MTH 329",
+      "STA 345"
+    ]
+  },
+  "scheduler_must_still_check": [
+    "Prerequisites, corequisites, minimum grades and registration rules",
+    "Which courses and sections are actually offered for the requested term",
+    "Meeting conflicts, scheduling preferences and seat availability",
+    "Any unresolved substitutions, lab qualifications or degree policy",
+    "Student-reported completions, earned credits, origin and transfer equivalencies"
+  ],
+  "warnings": [
+    "This handoff is not an approved degree audit or enrollment clearance.",
+    "Options are requirement candidates, not verified enrollment-eligible courses.",
+    "Do not sum per-requirement candidate credits into a degree total.",
+    "Some qualifying attribute-course options are not enumerated here; query the catalog-year courseattribute data separately."
+  ],
+  "course_eligibility": {
+    "evaluation_status": "NOT_EVALUATED",
+    "default_status": "UNKNOWN",
+    "courses": [
+      {
+        "course_code": "BSC 120",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "BSC 120L",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CHM 211",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CHM 217",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CMM 103",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 110",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 120",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 210",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 215",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 300",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 305",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 310",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 320",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 330",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 360",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 402",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 410",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 430",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "CS 490",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "ENG 101",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "ENG 201",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "ENG 354",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "ENGR 221",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "GLY 200",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "GLY 210L",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "MGT 320",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "MTH 220",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "MTH 230",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "MTH 329",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      },
+      {
+        "course_code": "STA 345",
+        "status": "UNKNOWN",
+        "reason": "PREREQUISITES_NOT_EVALUATED"
+      }
+    ]
+  },
+  "candidate_option_coverage": {
+    "explicit_course_codes_enumerated": true,
+    "unmet_attribute_option_lists_enumerated": false,
+    "notes": "Attribute requirements with missing candidate options need a catalog-year courseattribute lookup; course_eligibility.courses is not an exhaustive course pool."
+  }
+}
