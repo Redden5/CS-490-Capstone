@@ -1,0 +1,404 @@
+# Degree planning handoff: v1, opt-in v2, and opt-in v2.1
+
+The handoff is unofficial planning evidence, not an approved degree audit,
+verified transcript, graduation determination, or registration clearance.
+
+## Execution and compatibility
+
+`backend/scripts/preview_degree_audit.py` keeps `evaluate_preview()` unchanged.
+It builds the handoff with `build_planning_handoff()`, whose
+`finalize_planning_handoff_v1()` creates explicit candidate placeholders. Optional
+prerequisite enrichment happens **after** that finalizer returns.
+
+Without `--evaluate-prerequisites` or `--core-ii-candidates`, legacy code-list inputs produce the same
+preview and `1.0.0` handoff. No prerequisite source files, environment loading,
+client creation or queries occur. The existing independent `--supabase-attributes`
+option retains its behavior. Neither option is implied by the other.
+
+`--core-ii-candidates` is a separate opt-in mode that implies both completed-course
+attribute retrieval and prerequisite evaluation, and produces `2.1.0`. It does not
+require specifying the two older flags. Adding them explicitly does not repeat
+the lookups or prerequisite batch. The existing v1/v2 modes are unchanged.
+
+With `--evaluate-prerequisites`, the CLI:
+
+1. Validates coursework and the draft's catalog-year label.
+2. Computes the same degree-progress results and explicit candidate pool.
+3. Reads `backend/scripts/courses.csv` and `backend/scripts/catalog_prerequisites.csv`.
+4. Loads the root `.env` with `override=False` and creates a dedicated client using
+   the existing `create_api_client()` factory. Credentials stay at this CLI boundary.
+5. Calls `backend/services/planning_eligibility.py` once for the whole candidate batch.
+6. Attaches results to a `2.0.0` handoff and, if requested, the preview JSON.
+
+The opt-in flag works without either output path; the console reports counts and
+availability. `--output` includes `course_eligibility` and additional warnings.
+`--planning-output` includes the full v2 projection. Existing saved examples are
+not upgraded automatically. The frontend and Schedule Generator are unchanged.
+
+The client factory accepts `SUPABASE_URL` and `SUPABASE_SECRET_KEY`, with
+`SUPABASE_SERVICE_ROLE_KEY` as its existing fallback. No administrative import or
+RPC helper is called. The adapter and loader only retrieve data; no writes occur.
+
+## Coursework input
+
+`--completed "CS 110,CS 120"` and JSON code lists remain supported.
+`--completed-file` also accepts mixed records or the existing wrapper:
+
+```json
+{
+  "completed_courses": [
+    "CS 110",
+    {"course_code": "CS 120", "grade": "A"},
+    {"course_code": "MTH 220", "grade": null}
+  ]
+}
+```
+
+Record fields are `course_code`, optional `grade`, and optional boolean
+`equivalency_verified`. False marks an unresolved equivalency; the default does
+not independently certify transfer credit. Unknown fields, non-string grades
+(except null), invalid identities and malformed JSON are explicit input errors.
+
+The audit receives distinct codes. The evaluator receives the richer evidence,
+including repeats. Codes and grade strings are case/spacing normalized; no
+highest-grade, latest-attempt or replacement policy is applied. Identical records
+collapse inside the existing evaluator; conflicting records remain uncertain.
+Combining `--completed "CS 110"` with a graded CS 110 record creates both a missing
+grade and a known grade for that course, which is conflicting evidence.
+
+Only A/B/C/D/F comparisons are currently supported. A missing grade is insufficient
+when a minimum is required. Plus/minus, pass/fail and transfer marks are not
+assigned invented equivalents. F is not successful prerequisite completion.
+
+**Students enter only successfully completed courses.** Optional grades affect
+minimum-grade prerequisite evidence only; passing a course need not meet another
+course's minimum grade. The degree audit continues to use entered course codes
+and excludes those codes from remaining candidates. No failed-course or retake
+logic is added. `grades_used_for_degree_progress` remains false. The older v2
+warning text is retained for output compatibility; v2.1 describes the passed-only
+input policy explicitly.
+
+Normalization preserves existing audit identities while additionally accepting
+parser-supported multi-character suffixes and hyphens, such as `BSC 120LH` and
+`MUS 123-1`. Suffixes are never stripped. Legacy one-digit codes such as `CS 1`
+remain accepted in the disabled audit path, but the prerequisite evaluator's
+catalog grammar does not support them: opt-in requests fail validation explicitly
+rather than omit evidence or invent a mapping.
+
+## Candidate coverage
+
+The current CLI evaluates the finalizer's sorted union of:
+
+- Missing explicit required courses.
+- Missing members of unfinished options in incomplete choice groups.
+
+Already entered courses are excluded. Choice groups, ALL_OF option membership,
+review flags, credit progress, requirement summaries and degree dispositions do
+not change because of prerequisite results. No course is removed for being UNMET
+or UNKNOWN. No course is added from prerequisite diagnostics.
+
+Attribute-only requirements, including Core II categories, remain intact. Their
+candidate options are **not generated in v1/v2.0 mode**. Existing
+`candidate_option_coverage` and attribute-option warnings remain unchanged.
+`NO_CANDIDATES` means no explicit candidate codes, not that every flexible
+requirement is complete or that the degree has no remaining work.
+
+## V2 eligibility contract
+
+`course_eligibility` contains:
+
+| Field | Meaning |
+|---|---|
+| `evaluation_status` | Operational outcome below; distinct from rule satisfaction. |
+| `default_status` | Always `UNKNOWN`. |
+| `catalog_year` | The degree draft's year; never replaced with the current year. |
+| `basis` | `STUDENT_REPORTED_EVIDENCE`. |
+| `registration_eligibility_determined` | Always false. |
+| `source_verification`, `retrieval_status` | Loader evidence, or unavailable/not-requested state. |
+| `issues` | Sanitized batch availability diagnostics (`code`, optional `table`). |
+| `diagnostic_scope` | `ALL_ALTERNATIVES_NOT_MANDATORY_COURSEWORK`. |
+| `grades_used_for_degree_progress` | Always false. |
+| `candidate_scope` | CLI projection: `EXPLICIT_DEGREE_REQUIREMENT_COURSES`. |
+| `summary` | Counts keyed by `MET`, `UNMET`, `UNKNOWN`. |
+| `courses` | Sorted per-course results, including blocked and uncertain candidates. |
+
+Operational statuses:
+
+- `NOT_EVALUATED`: v1 only; evaluation was not requested.
+- `COMPLETED`: all requested candidates have complete rule data and were evaluated.
+  An unresolved rule, missing grade or timing uncertainty can still produce UNKNOWN.
+- `PARTIAL`: the loader returned, but one or more candidate envelopes are incomplete.
+  Independently complete candidates retain their own evaluation results.
+- `UNAVAILABLE`: expected source/client availability or batch loader failure.
+  Every affected candidate is retained as UNKNOWN; no partial read is trusted.
+- `NO_CANDIDATES`: empty request; no source reads or client creation are needed.
+
+Each course retains the evaluator's `course_code`, `catalog_year`, `status`,
+`basis`, `registration_eligibility_determined`, `reasons`, `rules`, `rule_groups`,
+`missing_courses`, `insufficient_grade_evidence`, and optional `source_url`.
+`reason` supplies a concise summary code. Status means:
+
+- `MET`: supplied rules are met by reported evidence. It is **not eligibility**.
+- `UNMET`: at least one required condition is proven unsatisfied under that evidence.
+- `UNKNOWN`: the available evidence cannot establish satisfaction or failure.
+
+`rule_groups` preserves prerequisite and corequisite results separately. A group's
+null status means no rule of that type was supplied, not MET. Individual rules and
+their clauses preserve AND/OR results. A proven failure can coexist with unresolved
+requirements; consumers must retain the explanations as well as aggregate status.
+
+Each course's `loading` object independently includes:
+
+- `data_complete`, `load_status`, `coverage_status`, `evaluability`, and `issues`.
+- `excluded_legacy_rule_ids` and `clause_provenance`.
+- `catalog_year_id` when a loader response is available.
+- `rule_provenance`: normalized parent metadata excluding clauses, including IDs,
+  raw text, source URLs, readiness/review flags, source metadata and fingerprints.
+
+Evaluator results can return early for incomplete envelopes. The separate loader
+diagnostics and parent provenance must therefore be retained. Degree requirement
+`rule_id` and database prerequisite `rule_id` are different namespaces; they are
+not join keys to each other.
+
+For each requirement, `prerequisites_evaluated` is true only when its nonempty set
+of explicit remaining candidates all has complete rule data and was evaluated.
+It does not mean MET. New `prerequisite_evaluation_status` is `COMPLETED`,
+`INCOMPLETE`, `UNAVAILABLE`, `CANDIDATES_NOT_ENUMERATED`, or `NOT_APPLICABLE`.
+Completed requirements with no remaining candidates retain false. Unenumerated
+attribute categories retain false. Existing requirement progress fields and
+`offered_sections_evaluated` are unchanged.
+
+## Completeness, failures and timing
+
+The adapter never forces `data_complete`. The unchanged loader verifies pinned
+source bytes, stable paginated reads, identities, relationships, fingerprints and
+the expected source graph. Its reviewed source evidence currently covers only
+2026–2027. Other years do not inherit that evidence.
+
+Completeness is relative to that reviewed snapshot, not proof of unrestricted
+database permissions or a transactionally current snapshot. Completely retrieved
+unresolved rules remain unevaluable. Missing metadata, missing references, hidden
+expected rows, unsupported conditions, mismatched years and absent source evidence
+remain UNKNOWN. Even source-confirmed absence of published metadata does not prove
+that a course has no prerequisites. Undated rules are not substituted for dated ones.
+
+The CLI uses `concurrent_courses=None`: no proposed same-term schedule has been
+reported. Candidate pools are not concurrency evidence. The reusable service accepts
+explicit `concurrent_courses`; an empty list states no concurrent courses, while a
+nonempty list asserts proposed same-term enrollment. Neither concurrency permission
+nor proposed enrollment invents a grade or resolves an unreviewed corequisite policy.
+
+`missing_courses` is a union of diagnostics from **all alternatives**. A MET course
+can have a nonempty list for unused OR branches. It can also reflect unavailable
+concurrent evidence rather than an absent completion. Do not turn this list into
+mandatory degree requirements, prerequisite chains, or automatic schedule additions.
+Alternative selection requires the individual rule/clause results and future policy.
+
+Expected configuration, dependency, source-file and loader failures produce
+sanitized structured diagnostics and console warnings. A valid degree audit is
+still written when possible, and the CLI returns 0 for this degraded success.
+Malformed student/draft input and output-file failures return 1. Unexpected adapter
+or projection programming errors propagate; they are not relabeled as availability.
+Consumers must inspect `evaluation_status`, not just the process exit code.
+
+## Opt-in Core II integration: v2.1.0
+
+Example invocation (performs read-only live catalog/prerequisite queries):
+
+```text
+.venv\Scripts\python.exe -m backend.scripts.preview_degree_audit --input backend/scripts/data/degree_requirements/resolved/computer_science_bs_resolved.json --completed-file completed.json --core-ii-candidates --output preview.json --planning-output planning.json
+```
+
+Only Humanities, Social Sciences (the draft's "Social Studies"), and Fine Arts
+are supported. Science with Lab, Critical Thinking, and other policy-dependent
+requirements remain deferred. No term availability, sections, scheduling,
+preference ranking or interactive prerequisite clarification is implemented.
+
+The workflow is:
+
+1. Retrieve entered-course attributes and credit evidence before running the
+   existing `evaluate_preview()` calculations. With the same input evidence,
+   degree progress is identical to `--supabase-attributes` mode.
+2. Build/finalize the original handoff. Preflight it through the existing pure
+   `build_flexible_candidates()` with no catalog rows. Its existing progress gates
+   identify which supported requirements need a catalog query; an unassessed
+   requirement is not assumed unfinished. Completed and policy-blocked categories
+   do not trigger attribute-candidate queries.
+3. Call `load_attribute_candidates()` once for the needed categories, supplying
+   the reviewed `catalog_attributes.csv` bytes. Preserve its source reconciliation,
+   relationship diagnostics, inactive/uncertain withheld evidence, and bounded
+   snapshot coverage. Build the candidates using the same standalone builder.
+4. Union the actual flexible candidate memberships with explicit candidates,
+   deduplicate by course code, and call the existing prerequisite service once.
+   A nonempty pool produces one prerequisite-loader call (internally batched and
+   paginated); an empty pool needs no prerequisite SELECTs. Missing-course OR
+   diagnostics never add courses to this pool.
+5. Attach the results after finalization. Preserve UNMET and UNKNOWN members;
+   prerequisites do not erase a course's degree-requirement membership.
+
+No degree progress, choices, course bundles, credit shortfalls, or credit-sharing
+policies are recalculated by this projection. The three standalone services
+remain reusable and unchanged by this integration.
+
+### Additive fields and references
+
+The handoff has `schema_version: "2.1.0"` and a new `flexible_candidates` section.
+The preview JSON includes the same section and `course_eligibility`; the preview's
+existing degree-progress fields remain unchanged.
+
+`flexible_candidates` preserves the entire Stage 4A result:
+
+- `catalog_year`, `basis`, `source_verification`, `retrieval_status`, and sanitized
+  `retrieval_issues`.
+- `requirements[]`, containing degree `requirement_id`, name, category, known
+  `remaining_credits_candidate`, per-requirement `generation_status`, reasons,
+  `coverage`, `candidates`, `withheld_courses`, and completed-course exclusions.
+- Course IDs/codes, matched attributes, classification sources, activity status,
+  credit ranges and credit fit. Variable credits never assume the maximum award.
+- `skipped_requirements`, deduplicated `candidate_course_codes`, and
+  `course_requirement_memberships`. One course can have multiple degree matches;
+  `allocation_status` remains `NOT_ALLOCATED_NO_DOUBLE_COUNTING_ASSUMED`.
+
+Each actionable candidate adds:
+
+```json
+{
+  "course_code": "PSC 201",
+  "prerequisite_status": "UNKNOWN",
+  "course_eligibility_reference": "PSC 201"
+}
+```
+
+`course_eligibility_reference` joins by exact course code to
+`course_eligibility.courses` within this same catalog-year handoff. That entry
+contains the complete prerequisite/corequisite result, grade evidence, rule
+provenance and loader diagnostics. The copied status is the combined result;
+neither field indicates registration approval. Withheld courses are not evaluated
+solely because they appear as withheld evidence, although a course independently
+required by an explicit requirement still belongs in the combined pool.
+
+`course_eligibility.candidate_scope` becomes
+`EXPLICIT_AND_CORE_II_REQUIREMENT_COURSES`. Its courses are the sorted, deduplicated
+union. Its summary counts the union once, not requirement occurrences. The original
+degree `summary` remains unchanged.
+
+The standalone provider's `prerequisites_evaluated: false` is retained in the
+flexible block: the provider itself has not evaluated prerequisites. Attached
+per-course references point to the separately evaluated evidence. Do not interpret
+this provider flag as the execution status of `course_eligibility`.
+
+The integration also adds two block-level fields:
+
+| Field | Meaning |
+|---|---|
+| `completed_course_attribute_evidence` | `status` AVAILABLE/UNAVAILABLE and sanitized issues for the initial progress lookup. |
+| `generation_status` | COMPLETED, NOT_NEEDED, PARTIAL, or UNAVAILABLE for supported category generation. |
+
+COMPLETED means requested supported categories were generated; it does not mean
+all degree requirements or prerequisites are satisfied. NOT_NEEDED means no
+supported requirement needed a catalog query. PARTIAL includes incomplete progress,
+source coverage or withheld candidates. UNAVAILABLE covers failure of the initial
+progress lookup, source-file/client setup or attribute-candidate retrieval.
+
+### Coverage and requirement annotations
+
+Existing requirement structures retain their IDs, options, progress and credit
+fields. For supported categories only, `eligible_catalog_course_options_included`
+is true when the provider reports GENERATED with complete membership coverage.
+Partial/withheld enumeration leaves it false. Global
+`unmet_attribute_option_lists_enumerated` is recomputed conservatively; it remains
+false while any unmet attribute category is unenumerated. Existing warnings remain,
+with an added supported-scope warning and updated coverage note.
+
+For a flexible requirement, `prerequisites_evaluated` requires complete enumeration,
+a nonempty candidate set, and complete prerequisite loader envelopes for every
+candidate. UNKNOWN due to grades or unresolved rules can still mean evaluation
+was performed. Partial enumeration cannot claim complete requirement evaluation.
+`prerequisite_evaluation_status` uses the existing statuses, plus NO_CANDIDATES when
+a fully enumerated unfinished requirement has no remaining usable candidates.
+Completed categories retain NOT_APPLICABLE; deferred/unassessed categories retain
+CANDIDATES_NOT_ENUMERATED. `offered_sections_evaluated` remains false.
+
+### Failure behavior
+
+Expected completed-course attribute failures now have the specific
+`AttributeEvidenceUnavailable` subtype of `PreviewError`. In the new mode only,
+they produce an audit without attribute evidence and an explicit unavailable
+diagnostic. The provider then withholds unassessed category recommendations.
+Explicit-course prerequisite evaluation may still succeed independently.
+Legacy `--supabase-attributes` failure behavior is unchanged.
+
+Attribute candidate errors preserve already computed degree progress and return
+no partial batch labeled complete. Prerequisite errors preserve the flexible
+memberships and mark the affected combined pool UNKNOWN. Source hash mismatches
+retain the provider's PARTIAL semantics: positive year-scoped database memberships
+can remain visible, but exhaustive reviewed-source coverage is not asserted.
+
+Expected availability failures return exit code 0 when a valid audit/report can
+be produced, with structured status and console warnings. Malformed grades,
+invalid reported credits and programming errors are not converted into availability
+success. A report consumer must inspect both generation and prerequisite statuses.
+
+### Schedule Generator coordination
+
+Teammate approval is needed before the scheduler consumes v2.1: accept the expanded
+candidate scope, join flexible memberships through requirement IDs, resolve the
+course-code eligibility references, preserve choice/bundle structures, and retain
+UNKNOWN results without silently accepting them. Category approval does not prove
+offerings, open seats, schedule feasibility or permission to double-count credits.
+No consumer code or schema migration is changed here. Existing consumers can keep
+requesting unchanged v1/v2.0 output until v2.1 support is agreed.
+
+## Reusable candidate-provider interface
+
+The service's interface is independent of requirement kinds:
+
+```python
+evaluate_candidate_prerequisites(
+    client,
+    candidate_course_codes,
+    completed_courses,
+    catalog_year=degree_catalog_year,
+    source_catalog_csv=reviewed_catalog_bytes,
+    source_prerequisite_csv=reviewed_prerequisite_bytes,
+    concurrent_courses=None,
+)
+```
+
+The Core II provider retrieves approved, catalog-year-scoped courseattribute
+matches for each remaining category and preserves category/requirement membership
+in a separate mapping. The integration combines its actual course codes with explicit candidates.
+Deduplicate that union for one service call, then associate results back with every
+requirement the course can satisfy. Do not create a pseudo-course named "Core II
+Humanities". Attribute classification establishes category membership; prerequisite
+MET establishes only reported rule evidence. Neither settles degree allocation,
+substitution policy, offered sections or registration eligibility.
+
+`apply_prerequisite_results()` checks the explicit pool by default and the validated
+union when its optional `flexible_candidates` argument is supplied. New providers
+must preserve that membership validation and coordinate any scope extension with
+the scheduler. The prerequisite service needs no category-specific branch.
+
+## Validation and next integration boundary
+
+Offline tests run with:
+
+```text
+.venv\Scripts\python.exe -B -m unittest discover -s backend/tests -p "test_*.py"
+```
+
+Stage 3 adds v1 fixture characterization, input compatibility, unchanged progress,
+v2 projection, expected failures, and real loader/evaluator composition with a
+SELECT-only fake client. Optional live/staging scripts are separate and are not
+part of offline discovery.
+
+Stage 4B adds mocked CLI-to-service composition using the real attribute loader,
+candidate builder, prerequisite loader and evaluator, with a SELECT-only fake SDK.
+Tests cover v1/v2 compatibility, the combined batch, v2.1 projections, source and
+service failures, grade uncertainty, overlap, completed categories and unchanged
+degree-progress calculations. No live verification is part of this suite.
+
+Before the Schedule Generator consumes v2, agree on version support, UNKNOWN
+handling, branch diagnostics, concurrency evidence, and incomplete attribute
+coverage. It must still check offerings, sections, conflicts, seats, registration
+restrictions and reported evidence. No scheduler behavior is changed by Stage 3.
