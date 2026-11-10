@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient.js";
-import DashboardCard from "../components/DashboardCard.jsx";
+import CourseDetailCard from "../components/CourseDetailCard.jsx";
+import CourseRequirements from "../components/CourseRequirements.jsx";
 import "../styles/CourseDetails.css";
 
 const DAYS = [null, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -66,8 +67,9 @@ function CourseDetails() {
         }
 
         const [rules, sections] = await Promise.all([
-          supabase.from("courserule").select("rule_id, rule_type, raw_text")
-            .eq("course_id", courseId).order("rule_type").abortSignal(controller.signal),
+          supabase.from("courserule")
+            .select("rule_id, rule_type, raw_text, catalog_year_id, catalogyear:catalog_year_id(catalog_label, start_year, end_year)")
+            .eq("course_id", courseId).order("rule_type").order("rule_id").abortSignal(controller.signal),
           supabase.from("coursesection")
             .select("section_id, section_number, crn, instructor, campus, delivery_mode, section_status, capacity, enrolled, term:term_id(term_name, start_date), sectionmeeting(meeting_id, day_of_week, start_time, end_time, building, room, meeting_type)")
             .eq("course_id", courseId).order("term_id", { ascending: false })
@@ -112,49 +114,45 @@ function CourseDetails() {
         <>
           <header className="course-details-heading">
             <p>{course.course_code}</p>
-            <h1 ref={heading} tabIndex={-1}>{course.course_title}</h1>
-            <dl className="course-facts">
-              <div><dt>Credits</dt><dd>{course.min_credit_hours === course.max_credit_hours
+            <div className="course-title-line">
+              <h1 ref={heading} tabIndex={-1}>{course.course_title}</h1>
+              <span className={`course-status-badge${course.active_status ? "" : " course-status-inactive"}`}>
+                {course.active_status ? "Active" : "Inactive"}
+              </span>
+            </div>
+            <dl className="course-facts course-summary-facts">
+              <div><dt>Credits:</dt><dd>{course.min_credit_hours === course.max_credit_hours
                 ? course.min_credit_hours : `${course.min_credit_hours}–${course.max_credit_hours}`}</dd></div>
-              <div><dt>Catalog status</dt><dd>{course.active_status ? "Active" : "Inactive"}</dd></div>
-              <div><dt>Department</dt><dd>{course.department?.department_name || "Not listed"}</dd></div>
+              <div><dt>Department:</dt><dd>{course.department?.department_name || "Not listed"}</dd></div>
             </dl>
           </header>
 
-          <DashboardCard title="Description">
-            <p className="course-description">{course.description || "No description available."}</p>
-          </DashboardCard>
+          <div className="course-details-layout">
+            <div className="course-details-main-column">
+              <CourseDetailCard title="Description" className="course-description-card">
+                <p className="course-description">{course.description || "No description available."}</p>
+              </CourseDetailCard>
 
-          <DashboardCard title="Prerequisites and corequisites">
-            {rules.error ? <p role="alert">Requirements could not be loaded. Try reloading the course.</p> : (
-              <>
-                {["PREREQUISITE", "COREQUISITE"].map((type) => {
-                  const rule = rules.data?.find((item) => item.rule_type === type);
-                  return (
-                    <div key={type}>
-                      <h3>{type === "PREREQUISITE" ? "Prerequisites" : "Corequisites"}</h3>
-                      <p className="course-description">{rule
-                        ? rule.raw_text || "Requirements are recorded, but their description is not available."
-                        : "No requirements listed."}</p>
-                    </div>
-                  );
-                })}
-                <p>Listed requirements do not confirm your eligibility to enroll.</p>
-              </>
-            )}
-          </DashboardCard>
-
-          <DashboardCard title="Course sections">
-            {sections.error ? <p role="alert">Sections could not be loaded. Try reloading the course.</p>
-              : sections.data?.length ? (
-                <>
-                  <p>All recorded terms are shown. Enrollment information may change.</p>
-                  <div className="course-sections">
-                    {sections.data.map((section) => <Section section={section} key={section.section_id} />)}
-                  </div>
-                </>
-              ) : <p>No sections are listed for this course.</p>}
-          </DashboardCard>
+              <CourseDetailCard title="Course sections" className="course-sections-card">
+                {sections.error ? <p role="alert">Sections could not be loaded. Try reloading the course.</p>
+                  : sections.data?.length ? (
+                    <>
+                      <p>All recorded terms are shown. Enrollment information may change.</p>
+                      <div className="course-sections">
+                        {sections.data.map((section) => <Section section={section} key={section.section_id} />)}
+                      </div>
+                    </>
+                  ) : <p className="course-sections-empty">No sections are listed for this course.</p>}
+              </CourseDetailCard>
+            </div>
+            <aside className="course-requirements-sidebar" aria-label="Course requirements">
+              {rules.error ? (
+                <CourseDetailCard title="Prerequisites and corequisites" className="course-requirements-card">
+                  <p role="alert">Requirements could not be loaded. Try reloading the course.</p>
+                </CourseDetailCard>
+              ) : <CourseRequirements key={course.course_id} rules={rules.data ?? []} />}
+            </aside>
+          </div>
           {(rules.error || sections.error) && (
             <button type="button" onClick={() => setAttempt(attempt + 1)}>Reload course</button>
           )}
