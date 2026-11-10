@@ -28,18 +28,10 @@ function CourseRequirements({ rules }) {
           <p>Choose the catalog year that applies to your program.</p>
         </div>
       )}
-      {["PREREQUISITE", "COREQUISITE"].map((type) => {
-        const requirements = selectedRules.filter((rule) => rule.rule_type === type);
-        return (
-          <div key={type}>
-            <h3>{type === "PREREQUISITE" ? "Prerequisites" : "Corequisites"}</h3>
-            {requirements.length ? requirements.map((rule) => (
-              <p key={rule.rule_id} className="course-description">{rule.raw_text?.trim()
-                || "Requirements are recorded, but their description is not available."}</p>
-            )) : <p>No requirements listed{catalogId ? " for this catalog year" : ""}.</p>}
-          </div>
-        );
-      })}
+      {selectedRules.length ? selectedRules.map((rule) => (
+        <p key={rule.rule_id} className="course-description">{rule.raw_text?.trim()
+          || "Requirements are recorded, but their description is not available."}</p>
+      )) : <p>No requirements listed.</p>}
       <p>Listed requirements do not confirm your eligibility to enroll.</p>
     </>
   );
