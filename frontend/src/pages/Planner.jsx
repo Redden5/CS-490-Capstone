@@ -85,9 +85,10 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
                 const added = selected.some((item) => item.course_id === course.course_id);
                 return (
                   <li key={course.course_id}>
-                    <div><Link to={`/courses/${course.course_id}`} target="_blank" rel="noopener noreferrer">
+                    <div className="planner-picker-course"><Link className="planner-course-link"
+                      to={`/courses/${course.course_id}`} target="_blank" rel="noopener noreferrer">
                       <strong>{course.course_code}</strong> — {course.course_title}
-                      {" · View details (opens in a new tab)"}
+                      <span className="planner-course-link-hint">View details (opens in a new tab)</span>
                     </Link>
                       <p>{creditLabel(course.min_credit_hours, course.max_credit_hours)} credits</p>
                     </div>
