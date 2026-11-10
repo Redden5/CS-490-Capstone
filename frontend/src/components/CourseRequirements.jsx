@@ -18,17 +18,17 @@ function CourseRequirements({ rules }) {
   const selectedRules = rules.filter((rule) => String(rule.catalog_year_id ?? "undated") === catalogId);
 
   return (
-    <CourseDetailCard title="Prerequisites and corequisites" icon="requirements"
-      action={catalogs.length > 0 && (
+    <CourseDetailCard title="Prerequisites and corequisites" className="course-requirements-card">
+      {catalogs.length > 0 && (
         <div className="course-catalog-control">
-          <label htmlFor="requirements-catalog">Catalog year</label>
+          <label htmlFor="requirements-catalog">Requirements catalog year</label>
           <select id="requirements-catalog" value={catalogId}
             aria-describedby="requirements-catalog-help"
             onChange={(event) => setSelectedCatalog(event.target.value)}>
             {catalogs.map((catalog) => <option key={catalog.id} value={catalog.id}>{catalog.label}</option>)}
           </select>
         </div>
-      )}>
+      )}
       {catalogs.length > 0 && <p id="requirements-catalog-help" className="course-catalog-help">
         Choose the catalog year that applies to your program.
       </p>}

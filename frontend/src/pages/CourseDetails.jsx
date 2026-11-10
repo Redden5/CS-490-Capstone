@@ -121,34 +121,38 @@ function CourseDetails() {
               </span>
             </div>
             <dl className="course-facts course-summary-facts">
-              <div><dt>Credits</dt><dd>{course.min_credit_hours === course.max_credit_hours
+              <div><dt>Credits:</dt><dd>{course.min_credit_hours === course.max_credit_hours
                 ? course.min_credit_hours : `${course.min_credit_hours}–${course.max_credit_hours}`}</dd></div>
-              <div><dt>Catalog status</dt><dd>{course.active_status ? "Active" : "Inactive"}</dd></div>
-              <div><dt>Department</dt><dd>{course.department?.department_name || "Not listed"}</dd></div>
+              <div><dt>Department:</dt><dd>{course.department?.department_name || "Not listed"}</dd></div>
             </dl>
           </header>
 
-          <CourseDetailCard title="Description" icon="description">
-            <p className="course-description">{course.description || "No description available."}</p>
-          </CourseDetailCard>
+          <div className="course-details-layout">
+            <div className="course-details-main-column">
+              <CourseDetailCard title="Description" className="course-description-card">
+                <p className="course-description">{course.description || "No description available."}</p>
+              </CourseDetailCard>
 
-          {rules.error ? (
-            <CourseDetailCard title="Prerequisites and corequisites" icon="requirements">
-              <p role="alert">Requirements could not be loaded. Try reloading the course.</p>
-            </CourseDetailCard>
-          ) : <CourseRequirements key={course.course_id} rules={rules.data ?? []} />}
-
-          <CourseDetailCard title="Course sections" icon="sections">
-            {sections.error ? <p role="alert">Sections could not be loaded. Try reloading the course.</p>
-              : sections.data?.length ? (
-                <>
-                  <p>All recorded terms are shown. Enrollment information may change.</p>
-                  <div className="course-sections">
-                    {sections.data.map((section) => <Section section={section} key={section.section_id} />)}
-                  </div>
-                </>
-              ) : <p className="course-sections-empty">No sections are listed for this course.</p>}
-          </CourseDetailCard>
+              <CourseDetailCard title="Course sections" className="course-sections-card">
+                {sections.error ? <p role="alert">Sections could not be loaded. Try reloading the course.</p>
+                  : sections.data?.length ? (
+                    <>
+                      <p>All recorded terms are shown. Enrollment information may change.</p>
+                      <div className="course-sections">
+                        {sections.data.map((section) => <Section section={section} key={section.section_id} />)}
+                      </div>
+                    </>
+                  ) : <p className="course-sections-empty">No sections are listed for this course.</p>}
+              </CourseDetailCard>
+            </div>
+            <aside className="course-requirements-sidebar" aria-label="Course requirements">
+              {rules.error ? (
+                <CourseDetailCard title="Prerequisites and corequisites" className="course-requirements-card">
+                  <p role="alert">Requirements could not be loaded. Try reloading the course.</p>
+                </CourseDetailCard>
+              ) : <CourseRequirements key={course.course_id} rules={rules.data ?? []} />}
+            </aside>
+          </div>
           {(rules.error || sections.error) && (
             <button type="button" onClick={() => setAttempt(attempt + 1)}>Reload course</button>
           )}
