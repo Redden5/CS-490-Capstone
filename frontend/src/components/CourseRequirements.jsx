@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CourseDetailCard from "./CourseDetailCard.jsx";
 
 // Keep catalog years separate: the same course can have different requirements.
 function CourseRequirements({ rules }) {
@@ -17,23 +18,28 @@ function CourseRequirements({ rules }) {
   const selectedRules = rules.filter((rule) => String(rule.catalog_year_id ?? "undated") === catalogId);
 
   return (
-    <>
-      {catalogs.length > 0 && (
-        <div>
-          <label htmlFor="requirements-catalog">Requirements catalog year</label>{" "}
+    <CourseDetailCard title="Prerequisites and corequisites" icon="requirements"
+      action={catalogs.length > 0 && (
+        <div className="course-catalog-control">
+          <label htmlFor="requirements-catalog">Catalog year</label>
           <select id="requirements-catalog" value={catalogId}
+            aria-describedby="requirements-catalog-help"
             onChange={(event) => setSelectedCatalog(event.target.value)}>
             {catalogs.map((catalog) => <option key={catalog.id} value={catalog.id}>{catalog.label}</option>)}
           </select>
-          <p>Choose the catalog year that applies to your program.</p>
         </div>
-      )}
-      {selectedRules.length ? selectedRules.map((rule) => (
-        <p key={rule.rule_id} className="course-description">{rule.raw_text?.trim()
-          || "Requirements are recorded, but their description is not available."}</p>
-      )) : <p>No requirements listed.</p>}
-      <p>Listed requirements do not confirm your eligibility to enroll.</p>
-    </>
+      )}>
+      {catalogs.length > 0 && <p id="requirements-catalog-help" className="course-catalog-help">
+        Choose the catalog year that applies to your program.
+      </p>}
+      <div className="course-requirements-text">
+        {selectedRules.length ? selectedRules.map((rule) => (
+          <p key={rule.rule_id} className="course-description">{rule.raw_text?.trim()
+            || "Requirements are recorded, but their description is not available."}</p>
+        )) : <p>No requirements listed.</p>}
+      </div>
+      <p className="course-requirements-note">Listed requirements do not confirm your eligibility to enroll.</p>
+    </CourseDetailCard>
   );
 }
 

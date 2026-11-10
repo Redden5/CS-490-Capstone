@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient.js";
-import DashboardCard from "../components/DashboardCard.jsx";
+import CourseDetailCard from "../components/CourseDetailCard.jsx";
 import CourseRequirements from "../components/CourseRequirements.jsx";
 import "../styles/CourseDetails.css";
 
@@ -114,8 +114,13 @@ function CourseDetails() {
         <>
           <header className="course-details-heading">
             <p>{course.course_code}</p>
-            <h1 ref={heading} tabIndex={-1}>{course.course_title}</h1>
-            <dl className="course-facts">
+            <div className="course-title-line">
+              <h1 ref={heading} tabIndex={-1}>{course.course_title}</h1>
+              <span className={`course-status-badge${course.active_status ? "" : " course-status-inactive"}`}>
+                {course.active_status ? "Active" : "Inactive"}
+              </span>
+            </div>
+            <dl className="course-facts course-summary-facts">
               <div><dt>Credits</dt><dd>{course.min_credit_hours === course.max_credit_hours
                 ? course.min_credit_hours : `${course.min_credit_hours}–${course.max_credit_hours}`}</dd></div>
               <div><dt>Catalog status</dt><dd>{course.active_status ? "Active" : "Inactive"}</dd></div>
@@ -123,16 +128,17 @@ function CourseDetails() {
             </dl>
           </header>
 
-          <DashboardCard title="Description">
+          <CourseDetailCard title="Description" icon="description">
             <p className="course-description">{course.description || "No description available."}</p>
-          </DashboardCard>
+          </CourseDetailCard>
 
-          <DashboardCard title="Prerequisites and corequisites">
-            {rules.error ? <p role="alert">Requirements could not be loaded. Try reloading the course.</p>
-              : <CourseRequirements key={course.course_id} rules={rules.data ?? []} />}
-          </DashboardCard>
+          {rules.error ? (
+            <CourseDetailCard title="Prerequisites and corequisites" icon="requirements">
+              <p role="alert">Requirements could not be loaded. Try reloading the course.</p>
+            </CourseDetailCard>
+          ) : <CourseRequirements key={course.course_id} rules={rules.data ?? []} />}
 
-          <DashboardCard title="Course sections">
+          <CourseDetailCard title="Course sections" icon="sections">
             {sections.error ? <p role="alert">Sections could not be loaded. Try reloading the course.</p>
               : sections.data?.length ? (
                 <>
@@ -141,8 +147,8 @@ function CourseDetails() {
                     {sections.data.map((section) => <Section section={section} key={section.section_id} />)}
                   </div>
                 </>
-              ) : <p>No sections are listed for this course.</p>}
-          </DashboardCard>
+              ) : <p className="course-sections-empty">No sections are listed for this course.</p>}
+          </CourseDetailCard>
           {(rules.error || sections.error) && (
             <button type="button" onClick={() => setAttempt(attempt + 1)}>Reload course</button>
           )}
