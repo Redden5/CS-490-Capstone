@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient.js";
 import DashboardCard from "../components/DashboardCard.jsx";
 import "../styles/Planner.css";
@@ -84,7 +85,10 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
                 const added = selected.some((item) => item.course_id === course.course_id);
                 return (
                   <li key={course.course_id}>
-                    <div><strong>{course.course_code}</strong> — {course.course_title}
+                    <div><Link to={`/courses/${course.course_id}`} target="_blank" rel="noopener noreferrer">
+                      <strong>{course.course_code}</strong> — {course.course_title}
+                      {" · View details (opens in a new tab)"}
+                    </Link>
                       <p>{creditLabel(course.min_credit_hours, course.max_credit_hours)} credits</p>
                     </div>
                     <button type="button" className="planner-secondary-button" disabled={added}
