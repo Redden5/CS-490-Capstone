@@ -33,6 +33,10 @@ class PreviewError(ValueError):
     """Invalid draft or input list."""
 
 
+class AttributeEvidenceUnavailable(PreviewError):
+    """Expected attribute transport/configuration failure, distinct from bad input."""
+
+
 def canonical_course_code(raw: str) -> str:
     """Normalize explicit course codes such as 'cs110' -> 'CS 110'."""
     if not isinstance(raw, str):
@@ -797,7 +801,7 @@ def fetch_supabase_attribute_evidence(
         from dotenv import load_dotenv
         from supabase import create_client
     except ImportError as error:
-        raise PreviewError(
+        raise AttributeEvidenceUnavailable(
             "Supabase mode requires installed 'supabase' and 'python-dotenv' packages."
         ) from error
 
@@ -806,12 +810,12 @@ def fetch_supabase_attribute_evidence(
     url = os.getenv("SUPABASE_URL")
     key = os.getenv("SUPABASE_SECRET_KEY")
     if not url or not key:
-        raise PreviewError("Set SUPABASE_URL and SUPABASE_SECRET_KEY in your root .env file.")
+        raise AttributeEvidenceUnavailable("Set SUPABASE_URL and SUPABASE_SECRET_KEY in your root .env file.")
 
     try:
         db = create_client(url, key)
     except Exception as error:
-        raise PreviewError(
+        raise AttributeEvidenceUnavailable(
             f"Cannot initialize Supabase ({type(error).__name__}); check .env credentials."
         ) from error
 
@@ -824,13 +828,13 @@ def fetch_supabase_attribute_evidence(
                 response = query.range(len(rows), len(rows) + page_size - 1).execute()
             except Exception as error:
                 # Never print credentials or API exception payloads.
-                raise PreviewError(
+                raise AttributeEvidenceUnavailable(
                     f"Supabase SELECT for {description} failed ({type(error).__name__}). "
                     "Check schema access, table permissions, and credentials."
                 ) from error
             batch = response.data
             if not isinstance(batch, list):
-                raise PreviewError(f"Unexpected Supabase response for {description}.")
+                raise AttributeEvidenceUnavailable(f"Unexpected Supabase response for {description}.")
             rows.extend(batch)
             if len(batch) < page_size:
                 return rows
@@ -842,7 +846,7 @@ def fetch_supabase_attribute_evidence(
         "catalogyear",
     )
     if len(years) != 1:
-        raise PreviewError(
+        raise AttributeEvidenceUnavailable(
             f"Expected one catalogyear record for {catalog_year!r}; found {len(years)}."
         )
     year_id = years[0]["catalog_year_id"]
@@ -882,7 +886,7 @@ def fetch_supabase_attribute_evidence(
     attribute_by_id = {row["attribute_id"]: row["attribute_name"] for row in attrs}
     missing_attribute_ids = set(attribute_ids) - set(attribute_by_id)
     if missing_attribute_ids:
-        raise PreviewError(f"Missing attribute definitions for IDs: {sorted(missing_attribute_ids)}")
+        raise AttributeEvidenceUnavailable(f"Missing attribute definitions for IDs: {sorted(missing_attribute_ids)}")
 
     courses_by_attribute: dict[str, set[str]] = {}
     # [attribute_name][course_code] -> provenance from year-scoped source rows
@@ -1413,14 +1417,17 @@ def _create_prerequisite_client():
     return create_api_client()
 
 
-def fetch_planning_eligibility(handoff: dict[str, Any], coursework: list) -> dict[str, Any]:
+def fetch_planning_eligibility(
+    handoff: dict[str, Any], coursework: list, *, candidate_course_codes: list[str] | None = None,
+) -> dict[str, Any]:
     """Read-only optional evidence. Expected availability failures keep the audit usable."""
     from backend.services.planning_eligibility import (
         evaluate_candidate_prerequisites, unavailable_candidate_prerequisites,
         validate_candidate_evidence,
     )
 
-    codes = [c["course_code"] for c in handoff["course_eligibility"]["courses"]]
+    codes = ([c["course_code"] for c in handoff["course_eligibility"]["courses"]]
+             if candidate_course_codes is None else sorted(set(candidate_course_codes)))
     year = handoff["degree"]["catalog_year"]
     # Do not hide malformed input behind missing credentials/source artifacts.
     validate_candidate_evidence(codes, coursework, catalog_year=year)
@@ -1452,9 +1459,80 @@ def fetch_planning_eligibility(handoff: dict[str, Any], coursework: list) -> dic
     )
 
 
-def apply_prerequisite_results(handoff: dict[str, Any], results: dict[str, Any]) -> dict[str, Any]:
+def fetch_core_ii_candidates(handoff: dict[str, Any], progress_evidence: dict[str, Any]) -> dict[str, Any]:
+    """Run the standalone provider only for supported, confirmed unfinished categories.
+
+    Preflight uses the provider's existing progress gates with an empty catalog
+    response. Only a missing catalog for an otherwise actionable requirement
+    triggers SELECTs; no independent copy of its academic-policy rules is added.
+    """
+    from backend.services.flexible_candidates import load_attribute_candidates, build_flexible_candidates
+
+    year = handoff["degree"]["catalog_year"]
+    loaded = load_attribute_candidates(None, [], catalog_year=year)
+    preflight = build_flexible_candidates(handoff, loaded)
+    names = sorted({r["category"] for r in preflight["requirements"]
+                    if r["reasons"] == ["MISSING_OR_MISMATCHED_CATALOG_DATA"]})
+    if names:
+        try:
+            source = (Path(__file__).resolve().parent / "catalog_attributes.csv").read_bytes()
+        except OSError:
+            loaded.update(retrieval_status="UNAVAILABLE", source_verification="SOURCE_ARTIFACT_UNAVAILABLE",
+                          issues=[{"code": "ATTRIBUTE_SOURCE_ARTIFACT_UNAVAILABLE"}])
+        else:
+            try:
+                client = _create_prerequisite_client()
+            except ImportError:
+                loaded.update(retrieval_status="UNAVAILABLE", issues=[{"code": "ATTRIBUTE_DEPENDENCIES_UNAVAILABLE"}])
+            except (OSError, ValueError, RuntimeError):
+                loaded.update(retrieval_status="UNAVAILABLE", issues=[{"code": "ATTRIBUTE_CLIENT_UNAVAILABLE"}])
+            else:
+                loaded = load_attribute_candidates(client, names, catalog_year=year,
+                                                   source_catalog_attributes_csv=source)
+    result = build_flexible_candidates(handoff, loaded)
+    result["completed_course_attribute_evidence"] = deepcopy(progress_evidence)
+    states = {r["generation_status"] for r in result["requirements"]}
+    if progress_evidence["status"] == "UNAVAILABLE" or loaded["retrieval_status"] == "UNAVAILABLE":
+        status = "UNAVAILABLE"
+    elif states & {"INSUFFICIENT_EVIDENCE", "INCOMPLETE", "PARTIAL"}:
+        status = "PARTIAL"
+    elif "GENERATED" in states:
+        status = "COMPLETED"
+    else:
+        status = "NOT_NEEDED"
+    result["generation_status"] = status
+    return result
+
+
+def combined_candidate_codes(handoff: dict[str, Any], flexible: dict[str, Any]) -> list[str]:
+    """Join actual candidate memberships, never prerequisite diagnostic courses."""
+    if flexible["catalog_year"] != handoff["degree"]["catalog_year"]:
+        raise ValueError("Flexible candidates do not match the handoff year")
+    requirement_ids = {r["rule_id"] for r in handoff["requirements"]}
+    memberships: dict[str, list[str]] = {}
+    seen = set()
+    for requirement in flexible["requirements"]:
+        rule_id = requirement["requirement_id"]
+        if rule_id not in requirement_ids or rule_id in seen:
+            raise ValueError("Flexible candidates have unknown or duplicate requirement IDs")
+        seen.add(rule_id)
+        for candidate in requirement["candidates"]:
+            memberships.setdefault(candidate["course_code"], []).append(rule_id)
+    if ({c: sorted(ids) for c, ids in memberships.items()} != flexible["course_requirement_memberships"]
+            or sorted(memberships) != flexible["candidate_course_codes"]):
+        raise ValueError("Flexible candidate membership/index mismatch")
+    if set(memberships) & set(handoff["completed_course_codes_entered"]):
+        raise ValueError("Flexible candidate pool contains completed courses")
+    return sorted({c["course_code"] for c in handoff["course_eligibility"]["courses"]} | set(memberships))
+
+
+def apply_prerequisite_results(
+    handoff: dict[str, Any], results: dict[str, Any], *, flexible_candidates: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Enrich a finalized v1 projection without changing degree-progress fields."""
     expected = {c["course_code"] for c in handoff["course_eligibility"]["courses"]}
+    if flexible_candidates is not None:
+        expected = set(combined_candidate_codes(handoff, flexible_candidates))
     actual = {c["course_code"] for c in results["courses"]}
     if (expected != actual or len(actual) != len(results["courses"])
             or results["catalog_year"] != handoff["degree"]["catalog_year"]):
@@ -1464,17 +1542,35 @@ def apply_prerequisite_results(handoff: dict[str, Any], results: dict[str, Any])
     output["course_eligibility"] = deepcopy(results)
     output["course_eligibility"]["candidate_scope"] = "EXPLICIT_DEGREE_REQUIREMENT_COURSES"
     by_code = {c["course_code"]: c for c in results["courses"]}
+    flexible_by_id = {}
+    if flexible_candidates is not None:
+        output["schema_version"] = "2.1.0"
+        output["course_eligibility"]["candidate_scope"] = "EXPLICIT_AND_CORE_II_REQUIREMENT_COURSES"
+        output["flexible_candidates"] = deepcopy(flexible_candidates)
+        flexible_by_id = {r["requirement_id"]: r for r in output["flexible_candidates"]["requirements"]}
+        for item in flexible_by_id.values():
+            for candidate in item["candidates"]:
+                code = candidate["course_code"]
+                candidate["prerequisite_status"] = by_code[code]["status"]
+                candidate["course_eligibility_reference"] = code
     entered = set(handoff["completed_course_codes_entered"])
     for requirement in output["requirements"]:
         candidates = set()
+        enumeration_complete = True
         if requirement["kind"] == "REQUIRED_COURSE":
             candidates.update(requirement.get("remaining_required_course_codes", []))
         elif requirement["kind"] == "CHOOSE_N" and requirement["planning_disposition"] != "CANDIDATE_COMPLETE":
             for option in requirement.get("course_options", []):
                 if not option["fully_entered"]:
                     candidates.update(option["missing_codes_to_complete_option"])
+        elif requirement["kind"] == "CREDIT_REQUIREMENT_DRAFT" and requirement["rule_id"] in flexible_by_id:
+            item = flexible_by_id[requirement["rule_id"]]
+            candidates.update(c["course_code"] for c in item["candidates"])
+            enumeration_complete = (item["generation_status"] == "GENERATED"
+                                    and (item["coverage"] or {}).get("coverage_complete") is True)
+            requirement["attribute_filter"]["eligible_catalog_course_options_included"] = enumeration_complete
         candidates -= entered
-        complete = bool(candidates) and all(by_code[c]["loading"]["data_complete"] for c in candidates)
+        complete = bool(candidates) and enumeration_complete and all(by_code[c]["loading"]["data_complete"] for c in candidates)
         requirement["prerequisites_evaluated"] = complete
         if candidates:
             status = "COMPLETED" if complete else (
@@ -1486,10 +1582,14 @@ def apply_prerequisite_results(handoff: dict[str, Any], results: dict[str, Any])
               and not requirement["attribute_filter"].get("eligible_catalog_course_options_included", False)):
             status = "CANDIDATES_NOT_ENUMERATED"
         else:
-            status = "NOT_APPLICABLE"
+            status = ("NO_CANDIDATES" if requirement["rule_id"] in flexible_by_id
+                      and flexible_by_id[requirement["rule_id"]]["generation_status"] == "GENERATED"
+                      else "NOT_APPLICABLE")
         requirement["prerequisite_evaluation_status"] = status
     output["warnings"].extend([
-        PREREQUISITE_SCOPE_WARNING,
+        PREREQUISITE_SCOPE_WARNING if flexible_candidates is None else
+        "Students report successfully completed coursework. Optional grades affect prerequisite evidence only; "
+        "degree-progress calculations and credit allocation are unchanged.",
         "Prerequisite MET is student-reported rule evidence, not registration approval. "
         "missing_courses includes unused alternatives and must not be treated as mandatory coursework.",
     ])
@@ -1498,6 +1598,28 @@ def apply_prerequisite_results(handoff: dict[str, Any], results: dict[str, Any])
             "Prerequisite evaluation is " + results["evaluation_status"]
             + "; affected courses remain UNKNOWN. Inspect course_eligibility loading diagnostics."
         )
+    if flexible_candidates is not None:
+        missing_options = any(
+            r["kind"] == "CREDIT_REQUIREMENT_DRAFT" and r["planning_disposition"] != "CANDIDATE_COMPLETE"
+            and r.get("attribute_filter", {}).get("attribute_names")
+            and not r["attribute_filter"]["eligible_catalog_course_options_included"]
+            for r in output["requirements"]
+        )
+        output["candidate_option_coverage"]["unmet_attribute_option_lists_enumerated"] = not missing_options
+        output["candidate_option_coverage"]["notes"] = (
+            "Core II candidate coverage is per requirement in flexible_candidates. "
+            "Other unresolved attribute requirements remain outside this course pool."
+            if missing_options else "All currently unmet attribute-option lists are enumerated; eligibility remains separate."
+        )
+        output["warnings"].append(
+            "Core II candidates are catalog requirement matches, not registration approval or term offerings. "
+            "Cross-requirement credit sharing is not allocated; Science with Lab and other unsupported categories remain deferred."
+        )
+        if flexible_candidates["generation_status"] in ("PARTIAL", "UNAVAILABLE"):
+            output["warnings"].append(
+                "Core II candidate generation is " + flexible_candidates["generation_status"]
+                + "; inspect flexible_candidates diagnostics. Unassessed categories are not assumed unfinished."
+            )
     return output
 
 
@@ -1508,7 +1630,7 @@ def main() -> int:
     parser.add_argument("--completed-file", type=Path, help="JSON list of course codes or {course_code, grade?} records")
     parser.add_argument(
         "--reported-credits",
-        help='Student-reported credits for variable-credit courses, e.g. "CS 475=6"; requires --supabase-attributes',
+        help='Student-reported credits for variable-credit courses, e.g. "CS 475=6"; requires --supabase-attributes or --core-ii-candidates',
     )
     parser.add_argument("--core-ii-json", type=Path, help="Optional current Core II listing for candidate matches")
     parser.add_argument(
@@ -1521,33 +1643,52 @@ def main() -> int:
         help="Read catalog-year prerequisites for explicit candidates; emit evidence-only v2 planning output",
     )
     parser.add_argument(
+        "--core-ii-candidates", action="store_true",
+        help="Read completed-course attributes, generate Core II options and evaluate the combined pool; emit v2.1",
+    )
+    parser.add_argument(
         "--planning-output", type=Path,
         help="Optional preliminary JSON input contract for the schedule generator",
     )
     args = parser.parse_args()
+    use_attributes = args.supabase_attributes or args.core_ii_candidates
+    evaluate_prerequisites = args.evaluate_prerequisites or args.core_ii_candidates
+    progress_evidence = {"status": "NOT_REQUESTED", "issues": []}
     try:
         draft = load_json(args.input)
         core_ii_listing = load_json(args.core_ii_json) if args.core_ii_json else None
         coursework = read_completed_coursework(args.completed, args.completed_file)
         completed = coursework_codes(coursework)
-        if args.evaluate_prerequisites:
+        if evaluate_prerequisites:
             from backend.services.planning_eligibility import validate_candidate_evidence
             validate_candidate_evidence([], coursework, catalog_year=draft.get("catalog_year"))
         reported_credits = parse_reported_credits(args.reported_credits)
-        if reported_credits and not args.supabase_attributes:
+        if reported_credits and not use_attributes:
             raise PreviewError("--reported-credits requires --supabase-attributes")
-        evidence = (
-            fetch_supabase_attribute_evidence(
-                completed, draft.get("catalog_year"), reported_credits
-            )
-            if args.supabase_attributes else None
-        )
+        evidence = None
+        if use_attributes:
+            try:
+                evidence = fetch_supabase_attribute_evidence(completed, draft.get("catalog_year"), reported_credits)
+                progress_evidence["status"] = "AVAILABLE"
+            except (AttributeEvidenceUnavailable, OSError):
+                if not args.core_ii_candidates:
+                    raise
+                # Failed retrieval is not evidence that no completed courses
+                # satisfy a category. Run the existing audit without that evidence.
+                progress_evidence = {"status": "UNAVAILABLE", "issues": [{"code": "COMPLETED_COURSE_ATTRIBUTES_UNAVAILABLE"}]}
         preview = evaluate_preview(draft, completed, core_ii_listing, evidence)
-        if args.planning_output or args.evaluate_prerequisites:
+        if args.planning_output or evaluate_prerequisites:
             planning = build_planning_handoff(preview)
-            if args.evaluate_prerequisites:
+            if evaluate_prerequisites:
                 original_warning_count = len(planning["warnings"])
-                planning = apply_prerequisite_results(planning, fetch_planning_eligibility(planning, coursework))
+                if args.core_ii_candidates:
+                    flexible = fetch_core_ii_candidates(planning, progress_evidence)
+                    codes = combined_candidate_codes(planning, flexible)
+                    results = fetch_planning_eligibility(planning, coursework, candidate_course_codes=codes)
+                    planning = apply_prerequisite_results(planning, results, flexible_candidates=flexible)
+                    preview["flexible_candidates"] = deepcopy(planning["flexible_candidates"])
+                else:
+                    planning = apply_prerequisite_results(planning, fetch_planning_eligibility(planning, coursework))
                 preview["course_eligibility"] = deepcopy(planning["course_eligibility"])
                 preview["warnings"].extend(planning["warnings"][original_warning_count:])
         if args.planning_output:
@@ -1564,20 +1705,26 @@ def main() -> int:
     summary = preview["summary"]
     print(f"UNOFFICIAL DEGREE AUDIT PREVIEW — {preview['program_title']} ({preview['catalog_year']})")
     print(f"Completed course codes entered: {len(preview['completed_course_codes_entered'])}")
-    if args.evaluate_prerequisites:
+    if evaluate_prerequisites:
         eligibility = preview["course_eligibility"]
         print(f"Prerequisite evidence: {eligibility['evaluation_status']} — "
               + ", ".join(f"{state}: {count}" for state, count in eligibility["summary"].items()))
-        print(PREREQUISITE_SCOPE_WARNING)
+        print("Optional grades are used for prerequisites; report only successfully completed courses."
+              if args.core_ii_candidates else PREREQUISITE_SCOPE_WARNING)
         if eligibility["evaluation_status"] in ("PARTIAL", "UNAVAILABLE"):
             print("WARNING: Prerequisite evidence is incomplete or unavailable; affected courses remain UNKNOWN.")
+    if args.core_ii_candidates:
+        flexible = preview["flexible_candidates"]
+        print(f"Core II candidates: {flexible['generation_status']} — {len(flexible['candidate_course_codes'])} distinct courses")
+        if flexible["generation_status"] in ("PARTIAL", "UNAVAILABLE"):
+            print("WARNING: Core II candidate coverage is incomplete or unavailable; inspect flexible_candidates diagnostics.")
     print(f"Required-course rule occurrences matched: {summary['ready_required_course_occurrences_matched']}")
     print(f"Required-course rule occurrences not entered: {summary['ready_required_course_occurrences_not_entered']}")
     print(f"Distinct explicitly required courses entered: {summary['unique_explicit_required_courses_entered']}/{summary['unique_explicit_required_courses']}")
     print(f"Resolver rules flagged for source review: {summary['source_rules_needing_review']}")
     print(f"Choice/credit rules still in audit review: {summary['requirements_needing_review']}")
     print(f"Rules with candidate progress met (not transcript-verified): {summary['candidate_rules_meeting_entered_requirements']}")
-    if args.supabase_attributes:
+    if use_attributes and evidence is not None:
         print(
             "Attribute requirements evaluated with catalog-year evidence: "
             f"{summary['attribute_rules_evaluated_from_catalog_year']} "
@@ -1590,7 +1737,7 @@ def main() -> int:
             f"{summary['core_i_ct_slots_with_reserved_course_exclusions']}"
         )
     print(f"Choice requirements with fully entered options: {summary['choice_requirements_with_entered_options']}")
-    if args.supabase_attributes:
+    if use_attributes and evidence is not None:
         print(
             "Credit-requirement rules with catalog-classified candidates: "
             f"{summary['credit_requirements_with_catalog_candidates']}"
