@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient.js";
 import DashboardCard from "../components/DashboardCard.jsx";
+import CourseRequirements from "../components/CourseRequirements.jsx";
 import "../styles/CourseDetails.css";
 
 const DAYS = [null, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -66,8 +67,9 @@ function CourseDetails() {
         }
 
         const [rules, sections] = await Promise.all([
-          supabase.from("courserule").select("rule_id, rule_type, raw_text")
-            .eq("course_id", courseId).order("rule_type").abortSignal(controller.signal),
+          supabase.from("courserule")
+            .select("rule_id, rule_type, raw_text, catalog_year_id, catalogyear:catalog_year_id(catalog_label, start_year, end_year)")
+            .eq("course_id", courseId).order("rule_type").order("rule_id").abortSignal(controller.signal),
           supabase.from("coursesection")
             .select("section_id, section_number, crn, instructor, campus, delivery_mode, section_status, capacity, enrolled, term:term_id(term_name, start_date), sectionmeeting(meeting_id, day_of_week, start_time, end_time, building, room, meeting_type)")
             .eq("course_id", courseId).order("term_id", { ascending: false })
@@ -126,22 +128,8 @@ function CourseDetails() {
           </DashboardCard>
 
           <DashboardCard title="Prerequisites and corequisites">
-            {rules.error ? <p role="alert">Requirements could not be loaded. Try reloading the course.</p> : (
-              <>
-                {["PREREQUISITE", "COREQUISITE"].map((type) => {
-                  const rule = rules.data?.find((item) => item.rule_type === type);
-                  return (
-                    <div key={type}>
-                      <h3>{type === "PREREQUISITE" ? "Prerequisites" : "Corequisites"}</h3>
-                      <p className="course-description">{rule
-                        ? rule.raw_text || "Requirements are recorded, but their description is not available."
-                        : "No requirements listed."}</p>
-                    </div>
-                  );
-                })}
-                <p>Listed requirements do not confirm your eligibility to enroll.</p>
-              </>
-            )}
+            {rules.error ? <p role="alert">Requirements could not be loaded. Try reloading the course.</p>
+              : <CourseRequirements key={course.course_id} rules={rules.data ?? []} />}
           </DashboardCard>
 
           <DashboardCard title="Course sections">
