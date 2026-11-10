@@ -242,3 +242,19 @@
 .planner-term-label { display: block; margin-bottom: 6px; font-weight: 600; }
 .planner-term-help { color: #53665b; font-size: 0.85rem; line-height: 1.5; }
 .planner-semester-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.planner-search-next-button {
+  border-color: rgb(1, 86, 1);
+  background-color: rgb(17, 200, 17);
+  border-radius: 6px;
+  font-size: 1rem;
+  color: white;
+}
+
+.planner-search-previous-button {
+  border-color: rgb(1, 86, 1);
+  background-color: rgb(17, 200, 17);
+  border-radius: 6px;
+  font-size: 1rem;
+  color: white;
+}

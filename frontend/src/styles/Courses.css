@@ -176,3 +176,21 @@
     padding: 22px 18px 30px;
   }
 }
+
+.course-search-next-button {
+  border-color: rgb(1, 86, 1);
+  background-color: rgb(17, 200, 17);
+  border-radius: 6px;
+  font-size: 1rem;
+  color: white;
+  margin-left: 10px;
+}
+
+.course-search-previous-button {
+  border-color: rgb(1, 86, 1);
+  background-color: rgb(17, 200, 17);
+  border-radius: 6px;
+  font-size: 1rem;
+  color: white;
+  margin-right: 10px;
+}

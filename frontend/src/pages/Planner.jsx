@@ -101,9 +101,9 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
             </ul>
             {result.total > PAGE_SIZE && (
               <div className="planner-pagination">
-                <button type="button" disabled={page === 0} onClick={() => setPage(page - 1)}>Previous</button>
+                <button className="planner-search-previous-button" type="button" disabled={page === 0} onClick={() => setPage(page - 1)}>Previous</button>
                 <span>Page {page + 1} of {Math.ceil(result.total / PAGE_SIZE)}</span>
-                <button type="button" disabled={(page + 1) * PAGE_SIZE >= result.total} onClick={() => setPage(page + 1)}>Next</button>
+                <button className="planner-search-next-button" type="button" disabled={(page + 1) * PAGE_SIZE >= result.total} onClick={() => setPage(page + 1)}>Next</button>
               </div>
             )}
           </>
