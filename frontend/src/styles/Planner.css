@@ -223,7 +223,21 @@
 .planner-dialog-heading > button { flex-shrink: 0; }
 .planner-picker-results li > button { min-width: 76px; }
 .planner-picker-results p { margin: 6px 0 0; }
-.planner-pagination { flex-wrap: wrap; }
+.planner-pagination {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+.planner-pagination > button { margin-right: 0; }
+.planner-pagination > button:first-child { justify-self: start; }
+.planner-pagination > span { justify-self: center; text-align: center; }
+.planner-pagination > button:last-child { justify-self: end; }
+
+@media (max-width: 480px) {
+  .planner-pagination > span { grid-column: 1 / -1; grid-row: 1; }
+  .planner-pagination > button { grid-row: 2; }
+  .planner-pagination > button:first-child { grid-column: 1; }
+  .planner-pagination > button:last-child { grid-column: 3; }
+}
 
 .planner-page button:focus-visible,
 .planner-page select:focus-visible,
