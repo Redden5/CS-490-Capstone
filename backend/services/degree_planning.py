@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, NamedTuple
 
+from backend.services import supabase_service
 from backend.services.degree_audit import (
     AttributeEvidenceUnavailable, PreviewError, apply_prerequisite_results,
     build_planning_handoff, canonical_course_code, combined_candidate_codes,
@@ -18,35 +19,35 @@ from backend.services.planning_eligibility import validate_candidate_evidence
 _SOURCE_DIR = Path(__file__).resolve().parents[1] / "scripts"
 
 
-def _create_attribute_client():
-    import os
+class _PlanningClient:
+    """One lazy client per evaluation, including at most one configuration attempt."""
 
-    try:
-        from dotenv import load_dotenv
-        from supabase import create_client
-    except ImportError as error:
-        raise AttributeEvidenceUnavailable(
-            "Supabase mode requires installed 'supabase' and 'python-dotenv' packages."
-        ) from error
+    def __init__(self, client):
+        self.client = client
+        self.failure: type[Exception] | None = None
 
-    project_root = Path(__file__).resolve().parents[2]
-    load_dotenv(dotenv_path=project_root / ".env", override=False)
-    url = os.getenv("SUPABASE_URL")
-    key = os.getenv("SUPABASE_SECRET_KEY")
-    if not url or not key:
-        raise AttributeEvidenceUnavailable("Set SUPABASE_URL and SUPABASE_SECRET_KEY in your root .env file.")
+    def get(self):
+        if self.failure is not None:
+            raise self.failure("Supabase client unavailable for this evaluation")
+        if self.client is None:
+            try:
+                self.client = supabase_service.create_supabase_client()
+            except (ImportError, OSError, ValueError, RuntimeError) as error:
+                self.failure = ImportError if isinstance(error, ImportError) else RuntimeError
+                raise
+        return self.client
 
-    try:
-        return create_client(url, key)
-    except Exception as error:
-        raise AttributeEvidenceUnavailable(
-            f"Cannot initialize Supabase ({type(error).__name__}); check .env credentials."
-        ) from error
+
+def _read_client(client, client_factory):
+    if client is not None:
+        return client
+    return (client_factory or supabase_service.create_supabase_client)()
 
 
 def fetch_supabase_attribute_evidence(
     completed_courses: list[str], catalog_year: str,
     reported_credits: dict[str, float] | None = None, *, client: Any = None,
+    client_factory: Callable[[], Any] | None = None,
 ) -> dict[str, Any]:
     """Fetch only the student's entered courses and catalog-year attributes.
 
@@ -54,21 +55,32 @@ def fetch_supabase_attribute_evidence(
     courseattribute rows and sectionattribute rows: neither establishes a
     course-level classification for the chosen catalog year.
     """
-    db = _create_attribute_client() if client is None else client
+    try:
+        db = _read_client(client, client_factory)
+    except ImportError:
+        raise AttributeEvidenceUnavailable(
+            "Supabase mode requires installed 'supabase' and 'python-dotenv' packages."
+        ) from None
+    except (OSError, ValueError, RuntimeError):
+        raise AttributeEvidenceUnavailable(
+            "Cannot initialize Supabase. Check the server URL and secret or service-role key."
+        ) from None
 
-    def fetch_rows(query: Any, description: str) -> list[dict[str, Any]]:
+    def fetch_rows(build_query: Callable[[], Any], description: str) -> list[dict[str, Any]]:
         """Page SELECT results to avoid PostgREST's default response limit."""
         rows: list[dict[str, Any]] = []
         page_size = 500
+        query = None
         while True:
             try:
+                if query is None:
+                    query = build_query()
                 response = query.range(len(rows), len(rows) + page_size - 1).execute()
             except Exception as error:
-                # Never print credentials or API exception payloads.
                 raise AttributeEvidenceUnavailable(
                     f"Supabase SELECT for {description} failed ({type(error).__name__}). "
                     "Check schema access, table permissions, and credentials."
-                ) from error
+                ) from None
             batch = response.data
             if not isinstance(batch, list):
                 raise AttributeEvidenceUnavailable(f"Unexpected Supabase response for {description}.")
@@ -77,7 +89,7 @@ def fetch_supabase_attribute_evidence(
                 return rows
 
     years = fetch_rows(
-        db.table("catalogyear")
+        lambda: db.table("catalogyear")
           .select("catalog_year_id,catalog_label")
           .eq("catalog_label", catalog_year),
         "catalogyear",
@@ -92,7 +104,7 @@ def fetch_supabase_attribute_evidence(
     courses: list[dict[str, Any]] = []
     for index in range(0, len(completed), 100):
         courses.extend(fetch_rows(
-            db.table("course")
+            lambda: db.table("course")
               .select("course_id,course_code,min_credit_hours,max_credit_hours")
               .in_("course_code", completed[index:index + 100]),
             "course",
@@ -104,7 +116,7 @@ def fetch_supabase_attribute_evidence(
     associations: list[dict[str, Any]] = []
     for index in range(0, len(course_ids), 100):
         associations.extend(fetch_rows(
-            db.table("courseattribute")
+            lambda: db.table("courseattribute")
               .select("course_id,attribute_id,source_url,observed_at")
               .eq("catalog_year_id", year_id)
               .in_("course_id", course_ids[index:index + 100]),
@@ -115,7 +127,7 @@ def fetch_supabase_attribute_evidence(
     attrs: list[dict[str, Any]] = []
     for index in range(0, len(attribute_ids), 100):
         attrs.extend(fetch_rows(
-            db.table("attribute")
+            lambda: db.table("attribute")
               .select("attribute_id,attribute_name")
               .in_("attribute_id", attribute_ids[index:index + 100]),
             "attribute",
@@ -154,18 +166,9 @@ def fetch_supabase_attribute_evidence(
     }
 
 
-def _create_prerequisite_client():
-    """Use the existing environment-backed factory when the caller supplies no client."""
-    from dotenv import load_dotenv
-    from backend.scripts.prerequisite_supabase import create_api_client
-
-    load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env", override=False)
-    return create_api_client()
-
-
 def fetch_planning_eligibility(
     handoff: dict[str, Any], coursework: list, *, candidate_course_codes: list[str] | None = None,
-    client: Any = None,
+    client: Any = None, client_factory: Callable[[], Any] | None = None,
 ) -> dict[str, Any]:
     """Read-only optional evidence. Expected availability failures keep the audit usable."""
     from backend.services.planning_eligibility import (
@@ -187,8 +190,7 @@ def fetch_planning_eligibility(
             codes, coursework, catalog_year=year, reason="SOURCE_ARTIFACTS_UNAVAILABLE",
         )
     try:
-        if client is None:
-            client = _create_prerequisite_client()
+        client = _read_client(client, client_factory)
     except ImportError:
         return unavailable_candidate_prerequisites(
             codes, coursework, catalog_year=year, reason="PREREQUISITE_DEPENDENCIES_UNAVAILABLE",
@@ -207,6 +209,7 @@ def fetch_planning_eligibility(
 
 def fetch_core_ii_candidates(
     handoff: dict[str, Any], progress_evidence: dict[str, Any], *, client: Any = None,
+    client_factory: Callable[[], Any] | None = None,
 ) -> dict[str, Any]:
     """Run the standalone provider only for supported, confirmed unfinished categories.
 
@@ -229,8 +232,7 @@ def fetch_core_ii_candidates(
                           issues=[{"code": "ATTRIBUTE_SOURCE_ARTIFACT_UNAVAILABLE"}])
         else:
             try:
-                if client is None:
-                    client = _create_prerequisite_client()
+                client = _read_client(client, client_factory)
             except ImportError:
                 loaded.update(retrieval_status="UNAVAILABLE", issues=[{"code": "ATTRIBUTE_DEPENDENCIES_UNAVAILABLE"}])
             except (OSError, ValueError, RuntimeError):
@@ -293,8 +295,8 @@ def run_degree_plan(
 
     The default returns the legacy preview and v1 handoff without database access.
     Prerequisites enable v2.0. Core II implies both attribute and prerequisite
-    lookups and enables v2.1. Each lookup uses the supplied Supabase client or
-    its existing lazy factory. Reviewed source CSVs are read only as needed.
+    lookups and enables v2.1. All lookups share the supplied Supabase client or
+    one created on demand for this evaluation. Reviewed source CSVs are read only as needed.
     A preview-only caller can skip the v1 projection with include_handoff=False.
     """
     coursework = normalize_coursework(completed_courses)
@@ -308,10 +310,11 @@ def run_degree_plan(
     credits = normalize_reported_credits(credit_entries) if credit_entries is not None else {}
 
     evidence = None
+    get_client = _PlanningClient(client).get
     progress_evidence = {"status": "NOT_REQUESTED", "issues": []}
     if supabase_attributes or core_ii_candidates:
         try:
-            evidence = fetch_supabase_attribute_evidence(completed, year, credits, client=client)
+            evidence = fetch_supabase_attribute_evidence(completed, year, credits, client_factory=get_client)
             progress_evidence["status"] = "AVAILABLE"
         except (AttributeEvidenceUnavailable, OSError):
             if not core_ii_candidates:
@@ -331,9 +334,9 @@ def run_degree_plan(
         flexible = None
         codes = None  # The eligibility provider defaults to the explicit/choice pool.
         if core_ii_candidates:
-            flexible = fetch_core_ii_candidates(handoff, progress_evidence, client=client)
+            flexible = fetch_core_ii_candidates(handoff, progress_evidence, client_factory=get_client)
             codes = combined_candidate_codes(handoff, flexible)
-        results = fetch_planning_eligibility(handoff, coursework, candidate_course_codes=codes, client=client)
+        results = fetch_planning_eligibility(handoff, coursework, candidate_course_codes=codes, client_factory=get_client)
         handoff = apply_prerequisite_results(handoff, results, flexible_candidates=flexible)
         if flexible is not None:
             preview["flexible_candidates"] = deepcopy(handoff["flexible_candidates"])

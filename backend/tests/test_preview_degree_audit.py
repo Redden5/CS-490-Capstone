@@ -5,15 +5,16 @@ from copy import deepcopy
 import io
 import hashlib
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
 from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from backend.scripts import preview_degree_audit as audit
-from backend.services import degree_planning
+from backend.services import degree_planning, supabase_service
 from backend.services import planning_eligibility as eligibility
 from backend.services import prerequisite_loader as loader
 from backend.services.prerequisite_evaluator import EvaluationInputError, _code
@@ -28,7 +29,7 @@ def read(path):
     return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
-def unavailable(handoff, coursework, *, candidate_course_codes=None, client=None):
+def unavailable(handoff, coursework, *, candidate_course_codes=None, client_factory=None):
     codes = ([c["course_code"] for c in handoff["course_eligibility"]["courses"]]
              if candidate_course_codes is None else candidate_course_codes)
     return eligibility.unavailable_candidate_prerequisites(
@@ -206,7 +207,7 @@ class CliTests(unittest.TestCase):
     def test_disabled_mode_no_prerequisite_io_and_exact_legacy_output(self):
         preview, handoff = self.directory / "audit.json", self.directory / "planning.json"
         with patch.object(degree_planning, "fetch_planning_eligibility", side_effect=AssertionError("not opt-in")), \
-                patch.object(degree_planning, "_create_prerequisite_client", side_effect=AssertionError("no SDK")), \
+                patch.object(supabase_service, "create_supabase_client", side_effect=AssertionError("no SDK")), \
                 patch.object(Path, "read_bytes", side_effect=AssertionError("no source reads")):
             status, out, err = self.run_cli("--completed", "CS110", "--output", preview, "--planning-output", handoff)
         baseline = audit.evaluate_preview(read(DRAFT), ["CS 110"])
@@ -248,7 +249,7 @@ class CliTests(unittest.TestCase):
         with patch.multiple(loader, _CATALOG_SHA256=hashlib.sha256(catalog).hexdigest(),
                             _PREREQUISITE_SHA256=hashlib.sha256(source).hexdigest()), \
                 patch.object(Path, "read_bytes", side_effect=[catalog, source]), \
-                patch.object(degree_planning, "_create_prerequisite_client", return_value=client), \
+                patch.object(supabase_service, "create_supabase_client", return_value=client), \
                 patch.object(eligibility, "load_prerequisite_rules", wraps=loader.load_prerequisite_rules) as load:
             status, out, err = self.run_cli("--completed-file", input_path, "--evaluate-prerequisites",
                                             "--planning-output", output)
@@ -282,7 +283,7 @@ class CliTests(unittest.TestCase):
     def test_source_file_failure_is_sanitized_without_client_creation(self):
         handoff = audit.build_planning_handoff(audit.evaluate_preview(read(DRAFT), []))
         with patch.object(Path, "read_bytes", side_effect=OSError("private secret")), \
-                patch.object(degree_planning, "_create_prerequisite_client") as client:
+                patch.object(supabase_service, "create_supabase_client") as client:
             result = audit.fetch_planning_eligibility(handoff, [])
         client.assert_not_called()
         self.assertEqual(result["evaluation_status"], "UNAVAILABLE")
@@ -293,7 +294,7 @@ class CliTests(unittest.TestCase):
         handoff = audit.build_planning_handoff(audit.evaluate_preview(read(DRAFT), []))
         for error in (ImportError("secret"), RuntimeError("secret"), ValueError("secret"), OSError("secret")):
             with self.subTest(error=type(error)), patch.object(Path, "read_bytes", return_value=b"fixture"), \
-                    patch.object(degree_planning, "_create_prerequisite_client", side_effect=error):
+                    patch.object(supabase_service, "create_supabase_client", side_effect=error):
                 result = audit.fetch_planning_eligibility(handoff, [])
             self.assertEqual(result["evaluation_status"], "UNAVAILABLE")
             self.assertNotIn("secret", str(result))
@@ -301,7 +302,7 @@ class CliTests(unittest.TestCase):
     def test_empty_candidates_skip_sources_and_client(self):
         handoff = {"degree": {"catalog_year": "2026-2027"}, "course_eligibility": {"courses": []}}
         with patch.object(Path, "read_bytes", side_effect=AssertionError("no source read")), \
-                patch.object(degree_planning, "_create_prerequisite_client", side_effect=AssertionError("no client")):
+                patch.object(supabase_service, "create_supabase_client", side_effect=AssertionError("no client")):
             result = audit.fetch_planning_eligibility(handoff, [])
         self.assertEqual(result["evaluation_status"], "NO_CANDIDATES")
 
@@ -310,18 +311,22 @@ class CliTests(unittest.TestCase):
                    "course_eligibility": {"courses": [{"course_code": "CS 210"}]}}
         client = object()
         with patch.object(Path, "read_bytes", side_effect=[b"catalog", b"prerequisites"]), \
-                patch.object(degree_planning, "_create_prerequisite_client", return_value=client), \
+                patch.object(supabase_service, "create_supabase_client", return_value=client), \
                 patch.object(eligibility, "evaluate_candidate_prerequisites", return_value={}) as evaluate:
             audit.fetch_planning_eligibility(handoff, ["CS 110"])
         evaluate.assert_called_once_with(client, ["CS 210"], ["CS 110"], catalog_year="2025-2026",
                                          source_catalog_csv=b"catalog", source_prerequisite_csv=b"prerequisites")
 
     def test_environment_factory_is_lazy_and_preserves_process_environment(self):
-        dotenv = SimpleNamespace(load_dotenv=lambda **kwargs: None)
-        with patch.dict(sys.modules, {"dotenv": dotenv}), patch.object(dotenv, "load_dotenv") as load, \
-                patch("backend.scripts.prerequisite_supabase.create_api_client", return_value="client") as create:
-            self.assertEqual(degree_planning._create_prerequisite_client(), "client")
-        create.assert_called_once_with()
+        dotenv = SimpleNamespace(load_dotenv=Mock())
+        sdk = SimpleNamespace(create_client=Mock(return_value="client"), ClientOptions=Mock())
+        with patch.dict(sys.modules, {"dotenv": dotenv, "supabase": sdk}), patch.dict(os.environ, {
+            "SUPABASE_URL": "https://fixture.invalid", "SUPABASE_SECRET_KEY": "fixture-only",
+        }, clear=True):
+            self.assertEqual(supabase_service.create_supabase_client(), "client")
+        sdk.create_client.assert_called_once()
+        load = dotenv.load_dotenv
+        load.assert_called_once()
         self.assertFalse(load.call_args.kwargs["override"])
         self.assertEqual(load.call_args.kwargs["dotenv_path"].name, ".env")
 

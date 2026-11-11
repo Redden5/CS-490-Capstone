@@ -5,26 +5,15 @@ avoids REST pagination limits, mixed read snapshots and silently filtered RLS.
 Only the validated CLI should call seed_api for an import: this transport does
 not replace artifact/source verification performed by seed_prerequisites.main.
 """
-import os
 import re
-from urllib.parse import urlsplit
 
 from backend.scripts.seed_prerequisites import build_plan
+from backend.services.supabase_service import create_supabase_client
 
 
 def create_api_client():
-    url = os.environ.get("SUPABASE_URL", "")
-    key = os.environ.get("SUPABASE_SECRET_KEY") or os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
-    parsed = urlsplit(url)
-    if not key or parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password or parsed.query or parsed.fragment:
-        raise ValueError("API mode requires an HTTPS SUPABASE_URL and SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY in the process environment")
-    # Match seed_course_attributes' create_client and key precedence, without dotenv.
-    from supabase import create_client, ClientOptions
-    try:
-        return create_client(url, key, options=ClientOptions(
-            auto_refresh_token=False, persist_session=False, postgrest_client_timeout=130))
-    except Exception:
-        raise RuntimeError("Unable to initialize Supabase client; inspect settings securely") from None
+    """Preserve the prerequisite import CLI's process-environment-only contract."""
+    return create_supabase_client(load_env_file=False)
 
 
 def rpc(client, name, params):

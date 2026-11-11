@@ -9,7 +9,7 @@ import unittest
 from unittest.mock import patch
 
 from backend.services import degree_planning as planning
-from backend.services import flexible_candidates, planning_eligibility, prerequisite_loader
+from backend.services import flexible_candidates, planning_eligibility, prerequisite_loader, supabase_service
 from backend.tests.test_core_ii_planning import Client, DRAFT, fixture
 
 
@@ -30,8 +30,9 @@ class DegreePlanningTests(unittest.TestCase):
             prerequisite_loader, _CATALOG_SHA256=hashlib.sha256(catalog).hexdigest(),
             _PREREQUISITE_SHA256=hashlib.sha256(prerequisites).hexdigest(),
         ))
-        for target in ("_create_attribute_client", "_create_prerequisite_client"):
-            stack.enter_context(patch.object(planning, target, side_effect=AssertionError("Unexpected client creation")))
+        self.factory = stack.enter_context(patch.object(
+            supabase_service, "create_supabase_client", side_effect=AssertionError("Unexpected client creation"),
+        ))
         for target in ("argparse.ArgumentParser.parse_args", "builtins.print", "pathlib.Path.write_text"):
             stack.enter_context(patch(target, side_effect=AssertionError("Unexpected CLI side effect")))
 
@@ -92,6 +93,42 @@ class DegreePlanningTests(unittest.TestCase):
         self.assertTrue(result.handoff["flexible_candidates"]["candidate_course_codes"])
         self.assertEqual({c["status"] for c in eligibility["courses"]}, {"UNKNOWN"})
         self.assertNotIn("private SDK error", json.dumps(result.handoff))
+
+    def test_one_client_per_evaluation_matches_injected_client_for_all_modes(self):
+        for flags in ({"supabase_attributes": True}, {"evaluate_prerequisites": True}, {"core_ii_candidates": True}):
+            with self.subTest(flags=flags):
+                other_client = Client(self.client.tables)
+                self.factory.reset_mock()
+                self.factory.side_effect = None
+                self.factory.return_value = other_client
+                direct = planning.run_degree_plan(self.draft, ["CS 110"], client=self.client, **flags)
+                self.factory.assert_not_called()
+                automatic = planning.run_degree_plan(self.draft, ["CS 110"], **flags)
+                self.factory.assert_called_once_with()
+                self.assertEqual(automatic, direct)
+                if flags.get("core_ii_candidates"):
+                    tables = {q.table_name for q in other_client.calls}
+                    self.assertTrue({"courseattribute", "attribute", "courserule", "rulecourse"} <= tables)
+
+    def test_failed_client_initialization_is_cached_only_for_one_plan(self):
+        self.factory.side_effect = [ValueError("private-config"), self.client]
+        failed = planning.run_degree_plan(self.draft, [], core_ii_candidates=True)
+        self.factory.assert_called_once_with()
+        eligibility = failed.handoff["course_eligibility"]
+        self.assertEqual(eligibility["issues"], [{"code": "PREREQUISITE_CLIENT_UNAVAILABLE"}])
+        self.assertEqual({c["status"] for c in eligibility["courses"]}, {"UNKNOWN"})
+        self.assertEqual(failed.handoff["flexible_candidates"]["generation_status"], "UNAVAILABLE")
+        self.assertNotIn("private-config", json.dumps(failed))
+        recovered = planning.run_degree_plan(self.draft, [], core_ii_candidates=True)
+        self.assertEqual(self.factory.call_count, 2)
+        self.assertEqual(recovered.handoff["flexible_candidates"]["generation_status"], "COMPLETED")
+
+    def test_attribute_query_setup_failure_does_not_expose_credentials(self):
+        with patch.object(self.client, "table", side_effect=RuntimeError("private header")):
+            with self.assertRaises(planning.AttributeEvidenceUnavailable) as caught:
+                planning.run_degree_plan(self.draft, [], supabase_attributes=True, client=self.client)
+        self.assertNotIn("private header", str(caught.exception))
+        self.assertTrue(caught.exception.__suppress_context__)
 
     def test_bad_credit_evidence_fails_before_retrieval(self):
         for credits in ({"cs110": 3, "CS 110": 3}, {"cs110": float("nan")}, {"cs110": True}):

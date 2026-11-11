@@ -27,8 +27,11 @@ the three mode flags `supabase_attributes`, `evaluate_prerequisites`, and
 `core_ii_candidates`. All flags default to false. The default result includes
 both the preview and the v1 handoff. With `include_handoff=False`, a legacy
 preview-only call returns `None` for the handoff. Either enrichment mode always
-builds the handoff. An injected `client` serves every requested Supabase lookup.
-Omitting it preserves the existing lazy client configuration.
+builds the handoff. An injected `client` serves every requested Supabase lookup
+and bypasses environment and SDK setup. Without an injected client, the first
+lookup that needs the database creates one client for that evaluation. The
+completed-course, Core II and prerequisite readers share it. A setup failure
+is remembered for that evaluation only. A later evaluation can try again.
 
 The audit and handoff calculations live in `backend/services/degree_audit.py`.
 The service builds the handoff with `build_planning_handoff()`, whose
@@ -50,8 +53,8 @@ With `--evaluate-prerequisites`, the CLI:
 1. Validates coursework and the draft's catalog-year label.
 2. Computes the same degree-progress results and explicit candidate pool.
 3. Reads `backend/scripts/courses.csv` and `backend/scripts/catalog_prerequisites.csv`.
-4. Loads the root `.env` with `override=False` and creates a dedicated client using
-   the existing `create_api_client()` factory when a client was not supplied.
+4. Obtains the evaluation's client after validating inputs and reading the reviewed
+   sources. An empty prerequisite pool skips both the source reads and client setup.
 5. Calls `backend/services/planning_eligibility.py` once for the whole candidate batch.
 6. Attaches results to a `2.0.0` handoff and, if requested, the preview JSON.
 
@@ -60,9 +63,27 @@ availability. `--output` includes `course_eligibility` and additional warnings.
 `--planning-output` includes the full v2 projection. Existing saved examples are
 not upgraded automatically. The frontend and Schedule Generator are unchanged.
 
-The client factory accepts `SUPABASE_URL` and `SUPABASE_SECRET_KEY`, with
-`SUPABASE_SERVICE_ROLE_KEY` as its existing fallback. No administrative import or
-RPC helper is called. The adapter and loader only retrieve data; no writes occur.
+### Server-side Supabase configuration
+
+Backend callers can use `backend.services.supabase_service.create_supabase_client()`
+and pass its return value as `client` to `run_degree_plan()`. The factory reads
+the project-root `.env` with `override=False`, preserving process environment
+values for each variable. It then selects `SUPABASE_SECRET_KEY` when nonempty,
+falling back to `SUPABASE_SERVICE_ROLE_KEY`. Both are server-side credentials.
+The prerequisite import CLI uses the same factory with `load_env_file=False`,
+preserving its process-environment-only behavior.
+
+Previously the completed-course attribute reader accepted only `SUPABASE_SECRET_KEY`
+and delegated URL validation to the SDK. It now accepts the service-role fallback
+and shares the prerequisite reader's HTTPS requirement for `SUPABASE_URL`.
+URLs with embedded credentials, queries, fragments or invalid ports are rejected.
+Both readers use the existing prerequisite client options with session persistence
+and token refresh disabled and a 130-second PostgREST timeout.
+
+Attribute-only CLI runs report a sanitized error on setup failure. Core II runs
+retain the audit and mark affected evidence unavailable. A failed prerequisite
+lookup preserves affected candidates with UNKNOWN eligibility. The planning
+readers use SELECT operations only.
 
 ## Coursework input
 

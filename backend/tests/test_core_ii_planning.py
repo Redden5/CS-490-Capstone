@@ -11,7 +11,7 @@ import sys
 import tempfile
 from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from backend.scripts import preview_degree_audit as audit
 from backend.services import degree_planning
@@ -129,15 +129,15 @@ class CoreIIPlanningTests(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         self.directory = Path(temporary.name)
         self.preview_path, self.handoff_path = self.directory / "audit.json", self.directory / "handoff.json"
+        self.sdk = SimpleNamespace(ClientOptions=Mock(), create_client=Mock(return_value=self.client))
         patches = [
             patch.object(flexible, "_SOURCE_SHA256", hashlib.sha256(attributes).hexdigest()),
             patch.multiple(loader, _CATALOG_SHA256=hashlib.sha256(catalog).hexdigest(),
                            _PREREQUISITE_SHA256=hashlib.sha256(prerequisites).hexdigest()),
-            patch.object(degree_planning, "_create_prerequisite_client", return_value=self.client),
             patch.object(Path, "read_bytes", autospec=True, side_effect=lambda path: self.files[path.name]),
-            patch.dict(os.environ, {"SUPABASE_URL": "https://fixture.invalid", "SUPABASE_SECRET_KEY": "fixture-only"}),
-            patch.dict(sys.modules, {"dotenv": SimpleNamespace(load_dotenv=lambda **kwargs: None),
-                                    "supabase": SimpleNamespace(create_client=lambda *args, **kwargs: self.client)}),
+            patch.dict(os.environ, {"SUPABASE_URL": "https://fixture.invalid", "SUPABASE_SECRET_KEY": "fixture-only"},
+                       clear=True),
+            patch.dict(sys.modules, {"dotenv": SimpleNamespace(load_dotenv=Mock()), "supabase": self.sdk}),
         ]
         for context in patches:
             context.start()
@@ -163,6 +163,15 @@ class CoreIIPlanningTests(unittest.TestCase):
         self.assertEqual(status, 0, err)
         self.assertEqual(err, "")
         return self.outputs(), out
+
+    def test_cli_service_role_fallback_builds_one_client_for_core_ii(self):
+        with patch.dict(os.environ, {"SUPABASE_SECRET_KEY": "", "SUPABASE_SERVICE_ROLE_KEY": "fixture-legacy"}):
+            (_, handoff), _ = self.successful("--core-ii-candidates")
+        self.sdk.create_client.assert_called_once_with(
+            "https://fixture.invalid", "fixture-legacy", options=self.sdk.ClientOptions.return_value,
+        )
+        self.assertEqual(handoff["flexible_candidates"]["generation_status"], "COMPLETED")
+        self.assertGreater(handoff["course_eligibility"]["summary"]["MET"], 0)
 
     def test_opt_in_full_workflow_combines_real_services_once(self):
         with patch.object(eligibility, "load_prerequisite_rules", wraps=loader.load_prerequisite_rules) as load, \
