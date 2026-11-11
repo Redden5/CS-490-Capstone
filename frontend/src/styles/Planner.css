@@ -177,7 +177,8 @@
 }
 
 .planner-course-dialog {
-  width: min(680px, calc(100% - 32px));
+  width: min(960px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
   max-height: 85svh;
   overflow-y: auto;
   overflow-wrap: anywhere;
@@ -203,8 +204,40 @@
 .planner-search > div { display: flex; gap: 8px; }
 .planner-search input { min-width: 0; flex: 1; }
 .planner-picker-results li { padding: 16px 0; border-bottom: 1px solid #d8e4dc; }
+.planner-picker-course { min-width: 0; flex: 1; }
+.planner-course-link {
+  color: #006747;
+  line-height: 1.5;
+  text-underline-offset: 3px;
+}
+.planner-course-link:hover,
+.planner-course-link:focus-visible { text-decoration: underline; }
+.planner-course-link strong { white-space: nowrap; }
+.planner-course-link-hint {
+  display: block;
+  margin-top: 4px;
+  color: #53665b;
+  font-size: 0.85rem;
+}
+.planner-picker-results li > button,
+.planner-dialog-heading > button { flex-shrink: 0; }
+.planner-picker-results li > button { min-width: 76px; }
 .planner-picker-results p { margin: 6px 0 0; }
-.planner-pagination { flex-wrap: wrap; }
+.planner-pagination {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+.planner-pagination > button { margin-right: 0; }
+.planner-pagination > button:first-child { justify-self: start; }
+.planner-pagination > span { justify-self: center; text-align: center; }
+.planner-pagination > button:last-child { justify-self: end; }
+
+@media (max-width: 480px) {
+  .planner-pagination > span { grid-column: 1 / -1; grid-row: 1; }
+  .planner-pagination > button { grid-row: 2; }
+  .planner-pagination > button:first-child { grid-column: 1; }
+  .planner-pagination > button:last-child { grid-column: 3; }
+}
 
 .planner-page button:focus-visible,
 .planner-page select:focus-visible,
@@ -217,8 +250,45 @@
 @media (max-width: 620px) {
   .planner-course-dialog { padding: 16px; }
   .planner-dialog-heading { align-items: flex-start; }
+  .planner-picker-results li { align-items: flex-start; gap: 12px; }
 }
 
 .planner-term-label { display: block; margin-bottom: 6px; font-weight: 600; }
 .planner-term-help { color: #53665b; font-size: 0.85rem; line-height: 1.5; }
 .planner-semester-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.planner-search-next-button {
+  border: 0;
+  border-radius: 7px;
+  font: inherit;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 9px 14px;
+  background: #00a83f;
+  color: #ffffff;
+  margin-right: 10px;
+  transition: background-color 160ms ease, box-shadow 160ms ease, transform 100ms ease;
+}
+
+.planner-search-next-button:hover {
+  background: #008f36;
+  box-shadow: 0 3px 8px rgba(0, 80, 30, 0.22);
+}
+
+.planner-search-previous-button {
+  border: 0;
+  border-radius: 7px;
+  font: inherit;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 9px 14px;
+  background: #00a83f;
+  color: #ffffff;
+  margin-right: 10px;
+  transition: background-color 160ms ease, box-shadow 160ms ease, transform 100ms ease;
+}
+
+.planner-search-previous-button:hover {
+  background: #008f36;
+  box-shadow: 0 3px 8px rgba(0, 80, 30, 0.22);
+}
