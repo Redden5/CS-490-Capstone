@@ -21,6 +21,10 @@ class AttributeEvidenceUnavailable(PreviewError):
     """Expected attribute transport/configuration failure, distinct from bad input."""
 
 
+class ReportedCreditError(PreviewError):
+    """Student-reported credits conflict with the entered courses or catalog range."""
+
+
 def canonical_course_code(raw: str) -> str:
     """Normalize explicit course codes such as 'cs110' -> 'CS 110'."""
     if not isinstance(raw, str):
@@ -75,7 +79,7 @@ def course_credit_evidence(
     reported = reported_credits or {}
     completed = set(completed_courses)
     if set(reported) - completed:
-        raise PreviewError(
+        raise ReportedCreditError(
             "Reported credits include courses not in --completed: "
             + ", ".join(sorted(set(reported) - completed))
         )
@@ -91,7 +95,7 @@ def course_credit_evidence(
         row = rows.get(code)
         if row is None:
             if code in reported:
-                raise PreviewError(f"Cannot validate reported credits: {code} absent from course table")
+                raise ReportedCreditError(f"Cannot validate reported credits: {code} absent from course table")
             result[code] = {
                 "status": "COURSE_NOT_FOUND", "catalog_min_credits": None,
                 "catalog_max_credits": None, "credit_value": None,
@@ -113,7 +117,7 @@ def course_credit_evidence(
         amount = reported.get(code)
         if amount is not None:
             if not (low <= amount <= high):
-                raise PreviewError(
+                raise ReportedCreditError(
                     f"Reported credits for {code} ({amount:g}) outside catalog range "
                     f"{low:g}–{high:g}"
                 )

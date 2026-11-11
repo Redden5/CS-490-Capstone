@@ -22,8 +22,9 @@ _SOURCE_DIR = Path(__file__).resolve().parents[1] / "scripts"
 class _PlanningClient:
     """One lazy client per evaluation, including at most one configuration attempt."""
 
-    def __init__(self, client):
+    def __init__(self, client, client_factory):
         self.client = client
+        self.client_factory = client_factory
         self.failure: type[Exception] | None = None
 
     def get(self):
@@ -31,7 +32,7 @@ class _PlanningClient:
             raise self.failure("Supabase client unavailable for this evaluation")
         if self.client is None:
             try:
-                self.client = supabase_service.create_supabase_client()
+                self.client = self.client_factory()
             except (ImportError, OSError, ValueError, RuntimeError) as error:
                 self.failure = ImportError if isinstance(error, ImportError) else RuntimeError
                 raise
@@ -290,6 +291,7 @@ def run_degree_plan(
     core_ii_candidates: bool = False,
     include_handoff: bool = True,
     client: Any = None,
+    client_factory: Callable[[], Any] | None = None,
 ) -> DegreePlanResult:
     """Evaluate a resolved draft against student-reported evidence.
 
@@ -310,7 +312,7 @@ def run_degree_plan(
     credits = normalize_reported_credits(credit_entries) if credit_entries is not None else {}
 
     evidence = None
-    get_client = _PlanningClient(client).get
+    get_client = _PlanningClient(client, client_factory or supabase_service.create_supabase_client).get
     progress_evidence = {"status": "NOT_REQUESTED", "issues": []}
     if supabase_attributes or core_ii_candidates:
         try:
