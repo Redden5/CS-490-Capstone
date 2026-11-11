@@ -85,9 +85,10 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
                 const added = selected.some((item) => item.course_id === course.course_id);
                 return (
                   <li key={course.course_id}>
-                    <div><Link to={`/courses/${course.course_id}`} target="_blank" rel="noopener noreferrer">
+                    <div className="planner-picker-course"><Link className="planner-course-link"
+                      to={`/courses/${course.course_id}`} target="_blank" rel="noopener noreferrer">
                       <strong>{course.course_code}</strong> — {course.course_title}
-                      {" · View details (opens in a new tab)"}
+                      <span className="planner-course-link-hint">View details (opens in a new tab)</span>
                     </Link>
                       <p>{creditLabel(course.min_credit_hours, course.max_credit_hours)} credits</p>
                     </div>
@@ -100,9 +101,9 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
             </ul>
             {result.total > PAGE_SIZE && (
               <div className="planner-pagination">
-                <button type="button" disabled={page === 0} onClick={() => setPage(page - 1)}>Previous</button>
+                <button className="planner-search-previous-button" type="button" disabled={page === 0} onClick={() => setPage(page - 1)}>Previous</button>
                 <span>Page {page + 1} of {Math.ceil(result.total / PAGE_SIZE)}</span>
-                <button type="button" disabled={(page + 1) * PAGE_SIZE >= result.total} onClick={() => setPage(page + 1)}>Next</button>
+                <button className="planner-search-next-button" type="button" disabled={(page + 1) * PAGE_SIZE >= result.total} onClick={() => setPage(page + 1)}>Next</button>
               </div>
             )}
           </>

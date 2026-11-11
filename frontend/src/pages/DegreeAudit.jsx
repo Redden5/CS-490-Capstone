@@ -84,8 +84,8 @@ function DegreeAudit() {
 
           <DashboardCard title="Quick Actions">
             <div className="degree-audit-actions">
-              <button className="primary-link" type="button">
-                Open Planner
+              <button className="open-planner-button" type="button" >
+                <Link to="/planner">Open Planner</Link>
               </button>
               <Link to="/courses">Explore Courses</Link>
             </div>
