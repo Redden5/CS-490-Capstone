@@ -5,8 +5,33 @@ verified transcript, graduation determination, or registration clearance.
 
 ## Execution and compatibility
 
-`backend/scripts/preview_degree_audit.py` keeps `evaluate_preview()` unchanged.
-It builds the handoff with `build_planning_handoff()`, whose
+`backend/scripts/preview_degree_audit.py` reads input files, calls
+`backend.services.degree_planning.run_degree_plan()`, and writes the requested
+reports. Python callers can pass the contents of the resolved degree JSON directly.
+
+```python
+from backend.services.degree_planning import run_degree_plan
+
+result = run_degree_plan(
+    draft, [{"course_code": "CS 110", "grade": "A"}],
+    core_ii_candidates=True, client=supabase_client,
+)
+preview = result.preview
+handoff = result.handoff
+```
+
+The two positional inputs are the resolved draft and a list of course codes or
+coursework records. Optional keyword inputs include `reported_credits` (course
+codes mapped to credit amounts, or pairs), the existing `core_ii_listing`, and
+the three mode flags `supabase_attributes`, `evaluate_prerequisites`, and
+`core_ii_candidates`. All flags default to false. The default result includes
+both the preview and the v1 handoff. With `include_handoff=False`, a legacy
+preview-only call returns `None` for the handoff. Either enrichment mode always
+builds the handoff. An injected `client` serves every requested Supabase lookup.
+Omitting it preserves the existing lazy client configuration.
+
+The audit and handoff calculations live in `backend/services/degree_audit.py`.
+The service builds the handoff with `build_planning_handoff()`, whose
 `finalize_planning_handoff_v1()` creates explicit candidate placeholders. Optional
 prerequisite enrichment happens **after** that finalizer returns.
 
@@ -26,7 +51,7 @@ With `--evaluate-prerequisites`, the CLI:
 2. Computes the same degree-progress results and explicit candidate pool.
 3. Reads `backend/scripts/courses.csv` and `backend/scripts/catalog_prerequisites.csv`.
 4. Loads the root `.env` with `override=False` and creates a dedicated client using
-   the existing `create_api_client()` factory. Credentials stay at this CLI boundary.
+   the existing `create_api_client()` factory when a client was not supplied.
 5. Calls `backend/services/planning_eligibility.py` once for the whole candidate batch.
 6. Attaches results to a `2.0.0` handoff and, if requested, the preview JSON.
 

@@ -14,6 +14,7 @@ import unittest
 from unittest.mock import patch
 
 from backend.scripts import preview_degree_audit as audit
+from backend.services import degree_planning
 from backend.scripts.parse_prerequisites import parse_rows
 from backend.services import flexible_candidates as flexible
 from backend.services import planning_eligibility as eligibility
@@ -132,7 +133,7 @@ class CoreIIPlanningTests(unittest.TestCase):
             patch.object(flexible, "_SOURCE_SHA256", hashlib.sha256(attributes).hexdigest()),
             patch.multiple(loader, _CATALOG_SHA256=hashlib.sha256(catalog).hexdigest(),
                            _PREREQUISITE_SHA256=hashlib.sha256(prerequisites).hexdigest()),
-            patch.object(audit, "_create_prerequisite_client", return_value=self.client),
+            patch.object(degree_planning, "_create_prerequisite_client", return_value=self.client),
             patch.object(Path, "read_bytes", autospec=True, side_effect=lambda path: self.files[path.name]),
             patch.dict(os.environ, {"SUPABASE_URL": "https://fixture.invalid", "SUPABASE_SECRET_KEY": "fixture-only"}),
             patch.dict(sys.modules, {"dotenv": SimpleNamespace(load_dotenv=lambda **kwargs: None),
@@ -244,7 +245,7 @@ class CoreIIPlanningTests(unittest.TestCase):
         self.assertNotIn("PHL 101", [c["course_code"] for c in handoff["course_eligibility"]["courses"]])
 
     def test_attribute_progress_failure_is_sanitized_and_does_not_invent_shortfalls(self):
-        with patch.object(audit, "fetch_supabase_attribute_evidence", side_effect=audit.AttributeEvidenceUnavailable("secret-token")), \
+        with patch.object(degree_planning, "fetch_supabase_attribute_evidence", side_effect=audit.AttributeEvidenceUnavailable("secret-token")), \
                 patch.object(flexible, "load_attribute_candidates", wraps=flexible.load_attribute_candidates) as load:
             (preview, handoff), out = self.successful("--core-ii-candidates")
         self.assertTrue(all(call.args[1] == [] for call in load.call_args_list))
@@ -323,7 +324,7 @@ class CoreIIPlanningTests(unittest.TestCase):
 
     def test_disabled_modes_do_not_query_attribute_candidates_and_preserve_versions(self):
         for flags, version in (([], "1.0.0"), (["--evaluate-prerequisites"], "2.0.0")):
-            with self.subTest(version=version), patch.object(audit, "fetch_core_ii_candidates", side_effect=AssertionError("not enabled")), \
+            with self.subTest(version=version), patch.object(degree_planning, "fetch_core_ii_candidates", side_effect=AssertionError("not enabled")), \
                     patch.object(flexible, "load_attribute_candidates", side_effect=AssertionError("no category queries")):
                 (_, handoff), _ = self.successful(*flags)
             self.assertEqual(handoff["schema_version"], version)
@@ -383,11 +384,11 @@ class CoreIIPlanningTests(unittest.TestCase):
         code, _, err = self.run_cli("--core-ii-candidates", "--reported-credits", "CS 110=9")
         self.assertEqual(code, 1)
         self.assertIn("outside catalog range", err)
-        with patch.object(audit, "fetch_core_ii_candidates", side_effect=KeyError("bug")):
+        with patch.object(degree_planning, "fetch_core_ii_candidates", side_effect=KeyError("bug")):
             with self.assertRaises(KeyError): self.run_cli("--core-ii-candidates")
 
     def test_legacy_attribute_failure_remains_an_error(self):
-        with patch.object(audit, "fetch_supabase_attribute_evidence", side_effect=audit.AttributeEvidenceUnavailable("Unavailable")):
+        with patch.object(degree_planning, "fetch_supabase_attribute_evidence", side_effect=audit.AttributeEvidenceUnavailable("Unavailable")):
             code, _, err = self.run_cli("--supabase-attributes")
         self.assertEqual(code, 1)
         self.assertIn("Unavailable", err)
