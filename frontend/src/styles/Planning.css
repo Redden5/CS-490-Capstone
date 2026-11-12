@@ -1,0 +1,100 @@
+.planning-page {
+  width: 100%;
+  max-width: 1320px;
+  padding: 28px 36px 48px;
+  margin: 0 auto;
+  color: #26362c;
+  overflow-wrap: anywhere;
+}
+.planning-page p, .planning-page li { line-height: 1.6; }
+.planning-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 22px; }
+.planning-heading h1 { margin: 0 0 6px; color: #183321; font-size: clamp(1.8rem, 3vw, 2.4rem); }
+.planning-heading p { margin: 0; }
+.planning-heading .planning-eyebrow { margin-bottom: 6px; font-size: 13px; color: #006747; font-weight: 700; }
+.planning-card { min-width: 0; padding: 24px; border: 1px solid #cfe0d6; background: #fff; border-radius: 12px; margin: 18px 0; }
+.planning-card h2 { margin: 0 0 14px; font-size: 22px; color: #183321; }
+.planning-muted { color: #53665b; font-size: 14px; }
+.planning-notice { margin: 16px 0; padding: 14px 18px; border: 1px solid #c8dfd1; border-radius: 9px; background: #eaf6ee; font-size: 14px; line-height: 1.6; }
+.planning-notice.warning { border-color: #dfc894; background: #fff8e9; color: #664b18; }
+.planning-notice p { margin: 0 0 8px; }
+.planning-link { border: 0; background: transparent; padding: 3px 0; color: #006747; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.planning-link:hover { color: #004f36; }
+.planning-button { display: inline-flex; justify-content: center; align-items: center; min-height: 42px; padding: 10px 16px; border: 1px solid #006747; border-radius: 7px; background: #006747; color: white; font: inherit; font-weight: 600; text-align: center; cursor: pointer; }
+.planning-button.secondary { border-color: #b6d7c4; background: #e8f4ec; color: #006747; }
+.planning-button:hover:not(:disabled) { filter: brightness(0.94); }
+.planning-button:disabled { cursor: default; opacity: 0.6; }
+.planning-page :is(button, input, select, summary):focus-visible { outline: 3px solid #008b2f; outline-offset: 3px; }
+.planning-page input:not([type='checkbox']), .planning-page select { width: 100%; min-width: 0; min-height: 42px; border: 1px solid #a7bcaf; border-radius: 7px; background: white; color: #26362c; padding: 9px 10px; font: inherit; }
+.planning-page input::placeholder { color: #68776e; }
+.planning-input-layout { display: grid; grid-template-columns: minmax(300px, 0.85fr) minmax(0, 1.5fr); align-items: start; gap: 22px; }
+.planning-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; font-size: 14px; font-weight: 600; }
+.planning-field input, .planning-field select { font-weight: 400; }
+.planning-search label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; }
+.planning-search > div { display: flex; gap: 8px; }
+.planning-search button { flex-shrink: 0; }
+.planning-search-results { list-style: none; margin: 0; padding: 0; }
+.planning-search-results li { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 0; border-bottom: 1px solid #dce7e0; font-size: 14px; }
+.planning-search-results button { flex-shrink: 0; }
+.planning-section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+.planning-section-heading > span { white-space: nowrap; color: #53665b; font-size: 14px; }
+.planning-coursework-list { list-style: none; padding: 0; }
+.planning-coursework-list fieldset { min-width: 0; margin: 0 0 18px; padding: 16px; border: 1px solid #cfe0d6; border-radius: 9px; }
+.planning-coursework-list legend { padding: 0 6px; font-weight: 600; color: #174b32; }
+.planning-course-fields { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px; }
+.planning-checkbox { display: flex; gap: 8px; align-items: baseline; margin: 16px 0 10px; font-size: 14px; }
+.planning-checkbox input { accent-color: #006747; }
+.planning-evaluate { margin-top: 24px; padding-top: 20px; border-top: 1px solid #dce7e0; }
+.planning-evaluate > button { width: 100%; }
+.planning-evaluate p { margin-bottom: 0; }
+.planning-empty { color: #53665b; padding: 20px; background: #f0f7f3; border-radius: 9px; }
+.planning-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+.planning-report-heading { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between; }
+.planning-report-heading h2 { margin-bottom: 6px; }
+.planning-report-heading p { margin: 0; }
+.planning-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.planning-stats .planning-card { margin: 0; }
+.planning-stats strong { display: block; color: #006747; font-size: 36px; margin-bottom: 8px; }
+.planning-stats h2 { font-size: 18px; margin-bottom: 8px; }
+.planning-stats p { margin: 0; font-size: 14px; color: #53665b; }
+.planning-badge { display: inline-block; flex-shrink: 0; max-width: 100%; padding: 5px 10px; border-radius: 6px; background: #edf2ef; color: #43564a; font-size: 12px; font-weight: 600; line-height: 1.5; }
+.planning-badge.met { background: #dff2e5; color: #175631; }
+.planning-badge.remaining { background: #eaf0f5; color: #294d67; }
+.planning-badge.review { background: #fff3da; color: #765013; }
+.planning-requirement-group { margin-top: 24px; }
+.planning-requirement-group > h3 { margin: 0 0 12px; color: #174b32; }
+.planning-requirement, .planning-evidence { border: 1px solid #d4e3da; border-radius: 8px; margin: 10px 0; background: #fff; }
+.planning-page summary { cursor: pointer; line-height: 1.5; color: #174b32; }
+.planning-requirement > summary, .planning-evidence > summary { padding: 14px; background: #f3f9f5; border-radius: 8px; }
+.planning-requirement > summary > .planning-badge, .planning-evidence > summary > .planning-badge { margin-left: 12px; }
+.planning-detail-body { padding: 0 18px 18px; font-size: 14px; }
+.planning-detail-body h4 { font-size: 16px; margin-bottom: 10px; color: #183321; }
+.planning-detail-body h5 { font-size: 14px; margin: 0 0 8px; }
+.planning-reasons { padding-left: 20px; }
+.planning-choice-options { padding-left: 22px; }
+.planning-choice-options > li { padding: 10px 0; }
+.planning-choice-options p { margin: 4px 0; }
+.planning-credit-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 18px 0; }
+.planning-credit-facts dt { color: #53665b; font-size: 13px; }
+.planning-credit-facts dd { margin: 4px 0 0; font-weight: 600; }
+.planning-candidate-list { list-style: none; padding: 0; }
+.planning-candidate-list li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 12px 0; border-bottom: 1px solid #dce7e0; }
+.planning-candidate-list li > div { width: 100%; }
+.planning-rule { margin-top: 16px; border-top: 1px solid #dce7e0; }
+.planning-alternative { padding: 14px; border: 1px solid #dce7e0; border-radius: 8px; margin: 10px 0; }
+.planning-alternative > ul { padding-left: 20px; margin-bottom: 0; }
+.planning-alternative p { margin: 4px 0; }
+.planning-source-details { margin-top: 16px; }
+.planning-filter-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; max-width: 700px; }
+@media (max-width: 950px) {
+  .planning-input-layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+@media (max-width: 620px) {
+  .planning-page { padding: 22px 16px 32px; }
+  .planning-card { padding: 18px; }
+  .planning-stats, .planning-course-fields, .planning-credit-facts, .planning-filter-row { grid-template-columns: minmax(0, 1fr); }
+  .planning-stats { gap: 12px; }
+  .planning-stats .planning-card { display: grid; grid-template-columns: 50px minmax(0, 1fr); column-gap: 14px; align-items: center; }
+  .planning-stats strong { grid-row: span 2; margin: 0; }
+  .planning-requirement > summary > .planning-badge, .planning-evidence > summary > .planning-badge { display: table; margin: 8px 0 0; }
+  .planning-detail-body { padding: 0 12px 14px; }
+}
