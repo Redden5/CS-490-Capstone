@@ -1,4 +1,4 @@
-# Degree planning handoff: v1, opt-in v2, and opt-in v2.1
+# Degree planning handoff (v1 through internal v2.2)
 
 The handoff is unofficial planning evidence, not an approved degree audit,
 verified transcript, graduation determination, or registration clearance.
@@ -23,10 +23,10 @@ handoff = result.handoff
 The two positional inputs are the resolved draft and a list of course codes or
 coursework records. Optional keyword inputs include `reported_credits` (course
 codes mapped to credit amounts, or pairs), the existing `core_ii_listing`, and
-the three mode flags `supabase_attributes`, `evaluate_prerequisites`, and
-`core_ii_candidates`. All flags default to false. The default result includes
+the mode flags `supabase_attributes`, `evaluate_prerequisites`, `core_ii_candidates`,
+and `critical_thinking_candidates`. All flags default to false. The default result includes
 both the preview and the v1 handoff. With `include_handoff=False`, a legacy
-preview-only call returns `None` for the handoff. Either enrichment mode always
+preview-only call returns `None` for the handoff. Prerequisite or flexible enrichment always
 builds the handoff. An injected `client` serves every requested Supabase lookup
 and bypasses environment and SDK setup. Without an injected client, the first
 lookup that needs the database creates one client for that evaluation. The
@@ -38,7 +38,7 @@ The service builds the handoff with `build_planning_handoff()`, whose
 `finalize_planning_handoff_v1()` creates explicit candidate placeholders. Optional
 prerequisite enrichment happens **after** that finalizer returns.
 
-Without `--evaluate-prerequisites` or `--core-ii-candidates`, legacy code-list inputs produce the same
+With prerequisite and flexible candidate modes off, legacy code-list inputs produce the same
 preview and `1.0.0` handoff. No prerequisite source files, environment loading,
 client creation or queries occur. The existing independent `--supabase-attributes`
 option retains its behavior. Neither option is implied by the other.
@@ -404,6 +404,21 @@ UNKNOWN results without silently accepting them. Category approval does not prov
 offerings, open seats, schedule feasibility or permission to double-count credits.
 No consumer code or schema migration is changed here. Existing consumers can keep
 requesting unchanged v1/v2.0 output until v2.1 support is agreed.
+
+## Internal preview v2.2 (Critical Thinking)
+
+From the repository root, preview the additional CS Core I slot alongside existing Core II options:
+
+```powershell
+.\.venv\Scripts\python.exe -m backend.scripts.preview_degree_audit --input backend/scripts/data/degree_requirements/resolved/computer_science_bs_resolved.json --completed "FYS 100,MTH 229" --critical-thinking-candidates --planning-output planning.json
+```
+
+Python callers select `run_degree_plan(..., critical_thinking_candidates=True)`. The preview includes Core II and prerequisite evaluation in the same pass and emits `schema_version: "2.2.0"`. The public evaluation route continues to serve v2.1. Internal v2.2 uses the candidate scope `EXPLICIT_CORE_II_AND_CRITICAL_THINKING_REQUIREMENT_COURSES`.
+
+- **Open slot.** For the CS B.S. 2026–2027 rule `t0_row_0005`, the audit must establish a positive shortfall. A prospective course needs an active, year-scoped CT membership reconciled to the reviewed catalog export and enough catalog credits for the single course slot. Inspect `generation_status`, `coverage`, and `withheld_courses` when reads or classifications are incomplete.
+- **Distinct courses.** The builder uses the audit's `reserved_explicit_sibling_courses` when reconciling entered coursework and listing options. FYS 100 and MTH 229 remain available to their explicit rules. Completing MTH 229 provisionally meets both its Core I and major occurrences. Completing ANT 201 as well can fill the additional CT slot and match Social Sciences. Same-group reservation never consumes the course globally.
+- **Consumer joins.** An uncompleted ANT 201 can be an alternative for both `t0_row_0005` and `t0_row_0013`. Both memberships reference the same course-level prerequisite result. MET, UNMET, and UNKNOWN describe student-reported prerequisite evidence. Each entry retains its classification sources. Cross-requirement credits remain unallocated.
+- **Academic review.** The standard draft lacks admission category, transfer-waiver evidence, and where a completed course was taken. The builder withholds MTH 229H from the additional slot pending confirmation of distinct credit with MTH 229. When completion depends on MTH 229H, the audit and the internal candidate list both report `INSUFFICIENT_EVIDENCE` with `HONORS_DISTINCT_SLOT_REVIEW_REQUIRED`. The audit retains the dated classification and potential credit subtotal, and leaves the credit shortfall unknown. Another entered CT course with sufficient known credits can independently fill the slot. The v2.1 API uses the same corrected audit and keeps its existing schema and candidate scope.
 
 ## Reusable candidate-provider interface
 

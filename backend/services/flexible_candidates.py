@@ -1,4 +1,4 @@
-"""Standalone Stage 4A: year-scoped Core II membership, not enrollment eligibility.
+"""Year-scoped catalog membership for Core II and opt-in CS Core I Critical Thinking.
 
 load_attribute_candidates(client, attribute_names, *, catalog_year,
                           source_catalog_attributes_csv=None) uses SELECT only.
@@ -45,6 +45,8 @@ from backend.services.prerequisite_evaluator import _code
 
 
 SUPPORTED_ATTRIBUTES = ("Core II Fine Arts", "Core II Humanities", "Core II Social Sciences")
+CRITICAL_THINKING = "Critical Thinking"
+CT_AND_CORE_II_ATTRIBUTES = (*SUPPORTED_ATTRIBUTES, CRITICAL_THINKING)
 _SOURCE_YEAR = "2026-2027"
 # Reviewed dated export already present in this repository; not a caller override.
 _SOURCE_SHA256 = "d879747438c30a0b9604157e714052a646370617af363973e282ccf8d5dc0faa"
@@ -202,12 +204,12 @@ def load_attribute_candidates(
     client, attribute_names: list[str], *, catalog_year: str,
     source_catalog_attributes_csv: bytes | None = None, batch_size: int = 100, page_size: int = 500,
 ) -> dict[str, Any]:
-    """Retrieve only the three supported exact attributes; see module contract."""
+    """Retrieve only explicitly requested, supported catalog attributes."""
     year = _year(catalog_year)
     if not isinstance(attribute_names, list) or any(
-        not isinstance(n, str) or n not in SUPPORTED_ATTRIBUTES for n in attribute_names
+        not isinstance(n, str) or n not in CT_AND_CORE_II_ATTRIBUTES for n in attribute_names
     ):
-        raise ValueError("attribute_names must be a list of supported exact Core II attributes")
+        raise ValueError("attribute_names must be a list of supported exact catalog attributes")
     for size in (batch_size, page_size):
         if not _id(size) or size > 1000:
             raise ValueError("batch_size and page_size must be integers from 1 to 1000")
@@ -357,7 +359,8 @@ def _progress_issues(requirement, year, completed):
     return issues
 
 
-def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dict[str, Any]) -> dict[str, Any]:
+def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dict[str, Any], *,
+                              critical_thinking_candidates: bool = False) -> dict[str, Any]:
     """Build separate requirement candidates; never mutate or enrich the handoff.
 
     Candidates are requirement matches, NOT prerequisite-approved recommendations.
@@ -387,8 +390,11 @@ def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dic
         seen_ids.add(rule_id)
         name = requirement.get("name")
         mapping = CATALOG_ATTRIBUTE_LABELS.get(normalize_heading(name)) if isinstance(name, str) else None
+        ct_slot = (critical_thinking_candidates and degree.get("program_title") == "Computer Science, B.S."
+                   and year == _SOURCE_YEAR and rule_id == "t0_row_0005"
+                   and mapping == ((CRITICAL_THINKING,), False))
         if (requirement.get("kind") != "CREDIT_REQUIREMENT_DRAFT" or mapping is None
-                or mapping[1] or len(mapping[0]) != 1 or mapping[0][0] not in SUPPORTED_ATTRIBUTES):
+                or mapping[1] or len(mapping[0]) != 1 or (mapping[0][0] not in SUPPORTED_ATTRIBUTES and not ct_slot)):
             skipped.append({"requirement_id": rule_id, "reason": "UNSUPPORTED_REQUIREMENT"})
             continue
         category = mapping[0][0]
@@ -397,10 +403,28 @@ def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dic
                 "candidates": [], "withheld_courses": [], "excluded_completed_course_codes": [],
                 "coverage": None}
         output.append(item)
+        reserved = set()
+        attr = requirement.get("attribute_filter") or {}
+        if ct_slot:
+            allocation = requirement.get("same_group_course_slot_allocation") or {}
+            siblings = allocation.get("reserved_explicit_sibling_courses") if isinstance(allocation, dict) else None
+            if (not isinstance(siblings, list) or not siblings
+                    or allocation.get("scope") != "SAME_PARENT_SECTION_GROUP_ONLY"
+                    or not all(isinstance(c, str) and c for c in siblings)):
+                item.update(generation_status="INSUFFICIENT_EVIDENCE", reasons=["MISSING_CORE_I_SLOT_RESERVATIONS"])
+                continue
+            reserved = set(siblings)
+            item["reserved_explicit_sibling_courses"] = sorted(reserved)
+            # Older handoffs identified an honors-only match without a policy flag.
+            legacy_honors_match = (requirement.get("candidate_progress_status") == "CANDIDATE_MET"
+                                   and isinstance(attr, dict)
+                                   and attr.get("candidate_course_codes_entered") == ["MTH 229H"])
+            if legacy_honors_match or "HONORS_DISTINCT_SLOT_REVIEW_REQUIRED" in requirement.get("remaining_policy_review_flags", []):
+                item.update(generation_status="INSUFFICIENT_EVIDENCE", reasons=["HONORS_DISTINCT_SLOT_REVIEW_REQUIRED"])
+                continue
         if requirement.get("candidate_progress_status") == "CANDIDATE_MET":
             item["reasons"] = ["REQUIREMENT_ALREADY_CANDIDATE_COMPLETE"]
             continue
-        attr = requirement.get("attribute_filter") or {}
         if not isinstance(attr, dict):
             item.update(generation_status="INSUFFICIENT_EVIDENCE", reasons=["MALFORMED_REQUIREMENT_EVIDENCE"])
             continue
@@ -421,8 +445,9 @@ def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dic
         if attribute_candidates.get("retrieval_status") not in ("VISIBLE_READS_AGREE_NOT_ATOMIC", "READ_CHANGED"):
             item.update(generation_status="INCOMPLETE", reasons=["RETRIEVAL_UNAVAILABLE"])
             continue
-        known_completed = {c["course_code"] for c in loaded["courses"] if c["course_code"] in completed}
-        missing_completed = {m["course_code"] for m in loaded["missing_source_memberships"]} & completed
+        available_completed = completed - reserved
+        known_completed = {c["course_code"] for c in loaded["courses"] if c["course_code"] in available_completed}
+        missing_completed = {m["course_code"] for m in loaded["missing_source_memberships"]} & available_completed
         recorded_completed = set(attr["candidate_course_codes_entered"])
         if missing_completed or not known_completed <= recorded_completed or (
             loaded["coverage_complete"] and known_completed != recorded_completed
@@ -434,9 +459,19 @@ def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dic
             if code in completed:
                 item["excluded_completed_course_codes"].append(code)
                 continue
+            if code in reserved:
+                continue
             candidate = deepcopy(course)
             candidate["credit_fit"] = _credit_fit(course, remaining)
             reasons = list(course["issues"])
+            if ct_slot:
+                if course["membership_status"] != "MATCHES_REVIEWED_SOURCE":
+                    reasons.append("CT_CLASSIFICATION_NOT_SOURCE_VERIFIED")
+                if code == "MTH 229H":
+                    reasons.append("HONORS_DISTINCT_SLOT_REVIEW_REQUIRED")
+                minimum = requirement["credit_progress"]["minimum_credits_interpreted"]
+                if not _number(course["min_credit_hours"]) or course["min_credit_hours"] < minimum:
+                    reasons.append("CT_SINGLE_COURSE_CREDIT_FIT_UNVERIFIED")
             if course["membership_status"] not in ("MATCHES_REVIEWED_SOURCE", "YEAR_SCOPED_DATABASE_ASSOCIATION"):
                 reasons.append("MEMBERSHIP_NOT_VERIFIED")
             if (course["catalog_year"] != year or course["catalog_year_id"] != attribute_candidates.get("catalog_year_id")
@@ -462,6 +497,7 @@ def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dic
         if not item["candidates"]:
             item["reasons"].append("NO_USABLE_CANDIDATES_IN_RETRIEVED_DATA")
     return {"catalog_year": year, "basis": "CATALOG_ATTRIBUTE_AND_UNOFFICIAL_DEGREE_PROGRESS",
+            **({"requested_categories": list(CT_AND_CORE_II_ATTRIBUTES)} if critical_thinking_candidates else {}),
             "prerequisites_evaluated": False, "registration_eligibility_determined": False,
             "source_verification": attribute_candidates.get("source_verification"),
             "retrieval_status": attribute_candidates.get("retrieval_status"),
