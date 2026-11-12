@@ -1411,6 +1411,6 @@
   "candidate_option_coverage": {
     "explicit_course_codes_enumerated": true,
     "unmet_attribute_option_lists_enumerated": false,
-    "notes": "Attribute requirements with missing candidate options need a catalog-year courseattribute lookup; course_eligibility.courses is not an exhaustive course pool."
+    "notes": "Some unfinished credit requirements lack complete candidate lists. Unsupported or unmapped requirements also count toward coverage."
   }
 }
