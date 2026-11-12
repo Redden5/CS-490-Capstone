@@ -373,11 +373,13 @@ class AttributeLoaderTests(FixtureCase):
     def test_actual_reviewed_export_hash_and_selected_memberships(self):
         raw = (ROOT / "backend/scripts/catalog_attributes.csv").read_bytes()
         source = list(csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))))
-        selected = [r for r in source if r["attribute_name"] in fc.SUPPORTED_ATTRIBUTES]
+        names = [HUM, SOCIAL, FINE, "Multicultural", "International"]
+        selected = [r for r in source if r["attribute_name"] in names]
         codes = sorted({r["course_code"] for r in selected})
         tables = {"catalogyear": deepcopy(self.tables["catalogyear"]),
                   "attribute": deepcopy(self.tables["attribute"]), "course": [], "courseattribute": []}
         ids = {c: i for i, c in enumerate(codes, 1)}
+        tables["attribute"] = [{"attribute_name": name, "attribute_id": i} for i, name in enumerate(names, 1)]
         attributes = {a["attribute_name"]: a["attribute_id"] for a in tables["attribute"]}
         for code, course_id in ids.items():
             tables["course"].append({"course_id": course_id, "course_code": code, "course_title": "Fixture",
@@ -387,10 +389,11 @@ class AttributeLoaderTests(FixtureCase):
                 "attribute_id": attributes[row["attribute_name"]], "source_url": row["source_url"],
                 "observed_at": row["observed_at_utc"], "catalog_year_id": 7})
         with patch.object(fc, "_SOURCE_SHA256", REAL_SOURCE_HASH):
-            result = self.load(client=SelectClient(tables, cap=7), source_catalog_attributes_csv=raw, batch_size=10)
+            result = self.load(names, client=SelectClient(tables, cap=7), source_catalog_attributes_csv=raw, batch_size=10)
         self.assertEqual(result["source_verification"], "HASH_VERIFIED_SOURCE")
         self.assertTrue(all(a["coverage_complete"] for a in result["attributes"].values()))
-        self.assertEqual({n: len(a["courses"]) for n, a in result["attributes"].items()}, {HUM: 60, SOCIAL: 43, FINE: 13})
+        self.assertEqual({n: len(a["courses"]) for n, a in result["attributes"].items()},
+                         {HUM: 60, SOCIAL: 43, FINE: 13, "Multicultural": 76, "International": 83})
 
 
 class CandidateBuilderTests(FixtureCase):
@@ -594,7 +597,7 @@ class AuditCompatibilityTests(FixtureCase):
         before = deepcopy(data)
         result = fc.build_flexible_candidates(data, self.load())
         self.assertEqual(data, before)
-        self.assertEqual(len(result["requirements"]), 3)
+        self.assertEqual(len(result["requirements"]), 4)
         by_category = {r["category"]: r for r in result["requirements"]}
         self.assertEqual(by_category[SOCIAL]["reasons"], ["REQUIREMENT_ALREADY_CANDIDATE_COMPLETE"])
         self.assertEqual(by_category[HUM]["remaining_credits_candidate"], 3)
