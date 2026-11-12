@@ -1,4 +1,4 @@
-"""HTTP inputs and the top-level v2.1 handoff contract."""
+"""HTTP inputs and the top-level planning handoff contract."""
 
 from typing import Annotated, Any, Literal, Self
 
@@ -27,6 +27,9 @@ class PlanningRequest(BaseModel):
     program_key: str = Field(min_length=1)
     catalog_year: str = Field(pattern=r"^[0-9]{4}-[0-9]{4}$")
     completed_courses: list[CourseCode | CompletedCourse]
+    critical_thinking_candidates: bool = Field(
+        default=False, description="Include Core I Critical Thinking candidates and return the v2.2 handoff.",
+    )
     reported_credits: dict[str, float | str] = Field(default_factory=dict)
 
     @field_validator("reported_credits")
@@ -58,7 +61,7 @@ class PlanningHandoff(BaseModel):
 
     model_config = ConfigDict(extra="allow", strict=True)
 
-    schema_version: Literal["2.1.0"]
+    schema_version: Literal["2.1.0", "2.2.0"]
     purpose: str
     degree: dict[str, Any]
     completed_course_codes_entered: list[str]
