@@ -145,7 +145,7 @@ or UNKNOWN. No course is added from prerequisite diagnostics.
 
 Attribute-only requirements, including Core II categories, remain intact. Their
 candidate options are **not generated in v1/v2.0 mode**. Existing
-`candidate_option_coverage` and attribute-option warnings remain unchanged.
+`candidate_option_coverage` includes unfinished credit requirements that lack an attribute mapping.
 `NO_CANDIDATES` means no explicit candidate codes, not that every flexible
 requirement is complete or that the degree has no remaining work.
 
@@ -362,8 +362,9 @@ Existing requirement structures retain their IDs, options, progress and credit
 fields. For supported categories only, `eligible_catalog_course_options_included`
 is true when the provider reports GENERATED with complete membership coverage.
 Partial/withheld enumeration leaves it false. Global
-`unmet_attribute_option_lists_enumerated` is recomputed conservatively; it remains
-false while any unmet attribute category is unenumerated. Existing warnings remain,
+`unmet_attribute_option_lists_enumerated` is true only when every unfinished credit requirement explicitly includes a complete
+candidate list. Unsupported or unmapped credit requirements, including Writing Intensive and
+Free Electives, keep the flag false while unfinished. A missing inclusion flag counts as false. Existing warnings remain,
 with an added supported-scope warning and updated coverage note.
 
 For a flexible requirement, `prerequisites_evaluated` requires complete enumeration,

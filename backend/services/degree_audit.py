@@ -1062,6 +1062,14 @@ def _remaining_choice_courses(requirement: dict[str, Any]) -> set[str]:
             for code in option.get("missing_codes_to_complete_option", [])}
 
 
+def _credit_option_lists_complete(requirements: list[dict[str, Any]]) -> bool:
+    return all(
+        (r.get("attribute_filter") or {}).get("eligible_catalog_course_options_included") is True
+        for r in requirements
+        if r["kind"] == "CREDIT_REQUIREMENT_DRAFT" and r["planning_disposition"] != "CANDIDATE_COMPLETE"
+    )
+
+
 def finalize_planning_handoff_v1(handoff: dict[str, Any]) -> dict[str, Any]:
     """Promote the existing projection to an explicit, conservative v1 interface.
 
@@ -1070,7 +1078,6 @@ def finalize_planning_handoff_v1(handoff: dict[str, Any]) -> dict[str, Any]:
     """
     requirements = handoff["requirements"]
     explicit_candidate_codes: set[str] = set()
-    missing_attribute_option_lists = False
 
     for item in requirements:
         status = item["candidate_progress_status"]
@@ -1089,12 +1096,6 @@ def finalize_planning_handoff_v1(handoff: dict[str, Any]) -> dict[str, Any]:
             # Do not imply an authoritative credit deficit for unresolved rules.
             if item["planning_disposition"] in ("REVIEW_REQUIRED", "UNSUPPORTED"):
                 item["credit_progress"]["additional_credits_indicated_candidate"] = None
-        elif item["kind"] == "CREDIT_REQUIREMENT_DRAFT":
-            attr = item.get("attribute_filter") or {}
-            if attr.get("attribute_names") and not attr.get(
-                "eligible_catalog_course_options_included", False
-            ) and item["planning_disposition"] != "CANDIDATE_COMPLETE":
-                missing_attribute_option_lists = True
 
     entered = set(handoff["completed_course_codes_entered"])
     candidates = sorted(explicit_candidate_codes - entered)
@@ -1111,15 +1112,15 @@ def finalize_planning_handoff_v1(handoff: dict[str, Any]) -> dict[str, Any]:
             for code in candidates
         ],
     }
+    credit_options_complete = _credit_option_lists_complete(requirements)
     handoff["candidate_option_coverage"] = {
         "explicit_course_codes_enumerated": True,
-        "unmet_attribute_option_lists_enumerated": not missing_attribute_option_lists,
+        "unmet_attribute_option_lists_enumerated": credit_options_complete,
         "notes": (
-            "Attribute requirements with missing candidate options need a "
-            "catalog-year courseattribute lookup; course_eligibility.courses "
-            "is not an exhaustive course pool."
-        ) if missing_attribute_option_lists else (
-            "All currently unmet requirements with explicit course codes are enumerated."
+            "All unfinished credit requirements have complete candidate lists."
+            if credit_options_complete else
+            "Some unfinished credit requirements lack complete candidate lists. "
+            "Unsupported or unmapped requirements also count toward coverage."
         ),
     }
     return handoff
@@ -1384,17 +1385,13 @@ def apply_prerequisite_results(
         )
     if flexible_candidates is not None:
         categories = "Core II and Critical Thinking" if critical_thinking_candidates else "Core II"
-        missing_options = any(
-            r["kind"] == "CREDIT_REQUIREMENT_DRAFT" and r["planning_disposition"] != "CANDIDATE_COMPLETE"
-            and r.get("attribute_filter", {}).get("attribute_names")
-            and not r["attribute_filter"]["eligible_catalog_course_options_included"]
-            for r in output["requirements"]
-        )
-        output["candidate_option_coverage"]["unmet_attribute_option_lists_enumerated"] = not missing_options
+        credit_options_complete = _credit_option_lists_complete(output["requirements"])
+        output["candidate_option_coverage"]["unmet_attribute_option_lists_enumerated"] = credit_options_complete
         output["candidate_option_coverage"]["notes"] = (
+            "All unfinished credit requirements have complete candidate lists; eligibility remains separate."
+            if credit_options_complete else
             f"{categories} candidate coverage is per requirement in flexible_candidates. "
-            "Other unresolved attribute requirements remain outside this course pool."
-            if missing_options else "All currently unmet attribute-option lists are enumerated; eligibility remains separate."
+            "Unfinished credit requirements without complete lists include unsupported or unmapped requirements."
         )
         output["warnings"].append(
             f"{categories} candidates are catalog requirement matches, not registration approval or term offerings. "
