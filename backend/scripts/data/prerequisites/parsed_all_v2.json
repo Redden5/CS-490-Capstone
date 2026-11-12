@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "stage": "reviewable_prerequisite_parse_not_approved_for_seeding",
-  "generated_at_utc": "2026-11-09T03:04:27.174494+00:00",
+  "generated_at_utc": "2026-11-12T17:53:49.012502+00:00",
   "approved_for_seeding": false,
   "logic_convention_for_future_relational_seeding": {
     "across_ruleclause_rows": "OR",
@@ -11,13 +11,13 @@
     "courses_with_enrollment_metadata": 1935,
     "raw_metadata_rows": 2219,
     "parseable_prerequisite_expressions": 1752,
-    "ready_for_seed_review": 1393,
-    "needs_review": 542,
+    "ready_for_seed_review": 1394,
+    "needs_review": 541,
     "corroborated_concurrent_pr_courses": 171,
     "corequisite_only_courses": 73,
     "syntax_parsed_rules": 1951,
     "course_only_rules": 1843,
-    "machine_checkable_rules": 1393
+    "machine_checkable_rules": 1394
   },
   "courses": [
     {
@@ -84076,9 +84076,24 @@
           ],
           "missing_course_references": [],
           "review_flags": [],
-          "machine_checkable": false,
-          "status": "NEEDS_REVIEW",
-          "dnf_clauses": []
+          "machine_checkable": true,
+          "status": "READY_FOR_SEED_REVIEW",
+          "dnf_clauses": [
+            [
+              {
+                "course_code": "CS 110",
+                "minimum_grade": "D",
+                "concurrent_allowed": false
+              }
+            ],
+            [
+              {
+                "course_code": "CS 110H",
+                "minimum_grade": "D",
+                "concurrent_allowed": false
+              }
+            ]
+          ]
         }
       ],
       "prerequisite_raw_text": "CS 110 with a minimum grade of D or CS 110H with a minimum grade of D.",
@@ -84097,7 +84112,7 @@
         {
           "field_label": "cr/pr",
           "requirement_text": "CS 110",
-          "status": "NEEDS_REVIEW",
+          "status": "REVIEWED_SUPPLEMENTARY_METADATA",
           "expression": {
             "op": "COURSE",
             "course_code": "CS 110",
@@ -84108,7 +84123,7 @@
           "listed_course_codes": [
             "CS 110"
           ],
-          "reason": "CR/PR semantics are unverified; never inferred to mean concurrency or prior completion",
+          "reason": "Fall 2026 registration (term 202701, CRN 1874) confirms the primary prerequisite.",
           "primary_course_codes": [
             "CS 110",
             "CS 110H"
@@ -84150,12 +84165,9 @@
         ]
       ],
       "prerequisite_expression_machine_checkable": true,
-      "complete_enrollment_conditions_machine_checkable": false,
-      "status": "NEEDS_REVIEW",
-      "review_flags": [
-        "cr_pr_semantics_not_interpreted",
-        "cr_pr_course_discrepancy"
-      ]
+      "complete_enrollment_conditions_machine_checkable": true,
+      "status": "READY_FOR_SEED_REVIEW",
+      "review_flags": []
     },
     {
       "course_code": "CS 205",

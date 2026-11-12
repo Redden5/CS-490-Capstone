@@ -410,12 +410,22 @@ def audit_additional_metadata(expression: dict | None, additional: list[dict],
                 flags.append("concurrent_pr_metadata_requires_review")
                 assessment["reason"] = "Concurrent metadata Boolean expression differs from inline annotation view or cannot be parsed"
         elif label == "cr/pr":
-            flags.append("cr_pr_semantics_not_interpreted")
             assessment["reason"] = "CR/PR semantics are unverified; never inferred to mean concurrency or prior completion"
             primary_codes = {a["course_code"] for a in course_atoms(expression["ast"])} if expression else set()
             listed_codes = set(assessment.get("listed_course_codes", []))
             assessment["primary_course_codes"] = sorted(primary_codes)
             assessment["course_set_discrepancy"] = primary_codes != listed_codes
+            # Fall 2026 registration lists these two prior-completion alternatives for CS 120.
+            if (row.get("course_code") == "CS 120" and row.get("catalog_year") == "2026-2027"
+                    and row.get("source_url") == "https://catalog.marshall.edu/undergraduate/courses-az/cs/"
+                    and len(additional) == 1 and row["requirement_text"] == "CS 110"
+                    and expression and not expression["normalizations"]
+                    and expression["normalized_text"] == (
+                        "CS 110 with a minimum grade of D or CS 110H with a minimum grade of D")):
+                assessment["status"] = "REVIEWED_SUPPLEMENTARY_METADATA"
+                assessment["reason"] = "Fall 2026 registration (term 202701, CRN 1874) confirms the primary prerequisite."
+                continue
+            flags.append("cr_pr_semantics_not_interpreted")
             if primary_codes != listed_codes:
                 flags.append("cr_pr_course_discrepancy")
         else:

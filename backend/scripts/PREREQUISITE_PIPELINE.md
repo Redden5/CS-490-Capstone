@@ -98,10 +98,18 @@ seeding the rule. AND and OR lists are supported, with Boolean absorption of
 redundant DNF clauses. Two mismatches remain: `PHL 250` and `RST 250` list
 `ENG 101` as concurrent in metadata, but the main expression does not annotate it.
 
-`CR/PR` is not interpreted as prerequisite or concurrency policy. Both known
-records remain unresolved: `CS 120` metadata omits `CS 110H`; `STA 564` metadata
-adds `STA 546`. Its stray closing parenthesis can be normalized without resolving
-the disagreement. Primary/metadata code sets and ASTs remain available for review.
+`CR/PR` normally requires review. For the reviewed 2026–2027 CS 120 rows,
+the registration schedule confirms two alternatives: prior CS 110 or CS 110H,
+each with a minimum grade of D. The parser preserves the supplementary
+`CR/PR: CS 110` row and its course-set discrepancy as provenance. The primary
+field supplies both clauses. STA 564 still requires review because its CR/PR
+field adds STA 546. [Marshall catalog](https://catalog.marshall.edu/undergraduate/courses-az/cs/) · [Fall 2026 schedule, CS 120, CRN 1874](https://mubert.marshall.edu/scheduleofcourses.php?PTs%5B%5D=1&PTs%5B%5D=2&PTs%5B%5D=3&PTs%5B%5D=5&PTs%5B%5D=6&PTs%5B%5D=7&PTs%5B%5D=8&camps%5B%5D=1&camps%5B%5D=3&classlevel%5B%5D=1&classlevel%5B%5D=2&search=Search&searchDays=%25&searchText=&searchTime=%25&searchterm=202701&showschedule=openclasslist)
+
+The regenerated `parsed_all_v2.json` contains the corrected CS 120 rule. Before
+deployment, review the existing seeder's database plan for the 2026–2027
+CS 120 prerequisite parent and its two alternative clauses. The planning
+loader compares the stored graph to a fresh parse of the reviewed CSVs and
+keeps CS 120 UNKNOWN until they agree. [Supabase import workflow](PREREQUISITE_SUPABASE.md)
 
 ACT/SAT labels and literal scores, placement exams, admission markers,
 proficiency/workshop markers, narrowly recognized permission conditions and
@@ -288,14 +296,14 @@ The sandbox initially prevented initdb from completing; the successful test
 run used an authorized local process outside the sandbox. The cluster was
 stopped and removed. No Supabase migration, connection or seeding was performed.
 
-The catalog result is 1,393 ready / 542 review versus the 1,615 / 320 baseline.
+Before the CS 120 schedule review, the catalog result was 1,393 ready / 542 review versus the 1,615 / 320 baseline.
 There are 280 courses referencing 181 missing catalog codes, 181 courses with
 unverified corequisite timing, 108 courses with external/unsupported conditions,
 90 comma-list syntax failures, two concurrency mismatches, two CR/PR
 discrepancies, one duplicated prerequisite field and one unresolved hyphenated
 identity. Counts overlap. See the full JSON for per-course details.
 
-CS B.S. coverage is 47 explicit courses: 27 with representable course rules,
+At that revision, CS B.S. coverage was 47 explicit courses: 27 with representable course rules,
 11 with unresolved conditions, nine verified catalog courses without published
 prerequisite-related metadata and zero unmatched course codes. No category
 implies verified eligibility.
