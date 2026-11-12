@@ -149,6 +149,16 @@ candidate options are **not generated in v1/v2.0 mode**. Existing
 `NO_CANDIDATES` means no explicit candidate codes, not that every flexible
 requirement is complete or that the degree has no remaining work.
 
+### CS Science with Lab progress across handoff versions
+
+For the 2026–2027 CS B.S., `t0_row_0058` retains all five listed lecture/lab bundles. Read `choice_progress.maximum_nonoverlapping_choices_entered` and `choices_remaining_candidate` for progress toward three. With both Physics I lectures and PHY 202 entered, two bundles match and only one choice counts. Three distinct pairs with at least 12 known candidate credits give `CANDIDATE_COMPLETE`. If credit evidence is missing, the count still closes the list of major science recommendations. The source rule and its “or above” alternatives retain their review flags.
+
+In `course_options`, `missing_codes_to_complete_option` describes the original bundle. An optional `candidate_exclusion_reason` explains why that bundle contributes no courses to the eligibility pool. Reasons are `LISTED_CHOICE_COUNT_MET`, `LAB_ALREADY_USED_IN_MAJOR_CHOICE`, and `PHYSICS_I_LECTURE_ALREADY_ENTERED`. For example, after PHY 211 alone, PHY 202 remains a candidate through the PHY 211 option. After PHY 202 alone, either lecture remains an alternative. Other requirement memberships and prerequisite results apply independently.
+
+For `t0_row_0011`, the planner checks a single completed option against year-scoped Core II Natural Sciences memberships for **every** member and at least four known credits. It considers the documented integrated lab PS 111 first, followed by the resolved major pairs in draft order. The qualifying option appears in `attribute_filter.candidate_course_codes_entered` when the disposition is `CANDIDATE_COMPLETE`. The same pair can contribute to provisional major progress, while distinct credit totals count each course once. PS 111 contributes only to Core II. A four-credit lecture alone, unrelated classified courses, and unverified substitutions leave the slot under review. The preview retains raw classification matches and their catalog sources.
+
+Core II science progress requires the entered-course attribute lookup, available through the API, `--supabase-attributes`, or `--core-ii-candidates`. Broader Core II lab options remain unenumerated. Source review and transcript verification still apply. [CS degree requirements](https://catalog.marshall.edu/undergraduate/programs-az/engineering-computer-sciences/computer-science/computer-science-bs/) · [PS 111 catalog entry](https://catalog.marshall.edu/undergraduate/courses-az/ps/)
+
 ## V2 eligibility contract
 
 `course_eligibility` contains:
@@ -255,9 +265,9 @@ Example invocation (performs read-only live catalog/prerequisite queries):
 .venv\Scripts\python.exe -m backend.scripts.preview_degree_audit --input backend/scripts/data/degree_requirements/resolved/computer_science_bs_resolved.json --completed-file completed.json --core-ii-candidates --output preview.json --planning-output planning.json
 ```
 
-Only Humanities, Social Sciences (the draft's "Social Studies"), and Fine Arts
-are supported. Science with Lab, Critical Thinking, and other policy-dependent
-requirements remain deferred. No term availability, sections, scheduling,
+Flexible catalog enumeration covers Humanities, Social Sciences (the draft's
+"Social Studies"), and Fine Arts. The shared audit evaluates documented completed
+science options and generates major pair candidates. No term availability, sections, scheduling,
 preference ranking or interactive prerequisite clarification is implemented.
 
 The workflow is:
