@@ -429,6 +429,27 @@ ATTRIBUTE_LOOKUP_REVIEW_FLAGS = frozenset({
 })
 
 
+def _science_lab_credit_progress(
+    major_progress: dict[str, Any], classified: set[str], credit_by_course: dict,
+) -> dict[str, Any] | None:
+    """One independently qualifying route for the 2026–27 CS Core II slot."""
+    # PS 111 has an integrated lab in the reviewed courses.csv description.
+    # The resolved major rule supplies the other documented lecture/lab pairings.
+    options = [["PS 111"]]
+    options.extend(option["course_codes"] for option in major_progress.get("candidate_options_fully_entered", [])
+                   if option["kind"] == "ALL_OF")
+    incomplete = None
+    for codes in options:
+        if classified.issuperset(codes):
+            progress = candidate_credit_progress(codes, credit_by_course, 4)
+            if (not progress["candidate_courses_without_known_credits"]
+                    and progress["threshold_evidence_status"] == "CANDIDATE_CREDIT_THRESHOLD_MET"):
+                return progress
+            if incomplete is None:
+                incomplete = progress
+    return incomplete
+
+
 def evaluate_attribute_rule_at_runtime(
     rule: dict[str, Any],
     info: dict[str, Any],
@@ -436,9 +457,9 @@ def evaluate_attribute_rule_at_runtime(
 ) -> dict[str, Any]:
     """Describe candidate completion using year-scoped Supabase attributes.
 
-    Only a *pure classification-lookup* review flag can be resolved here.
-    Laboratory requirements, course-origin rules, multiple-credit-slot rules,
-    unspecified eligibility, and any unfamiliar review flags remain blocked.
+    Year-scoped classification resolves lookup flags. A documented, completed
+    science option can also resolve the lab condition for this student's slot.
+    Course-origin rules, multiple-credit-slot rules and unfamiliar flags remain blocked.
     Resolver source_status is never changed, and nothing is certified.
     """
     flags = set(rule.get("review_flags") or [])
@@ -475,8 +496,11 @@ def evaluate_attribute_rule_at_runtime(
     } or mapping.get("attribute_match_mode") != "ANY"):
         result["status"] = "MAPPING_NOT_RUNTIME_APPROVED"
         return result
-    if (mapping.get("additional_lab_eligibility_unverified") or
-            flags - ATTRIBUTE_LOOKUP_REVIEW_FLAGS):
+    remaining_flags = flags - ATTRIBUTE_LOOKUP_REVIEW_FLAGS
+    science_lab = bool(info.get("qualifying_science_lab_option"))
+    if science_lab:
+        remaining_flags = remaining_flags - {"lab_eligibility_unverified"}
+    if (mapping.get("additional_lab_eligibility_unverified") and not science_lab) or remaining_flags:
         result["status"] = "ADDITIONAL_POLICY_REVIEW_REQUIRED"
         return result
     if rule.get("status") not in {"READY", "NEEDS_REVIEW"}:
@@ -512,6 +536,9 @@ def evaluate_attribute_rule_at_runtime(
             "earned credits, Marshall residency, grades, or degree eligibility."
         ),
     })
+    if science_lab:
+        result["note"] = ("One documented lab option meets the Core II credit target under the "
+                          "CS working rule. Major overlap is provisional and earns credits only once.")
     return result
 
 
@@ -739,6 +766,14 @@ def evaluate_preview(
     all_required: set[str] = set()
     matched_required: set[str] = set()
     counts: Counter[str] = Counter()
+    cs_science_year = (draft.get("program_title") == "Computer Science, B.S."
+                       and draft.get("catalog_year") == "2026-2027")
+    major_science = next((rule for rule in rules if cs_science_year
+                          and rule["source_kind"] == "CHOOSE_N"
+                          and rule.get("source", {}).get("rule_id") == "t0_row_0058"
+                          and rule.get("status") in {"NEEDS_REVIEW", "READY"}), None)
+    credits = catalog_attribute_evidence["credit_by_course"] if catalog_attribute_evidence is not None else None
+    science_progress = choice_requirement_progress(major_science, completed, credits) if major_science else {}
     for rule in rules:
         kind = rule["source_kind"]
         status = rule.get("status")
@@ -767,12 +802,20 @@ def evaluate_preview(
             # policies must not be presented as a completed requirement.
             info["preview_status"] = "REVIEW_REQUIRED" if status != "UNSUPPORTED" else "UNSUPPORTED"
             if kind == "CHOOSE_N":
-                info.update(choice_requirement_progress(
-                    rule,
-                    completed,
-                    (catalog_attribute_evidence["credit_by_course"]
-                     if catalog_attribute_evidence is not None else None),
-                ))
+                info.update(science_progress if rule is major_science else
+                            choice_requirement_progress(rule, completed, credits))
+                if rule is major_science and info["candidate_selection_exact"]:
+                    selected = set(info["candidate_selected_course_codes_distinct"])
+                    for option in info["option_progress"]:
+                        if option["fully_entered"]:
+                            continue
+                        if info["candidate_choices_remaining"] == 0:
+                            option["candidate_exclusion_reason"] = "LISTED_CHOICE_COUNT_MET"
+                        elif selected.intersection(option["course_codes"]):
+                            option["candidate_exclusion_reason"] = "LAB_ALREADY_USED_IN_MAJOR_CHOICE"
+                        elif ("PHY 202" in option["missing_course_codes"]
+                              and not option["entered_course_codes"] and completed & {"PHY 201", "PHY 211"}):
+                            option["candidate_exclusion_reason"] = "PHYSICS_I_LECTURE_ALREADY_ENTERED"
                 info["note"] = (
                     "Candidate choice progress only. Course reuse within a choice group is "
                     "excluded, but grades, substitutions, shared allocation across other "
@@ -816,12 +859,22 @@ def evaluate_preview(
                         code for codes in by_attribute.values() for code in codes
                     })
                     info["possible_catalog_matches"] = by_attribute
+                    if (cs_science_year and info["rule_id"] == "t0_row_0011"
+                            and attributes == ["Core II Natural Sciences"] and rule.get("minimum_credits") == 4):
+                        credit_progress = _science_lab_credit_progress(
+                            science_progress, set(distinct_candidates), catalog_attribute_evidence["credit_by_course"],
+                        )
+                        if credit_progress:
+                            distinct_candidates = credit_progress["candidate_courses_distinct"]
+                            if (not credit_progress["candidate_courses_without_known_credits"] and
+                                    credit_progress["threshold_evidence_status"] == "CANDIDATE_CREDIT_THRESHOLD_MET"):
+                                info["qualifying_science_lab_option"] = distinct_candidates
+                    else:
+                        credit_progress = candidate_credit_progress(
+                            distinct_candidates, catalog_attribute_evidence["credit_by_course"], rule.get("minimum_credits"),
+                        )
                     info["candidate_course_codes_distinct"] = distinct_candidates
-                    info["candidate_credit_progress"] = candidate_credit_progress(
-                        distinct_candidates,
-                        catalog_attribute_evidence["credit_by_course"],
-                        rule.get("minimum_credits"),
-                    )
+                    info["candidate_credit_progress"] = credit_progress
                     info["catalog_match_evidence"] = {
                         name: {
                             code: catalog_attribute_evidence["sources"].get(name, {}).get(code, [])
@@ -854,6 +907,12 @@ def evaluate_preview(
             else:
                 info["note"] = "Requires additional review."
         info["candidate_progress_status"] = classify_candidate_progress(rule, info)
+        if (rule is major_science and info.get("candidate_choice_status") == "CANDIDATE_CHOICE_COUNT_MET"
+                and (info.get("candidate_choice_credit_progress") or {}).get("threshold_evidence_status")
+                == "CANDIDATE_CREDIT_THRESHOLD_MET"
+                and not set(info["review_flags"]) - {"compound_options_require_group_evaluation",
+                    "shared_courses_across_options_need_allocation_rule", "some_options_require_review"}):
+            info["candidate_progress_status"] = "CANDIDATE_MET"
         if kind == "CREDIT_REQUIREMENT_DRAFT":
             runtime_result = evaluate_attribute_rule_at_runtime(
                 rule, info, catalog_attribute_evidence
@@ -986,6 +1045,14 @@ def evaluate_preview(
 
 
 
+def _remaining_choice_courses(requirement: dict[str, Any]) -> set[str]:
+    if requirement["planning_disposition"] == "CANDIDATE_COMPLETE":
+        return set()
+    return {code for option in requirement.get("course_options", [])
+            if not option.get("fully_entered") and not option.get("candidate_exclusion_reason")
+            for code in option.get("missing_codes_to_complete_option", [])}
+
+
 def finalize_planning_handoff_v1(handoff: dict[str, Any]) -> dict[str, Any]:
     """Promote the existing projection to an explicit, conservative v1 interface.
 
@@ -1009,14 +1076,7 @@ def finalize_planning_handoff_v1(handoff: dict[str, Any]) -> dict[str, Any]:
         if item["kind"] == "REQUIRED_COURSE":
             explicit_candidate_codes.update(item.get("remaining_required_course_codes", []))
         elif item["kind"] == "CHOOSE_N":
-            # Only include options for choice groups that are not candidate-complete.
-            if item["planning_disposition"] != "CANDIDATE_COMPLETE":
-                for option in item.get("course_options", []):
-                    # A full group option is not itself an additional course to take.
-                    if not option.get("fully_entered", False):
-                        explicit_candidate_codes.update(
-                            option.get("missing_codes_to_complete_option", [])
-                        )
+            explicit_candidate_codes.update(_remaining_choice_courses(item))
             # Do not imply an authoritative credit deficit for unresolved rules.
             if item["planning_disposition"] in ("REVIEW_REQUIRED", "UNSUPPORTED"):
                 item["credit_progress"]["additional_credits_indicated_candidate"] = None
@@ -1110,6 +1170,8 @@ def build_planning_handoff(preview: dict[str, Any]) -> dict[str, Any]:
                     "already_entered_codes": option["entered_course_codes"],
                     "missing_codes_to_complete_option": option["missing_course_codes"],
                     "fully_entered": option["fully_entered"],
+                    **({"candidate_exclusion_reason": option["candidate_exclusion_reason"]}
+                       if "candidate_exclusion_reason" in option else {}),
                     "review_flags": option["review_flags"],
                 }
                 for option in rule.get("option_progress", [])
@@ -1268,10 +1330,8 @@ def apply_prerequisite_results(
         enumeration_complete = True
         if requirement["kind"] == "REQUIRED_COURSE":
             candidates.update(requirement.get("remaining_required_course_codes", []))
-        elif requirement["kind"] == "CHOOSE_N" and requirement["planning_disposition"] != "CANDIDATE_COMPLETE":
-            for option in requirement.get("course_options", []):
-                if not option["fully_entered"]:
-                    candidates.update(option["missing_codes_to_complete_option"])
+        elif requirement["kind"] == "CHOOSE_N":
+            candidates.update(_remaining_choice_courses(requirement))
         elif requirement["kind"] == "CREDIT_REQUIREMENT_DRAFT" and requirement["rule_id"] in flexible_by_id:
             item = flexible_by_id[requirement["rule_id"]]
             candidates.update(c["course_code"] for c in item["candidates"])
@@ -1322,7 +1382,8 @@ def apply_prerequisite_results(
         )
         output["warnings"].append(
             "Core II candidates are catalog requirement matches, not registration approval or term offerings. "
-            "Cross-requirement credit sharing is not allocated; Science with Lab and other unsupported categories remain deferred."
+            "Core II Science with Lab catalog candidate enumeration remains deferred. "
+            "A listed major science pair can also contribute to provisional Core II progress."
         )
         if flexible_candidates["generation_status"] in ("PARTIAL", "UNAVAILABLE"):
             output["warnings"].append(

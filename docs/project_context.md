@@ -70,10 +70,10 @@ The resolved 2026–2027 CS draft has two science rules with different scopes. B
 
 | Rule | What the draft establishes | Open policy question |
 | --- | --- | --- |
-| Core II Physical/Natural Science (`t0_row_0011`) | Four-credit requirement mapped to `Core II Natural Sciences`. The draft flags `lab_eligibility_unverified`. | What catalog-year evidence confirms the lab condition for a course or combination? |
-| Major-Specific Science w/ Lab (`t0_row_0058`) | Choose three lecture/lab options with a 12-credit group target. Each listed pair is an `ALL_OF` option: BSC 120 & BSC 120L, CHM 211 & CHM 217, GLY 200 & GLY 210L, PHY 201 & PHY 202, or PHY 211 & PHY 202. | Which “or above” equivalents qualify, and how may the shared PHY 202 lab count across the two physics options? |
+| Core II Physical/Natural Science (`t0_row_0011`) | Four-credit slot. A listed major pair or the integrated lab PS 111 can meet it provisionally when every member has the dated Core II classification and the option has sufficient known credits. | Which other catalog courses or combinations meet the lab condition? |
+| Major-Specific Science w/ Lab (`t0_row_0058`) | Choose three lecture/lab options with a 12-credit group target. The pairs are BSC 120 & BSC 120L, CHM 211 & CHM 217, GLY 200 & GLY 210L, PHY 201 & PHY 202, and PHY 211 & PHY 202. The two physics alternatives share one lab and can fill one choice. | Which “or above” equivalents qualify? |
 
-The audit already tracks listed choice bundles and computes nonoverlapping progress within a group. Whether coursework can count toward both the major and Core II requires separate policy evidence. [Degree audit](../backend/services/degree_audit.py)
+The shared audit applies the student-informed overlap rule to the documented subset. A qualifying pair can support both slots, and its credits enter the distinct total once. PS 111 leaves all three major choices open. Broader credit allocation and institutional confirmation remain open. [Science handoff contract](planning_handoff.md#cs-science-with-lab-progress-across-handoff-versions)
 
 ## Decisions and limits to preserve
 
