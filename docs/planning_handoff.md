@@ -266,7 +266,12 @@ Example invocation (performs read-only live catalog/prerequisite queries):
 ```
 
 Flexible catalog enumeration covers Humanities, Social Sciences (the draft's
-"Social Studies"), and Fine Arts. The shared audit evaluates documented completed
+"Social Studies"), Fine Arts, and the 2026–2027 CS Multicultural or International
+requirement (`t0_row_0018`). Either dated designation can supply credits toward
+its three-credit target. A course appears once for this requirement and retains
+the matched designations and their classification sources. Coverage under
+`by_attribute` shows the evidence for each designation. An incomplete list for
+either designation keeps overall coverage partial. The shared audit evaluates documented completed
 science options and generates major pair candidates. No term availability, sections, scheduling,
 preference ranking or interactive prerequisite clarification is implemented.
 
@@ -335,7 +340,8 @@ required by an explicit requirement still belongs in the combined pool.
 
 `course_eligibility.candidate_scope` becomes
 `EXPLICIT_AND_CORE_II_REQUIREMENT_COURSES`. Its courses are the sorted, deduplicated
-union. Its summary counts the union once, not requirement occurrences. The original
+union, including the Multicultural or International options in v2.1. Its summary
+counts each course once across all requirement memberships. The original
 degree `summary` remains unchanged.
 
 The standalone provider's `prerequisites_evaluated: false` is retained in the

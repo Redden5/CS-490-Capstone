@@ -46,7 +46,8 @@ from backend.services.prerequisite_evaluator import _code
 
 SUPPORTED_ATTRIBUTES = ("Core II Fine Arts", "Core II Humanities", "Core II Social Sciences")
 CRITICAL_THINKING = "Critical Thinking"
-CT_AND_CORE_II_ATTRIBUTES = (*SUPPORTED_ATTRIBUTES, CRITICAL_THINKING)
+MI_ATTRIBUTES = ("Multicultural", "International")
+CATALOG_ATTRIBUTES = (*SUPPORTED_ATTRIBUTES, *MI_ATTRIBUTES, CRITICAL_THINKING)
 _SOURCE_YEAR = "2026-2027"
 # Reviewed dated export already present in this repository; not a caller override.
 _SOURCE_SHA256 = "d879747438c30a0b9604157e714052a646370617af363973e282ccf8d5dc0faa"
@@ -207,7 +208,7 @@ def load_attribute_candidates(
     """Retrieve only explicitly requested, supported catalog attributes."""
     year = _year(catalog_year)
     if not isinstance(attribute_names, list) or any(
-        not isinstance(n, str) or n not in CT_AND_CORE_II_ATTRIBUTES for n in attribute_names
+        not isinstance(n, str) or n not in CATALOG_ATTRIBUTES for n in attribute_names
     ):
         raise ValueError("attribute_names must be a list of supported exact catalog attributes")
     for size in (batch_size, page_size):
@@ -359,6 +360,34 @@ def _progress_issues(requirement, year, completed):
     return issues
 
 
+def _requirement_catalog(attributes, names):
+    """Keep the original single-attribute result, or combine the two ANY designations."""
+    if len(names) == 1:
+        return attributes.get(names[0])
+    if not any(name in attributes for name in names):
+        return None
+
+    combined = _empty_attribute()
+    combined["by_attribute"] = {}
+    for name in names:
+        group = attributes.get(name)
+        if group is None:
+            group = _empty_attribute()
+            group["issues"] = ["MISSING_OR_MISMATCHED_CATALOG_DATA"]
+        combined["by_attribute"][name] = {key: group[key] for key in (
+            "attribute_id", "coverage_status", "coverage_complete", "issues",
+        )}
+        combined["courses"].extend(group["courses"])
+        combined["issues"].extend(group["issues"])
+        for key in ("missing_source_memberships", "unexpected_source_memberships"):
+            combined[key].extend({**row, "attribute_name": name} for row in group[key])
+    combined["issues"] = sorted(set(combined["issues"]))
+    complete = all(group["coverage_complete"] for group in combined["by_attribute"].values())
+    combined["coverage_complete"] = complete
+    combined["coverage_status"] = "MATCHES_REVIEWED_SOURCE" if complete else "INCOMPLETE_OR_DIFFERENT"
+    return combined
+
+
 def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dict[str, Any], *,
                               critical_thinking_candidates: bool = False) -> dict[str, Any]:
     """Build separate requirement candidates; never mutate or enrich the handoff.
@@ -393,11 +422,14 @@ def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dic
         ct_slot = (critical_thinking_candidates and degree.get("program_title") == "Computer Science, B.S."
                    and year == _SOURCE_YEAR and rule_id == "t0_row_0005"
                    and mapping == ((CRITICAL_THINKING,), False))
-        if (requirement.get("kind") != "CREDIT_REQUIREMENT_DRAFT" or mapping is None
-                or mapping[1] or len(mapping[0]) != 1 or (mapping[0][0] not in SUPPORTED_ATTRIBUTES and not ct_slot)):
+        mi_slot = (rule_id == "t0_row_0018" and year == _SOURCE_YEAR and degree.get("program_title") == "Computer Science, B.S."
+                   and mapping == (MI_ATTRIBUTES, False))
+        if (requirement.get("kind") != "CREDIT_REQUIREMENT_DRAFT" or mapping is None or mapping[1]
+                or not (mi_slot or ct_slot or (len(mapping[0]) == 1 and mapping[0][0] in SUPPORTED_ATTRIBUTES))):
             skipped.append({"requirement_id": rule_id, "reason": "UNSUPPORTED_REQUIREMENT"})
             continue
-        category = mapping[0][0]
+        names = mapping[0]
+        category = " or ".join(names)
         item = {"requirement_id": rule_id, "requirement_name": name, "category": category,
                 "remaining_credits_candidate": None, "generation_status": "SKIPPED", "reasons": [],
                 "candidates": [], "withheld_courses": [], "excluded_completed_course_codes": [],
@@ -428,7 +460,7 @@ def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dic
         if not isinstance(attr, dict):
             item.update(generation_status="INSUFFICIENT_EVIDENCE", reasons=["MALFORMED_REQUIREMENT_EVIDENCE"])
             continue
-        if attr.get("attribute_names") != list(mapping[0]) or attr.get("match_mode") != "ANY":
+        if attr.get("attribute_names") != list(names) or attr.get("match_mode") != "ANY":
             item["reasons"] = ["ATTRIBUTE_MAPPING_MISMATCH"]
             continue
         issues = _progress_issues(requirement, year, completed)
@@ -437,7 +469,7 @@ def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dic
             continue
         remaining = requirement["credit_progress"]["additional_credits_indicated_candidate"]
         item["remaining_credits_candidate"] = remaining
-        loaded = attribute_candidates["attributes"].get(category)
+        loaded = _requirement_catalog(attribute_candidates["attributes"], names)
         if attribute_candidates.get("catalog_year") != year or loaded is None:
             item.update(generation_status="INCOMPLETE", reasons=["MISSING_OR_MISMATCHED_CATALOG_DATA"])
             continue
@@ -448,12 +480,17 @@ def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dic
         available_completed = completed - reserved
         known_completed = {c["course_code"] for c in loaded["courses"] if c["course_code"] in available_completed}
         missing_completed = {m["course_code"] for m in loaded["missing_source_memberships"]} & available_completed
+        if mi_slot and missing_completed:
+            # One verified designation establishes membership even if another association is missing.
+            missing_completed -= {c["course_code"] for c in loaded["courses"]
+                                  if c["membership_status"] == "MATCHES_REVIEWED_SOURCE" and not c["issues"]}
         recorded_completed = set(attr["candidate_course_codes_entered"])
         if missing_completed or not known_completed <= recorded_completed or (
             loaded["coverage_complete"] and known_completed != recorded_completed
         ):
             item.update(generation_status="INSUFFICIENT_EVIDENCE", reasons=["COMPLETED_CLASSIFICATION_EVIDENCE_MISMATCH"])
             continue
+        accepted, withheld = {}, {}
         for course in loaded["courses"]:
             code = course["course_code"]
             if code in completed:
@@ -475,7 +512,7 @@ def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dic
             if course["membership_status"] not in ("MATCHES_REVIEWED_SOURCE", "YEAR_SCOPED_DATABASE_ASSOCIATION"):
                 reasons.append("MEMBERSHIP_NOT_VERIFIED")
             if (course["catalog_year"] != year or course["catalog_year_id"] != attribute_candidates.get("catalog_year_id")
-                    or category not in course["matched_attributes"]):
+                    or not set(names).intersection(course["matched_attributes"])):
                 reasons.append("MEMBERSHIP_CONTEXT_MISMATCH")
             if course["active_status"] is not True:
                 reasons.append("INACTIVE_COURSE" if course["active_status"] is False else "ACTIVE_STATUS_UNKNOWN")
@@ -483,13 +520,20 @@ def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dic
                 reasons.append(candidate["credit_fit"]["status"])
             if reasons:
                 candidate["withheld_reasons"] = sorted(set(reasons))
-                item["withheld_courses"].append(candidate)
+            matches = withheld if reasons else accepted
+            if code in matches:
+                previous = matches[code]
+                previous["matched_attributes"].extend(candidate["matched_attributes"])
+                previous["classification_sources"].extend(candidate["classification_sources"])
+                if reasons:
+                    previous["withheld_reasons"] = sorted(set(previous["withheld_reasons"] + reasons))
             else:
-                item["candidates"].append(candidate)
-                course_requirements[code].append(rule_id)
-        for key in ("candidates", "withheld_courses"):
-            item[key].sort(key=lambda c: (c["course_code"], c["course_id"]))
-        item["excluded_completed_course_codes"].sort()
+                matches[code] = candidate
+        item["candidates"] = [accepted[code] for code in sorted(accepted)]
+        item["withheld_courses"] = [withheld[code] for code in sorted(withheld.keys() - accepted.keys())]
+        for code in accepted:
+            course_requirements[code].append(rule_id)
+        item["excluded_completed_course_codes"] = sorted(set(item["excluded_completed_course_codes"]))
         item["reasons"] = list(loaded["issues"])
         if item["withheld_courses"]:
             item["reasons"].append("SOME_COURSES_WITHHELD")
@@ -497,7 +541,7 @@ def build_flexible_candidates(handoff: dict[str, Any], attribute_candidates: dic
         if not item["candidates"]:
             item["reasons"].append("NO_USABLE_CANDIDATES_IN_RETRIEVED_DATA")
     return {"catalog_year": year, "basis": "CATALOG_ATTRIBUTE_AND_UNOFFICIAL_DEGREE_PROGRESS",
-            **({"requested_categories": list(CT_AND_CORE_II_ATTRIBUTES)} if critical_thinking_candidates else {}),
+            **({"requested_categories": list(CATALOG_ATTRIBUTES)} if critical_thinking_candidates else {}),
             "prerequisites_evaluated": False, "registration_eligibility_determined": False,
             "source_verification": attribute_candidates.get("source_verification"),
             "retrieval_status": attribute_candidates.get("retrieval_status"),
