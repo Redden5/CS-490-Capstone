@@ -210,7 +210,7 @@ def fetch_planning_eligibility(
 
 def fetch_core_ii_candidates(
     handoff: dict[str, Any], progress_evidence: dict[str, Any], *, client: Any = None,
-    client_factory: Callable[[], Any] | None = None,
+    client_factory: Callable[[], Any] | None = None, critical_thinking_candidates: bool = False,
 ) -> dict[str, Any]:
     """Run the standalone provider only for supported, confirmed unfinished categories.
 
@@ -222,7 +222,7 @@ def fetch_core_ii_candidates(
 
     year = handoff["degree"]["catalog_year"]
     loaded = load_attribute_candidates(None, [], catalog_year=year)
-    preflight = build_flexible_candidates(handoff, loaded)
+    preflight = build_flexible_candidates(handoff, loaded, critical_thinking_candidates=critical_thinking_candidates)
     names = sorted({r["category"] for r in preflight["requirements"]
                     if r["reasons"] == ["MISSING_OR_MISMATCHED_CATALOG_DATA"]})
     if names:
@@ -241,7 +241,7 @@ def fetch_core_ii_candidates(
             else:
                 loaded = load_attribute_candidates(client, names, catalog_year=year,
                                                    source_catalog_attributes_csv=source)
-    result = build_flexible_candidates(handoff, loaded)
+    result = build_flexible_candidates(handoff, loaded, critical_thinking_candidates=critical_thinking_candidates)
     result["completed_course_attribute_evidence"] = deepcopy(progress_evidence)
     states = {r["generation_status"] for r in result["requirements"]}
     if progress_evidence["status"] == "UNAVAILABLE" or loaded["retrieval_status"] == "UNAVAILABLE":
@@ -289,6 +289,7 @@ def run_degree_plan(
     supabase_attributes: bool = False,
     evaluate_prerequisites: bool = False,
     core_ii_candidates: bool = False,
+    critical_thinking_candidates: bool = False,
     include_handoff: bool = True,
     client: Any = None,
     client_factory: Callable[[], Any] | None = None,
@@ -297,14 +298,16 @@ def run_degree_plan(
 
     The default returns the legacy preview and v1 handoff without database access.
     Prerequisites enable v2.0. Core II implies both attribute and prerequisite
-    lookups and enables v2.1. All lookups share the supplied Supabase client or
+    lookups and enables v2.1. Critical Thinking extends Core II in internal v2.2.
+    All lookups share the supplied Supabase client or
     one created on demand for this evaluation. Reviewed source CSVs are read only as needed.
     A preview-only caller can skip the v1 projection with include_handoff=False.
     """
     coursework = normalize_coursework(completed_courses)
     completed = coursework_codes(coursework)
     year = draft.get("catalog_year")
-    enrich = evaluate_prerequisites or core_ii_candidates
+    flexible_requested = core_ii_candidates or critical_thinking_candidates
+    enrich = evaluate_prerequisites or flexible_requested
     if enrich:
         validate_candidate_evidence([], coursework, catalog_year=year)
 
@@ -314,12 +317,12 @@ def run_degree_plan(
     evidence = None
     get_client = _PlanningClient(client, client_factory or supabase_service.create_supabase_client).get
     progress_evidence = {"status": "NOT_REQUESTED", "issues": []}
-    if supabase_attributes or core_ii_candidates:
+    if supabase_attributes or flexible_requested:
         try:
             evidence = fetch_supabase_attribute_evidence(completed, year, credits, client_factory=get_client)
             progress_evidence["status"] = "AVAILABLE"
         except (AttributeEvidenceUnavailable, OSError):
-            if not core_ii_candidates:
+            if not flexible_requested:
                 raise
             progress_evidence = {
                 "status": "UNAVAILABLE", "issues": [{"code": "COMPLETED_COURSE_ATTRIBUTES_UNAVAILABLE"}],
@@ -335,8 +338,9 @@ def run_degree_plan(
         original_warning_count = len(handoff["warnings"])
         flexible = None
         codes = None  # The eligibility provider defaults to the explicit/choice pool.
-        if core_ii_candidates:
-            flexible = fetch_core_ii_candidates(handoff, progress_evidence, client_factory=get_client)
+        if flexible_requested:
+            flexible = fetch_core_ii_candidates(handoff, progress_evidence, client_factory=get_client,
+                                                critical_thinking_candidates=critical_thinking_candidates)
             codes = combined_candidate_codes(handoff, flexible)
         results = fetch_planning_eligibility(handoff, coursework, candidate_course_codes=codes, client_factory=get_client)
         handoff = apply_prerequisite_results(handoff, results, flexible_candidates=flexible)

@@ -766,9 +766,9 @@ def evaluate_preview(
     all_required: set[str] = set()
     matched_required: set[str] = set()
     counts: Counter[str] = Counter()
-    cs_science_year = (draft.get("program_title") == "Computer Science, B.S."
-                       and draft.get("catalog_year") == "2026-2027")
-    major_science = next((rule for rule in rules if cs_science_year
+    cs_2026 = (draft.get("program_title") == "Computer Science, B.S."
+               and draft.get("catalog_year") == "2026-2027")
+    major_science = next((rule for rule in rules if cs_2026
                           and rule["source_kind"] == "CHOOSE_N"
                           and rule.get("source", {}).get("rule_id") == "t0_row_0058"
                           and rule.get("status") in {"NEEDS_REVIEW", "READY"}), None)
@@ -859,7 +859,7 @@ def evaluate_preview(
                         code for codes in by_attribute.values() for code in codes
                     })
                     info["possible_catalog_matches"] = by_attribute
-                    if (cs_science_year and info["rule_id"] == "t0_row_0011"
+                    if (cs_2026 and info["rule_id"] == "t0_row_0011"
                             and attributes == ["Core II Natural Sciences"] and rule.get("minimum_credits") == 4):
                         credit_progress = _science_lab_credit_progress(
                             science_progress, set(distinct_candidates), catalog_attribute_evidence["credit_by_course"],
@@ -917,6 +917,15 @@ def evaluate_preview(
             runtime_result = evaluate_attribute_rule_at_runtime(
                 rule, info, catalog_attribute_evidence
             )
+            matches = runtime_result.get("candidate_course_codes", [])
+            if cs_2026 and info["rule_id"] == "t0_row_0005" and "MTH 229H" in matches:
+                # The honors classification is known. A separate course must establish
+                # completion on its own while distinct credit with MTH 229 is under review.
+                if not any((credits.get(code, {}).get("credit_value") or 0) >= rule["minimum_credits"]
+                           for code in matches if code != "MTH 229H"):
+                    runtime_result["candidate_progress_status"] = "INSUFFICIENT_EVIDENCE"
+                    runtime_result["remaining_policy_review_flags"].append("HONORS_DISTINCT_SLOT_REVIEW_REQUIRED")
+                    runtime_result["note"] = "Whether MTH 229H can fill the additional distinct CT slot requires review."
             info["attribute_runtime_evaluation"] = runtime_result
             if runtime_result["catalog_year_classification_evidence_used"]:
                 info["candidate_progress_status"] = runtime_result[
@@ -1199,7 +1208,7 @@ def build_planning_handoff(preview: dict[str, Any]) -> dict[str, Any]:
                 rule.get("candidate_credit_progress"),
                 rule.get("minimum_credits_unverified"),
                 confirmed_target=(
-                    runtime.get("catalog_year_classification_evidence_used", False)
+                    runtime.get("catalog_year_classification_evidence_used", False) and not remaining_policy_flags
                 ),
             )
             if rule.get("same_group_course_slot_allocation"):
@@ -1301,6 +1310,9 @@ def apply_prerequisite_results(
     handoff: dict[str, Any], results: dict[str, Any], *, flexible_candidates: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Enrich a finalized v1 projection without changing degree-progress fields."""
+    critical_thinking_candidates = flexible_candidates is not None and (
+        "Critical Thinking" in flexible_candidates.get("requested_categories", [])
+    )
     expected = {c["course_code"] for c in handoff["course_eligibility"]["courses"]}
     if flexible_candidates is not None:
         expected = set(combined_candidate_codes(handoff, flexible_candidates))
@@ -1315,8 +1327,11 @@ def apply_prerequisite_results(
     by_code = {c["course_code"]: c for c in results["courses"]}
     flexible_by_id = {}
     if flexible_candidates is not None:
-        output["schema_version"] = "2.1.0"
-        output["course_eligibility"]["candidate_scope"] = "EXPLICIT_AND_CORE_II_REQUIREMENT_COURSES"
+        output["schema_version"] = "2.2.0" if critical_thinking_candidates else "2.1.0"
+        output["course_eligibility"]["candidate_scope"] = (
+            "EXPLICIT_CORE_II_AND_CRITICAL_THINKING_REQUIREMENT_COURSES" if critical_thinking_candidates
+            else "EXPLICIT_AND_CORE_II_REQUIREMENT_COURSES"
+        )
         output["flexible_candidates"] = deepcopy(flexible_candidates)
         flexible_by_id = {r["requirement_id"]: r for r in output["flexible_candidates"]["requirements"]}
         for item in flexible_by_id.values():
@@ -1368,6 +1383,7 @@ def apply_prerequisite_results(
             + "; affected courses remain UNKNOWN. Inspect course_eligibility loading diagnostics."
         )
     if flexible_candidates is not None:
+        categories = "Core II and Critical Thinking" if critical_thinking_candidates else "Core II"
         missing_options = any(
             r["kind"] == "CREDIT_REQUIREMENT_DRAFT" and r["planning_disposition"] != "CANDIDATE_COMPLETE"
             and r.get("attribute_filter", {}).get("attribute_names")
@@ -1376,18 +1392,23 @@ def apply_prerequisite_results(
         )
         output["candidate_option_coverage"]["unmet_attribute_option_lists_enumerated"] = not missing_options
         output["candidate_option_coverage"]["notes"] = (
-            "Core II candidate coverage is per requirement in flexible_candidates. "
+            f"{categories} candidate coverage is per requirement in flexible_candidates. "
             "Other unresolved attribute requirements remain outside this course pool."
             if missing_options else "All currently unmet attribute-option lists are enumerated; eligibility remains separate."
         )
         output["warnings"].append(
-            "Core II candidates are catalog requirement matches, not registration approval or term offerings. "
+            f"{categories} candidates are catalog requirement matches, not registration approval or term offerings. "
             "Core II Science with Lab catalog candidate enumeration remains deferred. "
             "A listed major science pair can also contribute to provisional Core II progress."
         )
+        if critical_thinking_candidates:
+            output["warnings"].append(
+                "Core I progress assumes the standard degree draft. Transfer exemptions, coursework origin, "
+                "and whether MTH 229H can count separately from MTH 229 require review."
+            )
         if flexible_candidates["generation_status"] in ("PARTIAL", "UNAVAILABLE"):
             output["warnings"].append(
-                "Core II candidate generation is " + flexible_candidates["generation_status"]
+                f"{categories} candidate generation is " + flexible_candidates["generation_status"]
                 + "; inspect flexible_candidates diagnostics. Unassessed categories are not assumed unfinished."
             )
     return output
