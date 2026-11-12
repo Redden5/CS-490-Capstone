@@ -50,6 +50,7 @@ import re
 from typing import Any
 
 from backend.scripts.parse_prerequisites import canonical_code, parse_rows
+from backend.services import reviewed_csv_sha256
 # Keep Stage 1 unchanged while sharing its exact request-code normalization.
 from backend.services.prerequisite_evaluator import _code
 
@@ -180,7 +181,8 @@ def _source(catalog_csv, prerequisite_csv, year):
         return "SOURCE_NOT_SUPPLIED", set(), {}
     if year != _SOURCE_YEAR:
         return "SOURCE_YEAR_UNSUPPORTED", set(), {}
-    if hashlib.sha256(catalog_csv).hexdigest() != _CATALOG_SHA256 or hashlib.sha256(prerequisite_csv).hexdigest() != _PREREQUISITE_SHA256:
+    if (reviewed_csv_sha256(catalog_csv) != _CATALOG_SHA256
+            or reviewed_csv_sha256(prerequisite_csv) != _PREREQUISITE_SHA256):
         return "SOURCE_HASH_MISMATCH", set(), {}
     try:
         catalog = list(csv.DictReader(io.StringIO(catalog_csv.decode("utf-8-sig"))))

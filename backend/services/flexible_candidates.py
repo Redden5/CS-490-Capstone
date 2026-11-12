@@ -33,7 +33,6 @@ from collections import Counter, defaultdict
 from copy import deepcopy
 import csv
 from datetime import datetime
-import hashlib
 import io
 import math
 import re
@@ -41,6 +40,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from backend.scripts.resolve_requirements import CATALOG_ATTRIBUTE_LABELS, normalize_heading
+from backend.services import reviewed_csv_sha256
 from backend.services.prerequisite_evaluator import _code
 
 
@@ -173,7 +173,7 @@ def _source(data, year):
         return "SOURCE_NOT_SUPPLIED", {}
     if year != _SOURCE_YEAR:
         return "SOURCE_YEAR_UNSUPPORTED", {}
-    if hashlib.sha256(data).hexdigest() != _SOURCE_SHA256:
+    if reviewed_csv_sha256(data) != _SOURCE_SHA256:
         return "SOURCE_HASH_MISMATCH", {}
     memberships = defaultdict(set)
     seen = set()
