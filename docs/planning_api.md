@@ -47,9 +47,15 @@ is valid. For example:
     {"course_code": "CS 120", "grade": "B"},
     {"course_code": "MTH 229", "grade": null}
   ],
-  "reported_credits": {}
+  "reported_credits": {},
+  "critical_thinking_candidates": true
 }
 ```
+
+The optional JSON boolean `critical_thinking_candidates` selects the response.
+Omitting it or sending `false` returns the existing `2.1.0` handoff. Sending
+`true`, as above, returns `2.2.0` with Core I Critical Thinking candidates.
+Strings, numbers, and null for this field return HTTP 422.
 
 Coursework records accept an optional string or null `grade` and an optional
 boolean `equivalency_verified`. Submit each reported attempt. The service
@@ -65,8 +71,16 @@ accepted. The service checks the catalog range when it retrieves course evidence
 | 422 | Correct malformed coursework, unsupported fields, or invalid reported credits. Validation responses identify affected top-level fields when available. |
 | 500 | The server could not produce a valid handoff. The response contains a generic error. |
 
-The HTTP route is version **v1**. Its successful response is the complete planning
-handoff with `schema_version: "2.1.0"`. The React client can display requirement
+Both handoff versions use the same **v1** route. In a v2.2 response, find the
+additional CT slot by `requirement_id == "t0_row_0005"` in
+`flexible_candidates.requirements`. Read its `generation_status`, `reasons`,
+and `withheld_courses` when its candidate list is empty or partial. Each candidate's
+`course_eligibility_reference` joins to `course_eligibility.courses[].course_code`,
+including when the course also appears under another requirement. MTH 229 can
+meet the explicit Core I and major calculus rules while the additional CT slot
+remains open.
+
+The React client can display requirement
 progress, warnings, and per-course evidence from this object. The Schedule
 Generator can join flexible memberships to requirements by ID and resolve
 `course_eligibility_reference` by course code. It still checks term offerings and

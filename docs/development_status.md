@@ -2,11 +2,11 @@
 
 ## Current state · 2026-11-11
 
-The local degree planning API is merged in `16c1d41` (PR #10). It evaluates student-reported coursework for Computer Science, B.S., catalog year `2026-2027`, and returns the v2.1 handoff. Frontend consumption and Schedule Generator integration are pending. [API guide](planning_api.md) · [Architecture and service interfaces](project_context.md)
+The local degree planning API is merged in `16c1d41` (PR #10). It evaluates student-reported coursework for Computer Science, B.S., catalog year `2026-2027`, and returns the v2.1 handoff by default. Frontend consumption and Schedule Generator integration are pending. [API guide](planning_api.md) · [Architecture and service interfaces](project_context.md)
 
 This handoff records the science-specific worktree on `feature/science-lab-requirements`, based on `d889101`.
 
-The CT preview is isolated on `feature/critical-thinking-isolated`, based on `f04a47e`. The service and CLI support the additional CS Critical Thinking slot through `--critical-thinking-candidates`. The public API still returns v2.1.
+On `feature/critical-thinking-api`, HTTP clients can request the existing v2.2 CT handoff by sending `critical_thinking_candidates: true` to the evaluation endpoint. Existing requests continue to receive v2.1. [API guide](planning_api.md#endpoints)
 
 The current working tree supports the listed science pairs and PS 111 under the 2026–2027 CS working rules. The shared audit can recognize a documented four-credit Core II lab option and omit redundant major science candidates. The v2.1 API serves these results through its existing evaluation route. [Science and laboratory requirements](project_context.md#science-and-laboratory-requirements)
 
@@ -24,13 +24,14 @@ The current working tree supports the listed science pairs and PS 111 under the 
 | 2026-11-11 | MTH 229H. For the additional CS Core I slot, the shared audit and CT candidate generator report insufficient evidence when completion depends on the honors course. The dated classification and potential credits remain visible. Another qualifying course can independently meet the slot. | Pytest passed 307 tests and 362 subtests with one Starlette test-client deprecation warning. Unittest passed all 307 tests. Three offline HTTP fixture evaluations confirmed the corrected audit under the existing v2.1 schema. [Handoff contract](planning_handoff.md#internal-preview-v22-critical-thinking) |
 | 2026-11-11 | The planning attribute and prerequisite loaders hash CSVs with the reviewed CRLF line endings. Both LF and CRLF checkouts match the existing pins for the course, attribute, and prerequisite exports. | All three committed exports produced identical parsed evidence in both formats. Edited course codes and grade requirements failed verification. Offline pytest passed 309 tests and 368 subtests with one Starlette deprecation warning. Unittest passed all 309 tests. |
 | 2026-11-12 | The v1 finalizer and flexible handoff now count every unfinished credit requirement when reporting global candidate coverage. Unmapped Writing Intensive and Free Electives keep coverage incomplete. | Focused tests cover each unmapped rule alone, both together, missing inclusion flags, and explicit complete coverage. Pytest passed 311 tests and 374 subtests with one Starlette deprecation warning. Unittest passed all 311 tests. Candidate generation for these two rules remains open. |
+| 2026-11-12 | The FastAPI evaluation request accepts the optional boolean `critical_thinking_candidates`. It forwards the flag to the shared service. Omitted and false requests return v2.1, and true requests return the existing v2.2 handoff. | All 13 HTTP tests passed, including full service parity, shared eligibility, MTH 229 overlap, and strict opt-in validation. Full offline pytest passed 313 tests and 377 subtests with one Starlette deprecation warning. Unittest passed all 313 tests. Client adoption is pending. [API guide](planning_api.md#endpoints) |
 
 ## Upcoming development
 
 | Area | Open work or decision |
 | --- | --- |
 | Science with Lab | Confirm the provisional major/Core II overlap with the program. Obtain catalog-year evidence for additional Core II labs and approved “or above” substitutes before extending coverage. |
-| Critical Thinking | Review the internal v2.2 consumer contract and determine what evidence is needed for honors variants, transfer exemptions, and coursework origin. |
+| Critical Thinking | Review the opt-in v2.2 consumer contract and determine what evidence is needed for honors variants, transfer exemptions, and coursework origin. |
 | Prerequisites | Design interactive clarification for UNKNOWN results, including missing grades or equivalency evidence. Preserve uncertainty when catalog metadata itself is incomplete. |
 | Credit allocation | Resolve repeated credit slots, variable-credit evidence, and overlap across major and core requirements. Preserve potential matches until allocation policy is reviewed. |
 | Frontend and scheduling | Connect the frontend to the planning API. Agree with the scheduler owner on handoff version, choice bundles, flexible memberships, UNKNOWN results, and term-specific feasibility checks. |
@@ -41,4 +42,4 @@ The current working tree supports the listed science pairs and PS 111 under the 
 
 For the science progress report, demonstrate the v2.1 audit with a listed pair, PS 111 alone, and three complete pairs. Use the existing source flags to distinguish provisional planning from institutional approval. [Science handoff contract](planning_handoff.md#cs-science-with-lab-progress-across-handoff-versions)
 
-Confirm with the CS program whether MTH 229H can independently satisfy the additional CT slot, then review a v2.2 handoff with the frontend and Schedule Generator owners. Confirm how each consumer presents alternative CT courses, shared memberships, withheld honors evidence, and UNKNOWN prerequisites. Agree on an explicit API version or request option before exposing CT to HTTP clients.
+Confirm with the CS program whether MTH 229H can independently satisfy the additional CT slot, then review a v2.2 handoff with the frontend and Schedule Generator owners. Confirm how each consumer presents alternative CT courses, shared memberships, withheld honors evidence, and UNKNOWN prerequisites. Exercise the opt-in request in the consuming client when it is ready to display CT alternatives.

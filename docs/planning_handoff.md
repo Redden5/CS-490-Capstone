@@ -1,4 +1,4 @@
-# Degree planning handoff (v1 through internal v2.2)
+# Degree planning handoff (v1 through v2.2)
 
 The handoff is unofficial planning evidence, not an approved degree audit,
 verified transcript, graduation determination, or registration clearance.
@@ -406,7 +406,9 @@ offerings, open seats, schedule feasibility or permission to double-count credit
 No consumer code or schema migration is changed here. Existing consumers can keep
 requesting unchanged v1/v2.0 output until v2.1 support is agreed.
 
-## Internal preview v2.2 (Critical Thinking)
+<a id="internal-preview-v22-critical-thinking"></a>
+
+## Opt-in v2.2 (Critical Thinking)
 
 From the repository root, preview the additional CS Core I slot alongside existing Core II options:
 
@@ -414,12 +416,12 @@ From the repository root, preview the additional CS Core I slot alongside existi
 .\.venv\Scripts\python.exe -m backend.scripts.preview_degree_audit --input backend/scripts/data/degree_requirements/resolved/computer_science_bs_resolved.json --completed "FYS 100,MTH 229" --critical-thinking-candidates --planning-output planning.json
 ```
 
-Python callers select `run_degree_plan(..., critical_thinking_candidates=True)`. The preview includes Core II and prerequisite evaluation in the same pass and emits `schema_version: "2.2.0"`. The public evaluation route continues to serve v2.1. Internal v2.2 uses the candidate scope `EXPLICIT_CORE_II_AND_CRITICAL_THINKING_REQUIREMENT_COURSES`.
+Python callers select `run_degree_plan(..., critical_thinking_candidates=True)`. The preview includes Core II and prerequisite evaluation in the same pass and emits `schema_version: "2.2.0"`. HTTP clients select the same handoff by sending the JSON boolean `critical_thinking_candidates: true` to `POST /api/v1/planning/evaluate`. Omitting the field or sending `false` preserves v2.1. The v2.2 handoff uses the candidate scope `EXPLICIT_CORE_II_AND_CRITICAL_THINKING_REQUIREMENT_COURSES`.
 
 - **Open slot.** For the CS B.S. 2026–2027 rule `t0_row_0005`, the audit must establish a positive shortfall. A prospective course needs an active, year-scoped CT membership reconciled to the reviewed catalog export and enough catalog credits for the single course slot. Inspect `generation_status`, `coverage`, and `withheld_courses` when reads or classifications are incomplete.
 - **Distinct courses.** The builder uses the audit's `reserved_explicit_sibling_courses` when reconciling entered coursework and listing options. FYS 100 and MTH 229 remain available to their explicit rules. Completing MTH 229 provisionally meets both its Core I and major occurrences. Completing ANT 201 as well can fill the additional CT slot and match Social Sciences. Same-group reservation never consumes the course globally.
 - **Consumer joins.** An uncompleted ANT 201 can be an alternative for both `t0_row_0005` and `t0_row_0013`. Both memberships reference the same course-level prerequisite result. MET, UNMET, and UNKNOWN describe student-reported prerequisite evidence. Each entry retains its classification sources. Cross-requirement credits remain unallocated.
-- **Academic review.** The standard draft lacks admission category, transfer-waiver evidence, and where a completed course was taken. The builder withholds MTH 229H from the additional slot pending confirmation of distinct credit with MTH 229. When completion depends on MTH 229H, the audit and the internal candidate list both report `INSUFFICIENT_EVIDENCE` with `HONORS_DISTINCT_SLOT_REVIEW_REQUIRED`. The audit retains the dated classification and potential credit subtotal, and leaves the credit shortfall unknown. Another entered CT course with sufficient known credits can independently fill the slot. The v2.1 API uses the same corrected audit and keeps its existing schema and candidate scope.
+- **Academic review.** The standard draft lacks admission category, transfer-waiver evidence, and where a completed course was taken. The builder withholds MTH 229H from the additional slot pending confirmation of distinct credit with MTH 229. When completion depends on MTH 229H, the audit and the v2.2 candidate list both report `INSUFFICIENT_EVIDENCE` with `HONORS_DISTINCT_SLOT_REVIEW_REQUIRED`. The audit retains the dated classification and potential credit subtotal, and leaves the credit shortfall unknown. Another entered CT course with sufficient known credits can independently fill the slot. The v2.1 API uses the same corrected audit and keeps its existing schema and candidate scope.
 
 ## Reusable candidate-provider interface
 
