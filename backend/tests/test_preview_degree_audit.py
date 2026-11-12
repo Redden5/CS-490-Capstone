@@ -116,6 +116,48 @@ class HandoffTests(unittest.TestCase):
         self.assertEqual(len(self.handoff["course_eligibility"]["courses"]), 30)
         self.assertEqual(self.handoff["course_eligibility"]["evaluation_status"], "NOT_EVALUATED")
 
+    def test_coverage_includes_unmapped_credit_requirements(self):
+        writing, electives = "t0_row_0016", "t0_row_0064"
+        for ids in ((writing,), (electives,), (writing, electives)):
+            with self.subTest(ids=ids):
+                handoff = deepcopy(self.handoff)
+                handoff["requirements"] = [r for r in handoff["requirements"] if r["rule_id"] in ids]
+                self.assertCountEqual([r["rule_id"] for r in handoff["requirements"]], ids)
+                for requirement in handoff["requirements"]:
+                    attr = requirement["attribute_filter"]
+                    self.assertEqual(attr["attribute_names"], [])
+                    if requirement["rule_id"] == electives:
+                        del attr["eligible_catalog_course_options_included"]
+                self.assert_credit_option_coverage(handoff, expected=False)
+
+    def test_coverage_requires_explicit_true_only_for_unfinished_credit_requirements(self):
+        # Humanities is unfinished; Social Sciences is complete and needs no options.
+        handoff = self.handoff
+        handoff["requirements"] = [r for r in handoff["requirements"] if r["rule_id"] in ("t0_row_0012", "t0_row_0013")]
+        humanities = next(r for r in handoff["requirements"] if r["rule_id"] == "t0_row_0012")
+        for included in (None, "true", True):
+            with self.subTest(included=included):
+                attr = humanities["attribute_filter"]
+                if included is None:
+                    attr.pop("eligible_catalog_course_options_included", None)
+                else:
+                    attr["eligible_catalog_course_options_included"] = included
+                self.assert_credit_option_coverage(handoff, expected=included is True)
+
+    def assert_credit_option_coverage(self, handoff, expected):
+        field = "unmet_attribute_option_lists_enumerated"
+        v1 = audit.finalize_planning_handoff_v1(deepcopy(handoff))
+        v1_flag = v1["candidate_option_coverage"][field]
+        # Check that v2.1 recomputes coverage from its requirements independently of v1.
+        v1["candidate_option_coverage"][field] = not expected
+        flexible = {
+            "catalog_year": v1["degree"]["catalog_year"], "requirements": [], "candidate_course_codes": [],
+            "course_requirement_memberships": {}, "generation_status": "NOT_NEEDED",
+        }
+        v21 = audit.apply_prerequisite_results(v1, unavailable(v1, []), flexible_candidates=flexible)
+        self.assertEqual(v21["schema_version"], "2.1.0")
+        self.assertEqual((v1_flag, v21["candidate_option_coverage"][field]), (expected, expected))
+
     def test_apply_after_finalization_versions_without_mutating_progress(self):
         before = deepcopy(self.handoff)
         result = unavailable(self.handoff, self.preview["completed_course_codes_entered"])
