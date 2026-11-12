@@ -26,6 +26,7 @@ The current working tree supports the listed science pairs and PS 111 under the 
 | 2026-11-12 | The v1 finalizer and flexible handoff now count every unfinished credit requirement when reporting global candidate coverage. Unmapped Writing Intensive and Free Electives keep coverage incomplete. | Focused tests cover each unmapped rule alone, both together, missing inclusion flags, and explicit complete coverage. Pytest passed 311 tests and 374 subtests with one Starlette deprecation warning. Unittest passed all 311 tests. Candidate generation for these two rules remains open. |
 | 2026-11-12 | The FastAPI evaluation request accepts the optional boolean `critical_thinking_candidates`. It forwards the flag to the shared service. Omitted and false requests return v2.1, and true requests return the existing v2.2 handoff. | All 13 HTTP tests passed, including full service parity, shared eligibility, MTH 229 overlap, and strict opt-in validation. Full offline pytest passed 313 tests and 377 subtests with one Starlette deprecation warning. Unittest passed all 313 tests. Client adoption is pending. [API guide](planning_api.md#endpoints) |
 | 2026-11-12 | The flexible provider now enumerates either dated designation for CS Multicultural or International (`t0_row_0018`) through the existing v2.1 route and internal v2.2 preview. Candidates retain their classification sources and share one prerequisite evaluation per course. | An offline replay of reviewed catalog data produced 159 distinct options (76 Multicultural, 83 International). Fixtures cover dual designations, partial credit, missing or unexpected associations, completed courses, and prerequisite results. Pytest passed 315 tests and 377 subtests with one Starlette deprecation warning. Unittest passed all 315 tests. Coverage remains bounded by the dated catalog evidence. |
+| 2026-11-12 | The prerequisite parser recognizes the reviewed Fall 2026 CS 120 registration rule. CS 110 or CS 110H with D or better meets it. The supplementary CR/PR text and discrepancy remain in the evidence. Only the CS 120 course record changed in the regenerated v2 seed artifact. | 141 focused tests passed. Full pytest passed 319 tests and 393 subtests with one Starlette deprecation warning. Unittest passed all 319. An offline planning replay returned UNKNOWN with the old graph and MET with the corrected graph for CS 110 graded A. Supabase synchronization is pending. [Prerequisite pipeline](../backend/scripts/PREREQUISITE_PIPELINE.md#meaning-and-conservative-decisions) |
 
 ## Upcoming development
 
@@ -40,6 +41,8 @@ The current working tree supports the listed science pairs and PS 111 under the 
 | RAG Advisor | Connect reviewed source material to retrieval and answers. The current Advisor page is a preview. |
 
 ## Next recommended action
+
+Review the CS 120 database update plan before authorizing a reseed. After synchronization, repeat the planning API check with CS 110 graded A.
 
 For the science progress report, demonstrate the v2.1 audit with a listed pair, PS 111 alone, and three complete pairs. Use the existing source flags to distinguish provisional planning from institutional approval. [Science handoff contract](planning_handoff.md#cs-science-with-lab-progress-across-handoff-versions)
 

@@ -195,12 +195,38 @@ class ParserTests(unittest.TestCase):
         self.assertFalse(actual("MUS 279A")["rules"][0]["machine_checkable"])
 
     def test_cr_pr_discrepancies(self):
-        for code in ["CS 120", "STA 564"]:
-            course = actual(code)
-            self.assertIn("cr_pr_course_discrepancy", course["review_flags"])
-            self.assertFalse(course["rules"][0]["machine_checkable"])
-        check = next(c for c in actual("STA 564")["additional_metadata_checks"] if c["field_label"] == "cr/pr")
+        course = actual("STA 564")
+        self.assertIn("cr_pr_course_discrepancy", course["review_flags"])
+        self.assertFalse(course["rules"][0]["machine_checkable"])
+        check = next(c for c in course["additional_metadata_checks"] if c["field_label"] == "cr/pr")
         self.assertTrue(check["normalizations"])
+
+    def test_cs120_schedule_review_is_limited_to_the_reviewed_fields(self):
+        course = actual("CS 120")
+        rule = course["rules"][0]
+        self.assertTrue(rule["machine_checkable"])
+        self.assertEqual(rule["dnf_clauses"], [
+            [{"course_code": code, "minimum_grade": "D", "concurrent_allowed": False}]
+            for code in ("CS 110", "CS 110H")
+        ])
+        check, = course["additional_metadata_checks"]
+        self.assertEqual(check["requirement_text"], "CS 110")
+        self.assertTrue(check["course_set_discrepancy"])
+        self.assertEqual(check["status"], "REVIEWED_SUPPLEMENTARY_METADATA")
+
+        primary = next(r for r in course["source_metadata"] if r["field_label"] == "pre-req")
+        extra, = course["additional_metadata"]
+        for rows in (
+            [{**r, "course_code": "CS 210"} for r in (primary, extra)],
+            [{**r, "catalog_year": "2027-2028"} for r in (primary, extra)],
+            [{**primary, "requirement_text": primary["requirement_text"].replace("grade of D", "grade of C")}, extra],
+            [primary, {**extra, "requirement_text": "CS 110H"}],
+            [primary, extra, extra],
+        ):
+            with self.subTest(rows=rows):
+                unreviewed, = parse_rows(rows, CODES)["courses"]
+                self.assertIn("cr_pr_semantics_not_interpreted", unreviewed["review_flags"])
+                self.assertFalse(unreviewed["rules"][0]["machine_checkable"])
 
     def test_missing_course_reference(self):
         course = parse_rows([row(text="CS 999")], CODES)["courses"][0]
