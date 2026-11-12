@@ -191,8 +191,25 @@ class LoaderTests(unittest.TestCase):
         self.assertFalse(result["courses"]["CS 210"]["rule_data"]["data_complete"])
         self.assertEqual(self.evaluate(result, [{"course_code": "CS 110", "grade": "A"}, "CS 120"])["status"], "UNKNOWN")
 
+    def test_line_endings_preserve_verified_prerequisite_evidence(self):
+        windows = self.load()
+        self.assertEqual(windows["source_verification"], "HASH_VERIFIED_SOURCE")
+        for catalog in (self.catalog, self.catalog.replace(b"\r\n", b"\n")):
+            for raw in (self.raw, self.raw.replace(b"\r\n", b"\n")):
+                with self.subTest(catalog_lf=catalog != self.catalog, prerequisites_lf=raw != self.raw):
+                    result = loader.load_prerequisite_rules(
+                        SelectClient(self.tables), ["CS 210"], source_catalog_csv=catalog, source_prerequisite_csv=raw,
+                    )
+                    self.assertEqual(result, windows)
+                    completed = [{"course_code": "CS 110", "grade": "A"}, "CS 120"]
+                    self.assertEqual(self.evaluate(result, completed)["status"], "MET")
+
     def test_modified_source_bytes_fail_hash_verification(self):
-        for catalog, raw in [(self.catalog + b"\n", self.raw), (self.catalog, self.raw + b"\n")]:
+        for catalog, raw in [
+            (self.catalog + b"\n", self.raw), (self.catalog, self.raw + b"\n"),
+            (self.catalog.replace(b"CS 110", b"CS 111"), self.raw),
+            (self.catalog, self.raw.replace(b"grade of C", b"grade of D")),
+        ]:
             with self.subTest(catalog_changed=catalog != self.catalog):
                 result = loader.load_prerequisite_rules(SelectClient(self.tables), ["CS 210"],
                                                         source_catalog_csv=catalog, source_prerequisite_csv=raw)

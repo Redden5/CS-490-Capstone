@@ -244,15 +244,23 @@ class AttributeLoaderTests(FixtureCase):
         self.client.tables["course"][0]["course_code"] = "unmapped"
         self.assertIn("INVALID_OR_AMBIGUOUS_COURSE_CODE", self.load()["attributes"][HUM]["issues"])
 
+    def test_line_endings_preserve_verified_attribute_candidates(self):
+        windows = self.load()
+        unix = self.load(source_catalog_attributes_csv=self.source.replace(b"\r\n", b"\n"))
+        self.assertEqual(windows["source_verification"], "HASH_VERIFIED_SOURCE")
+        self.assertEqual(unix, windows)
+        self.assertEqual(fc.build_flexible_candidates(handoff(), unix), fc.build_flexible_candidates(handoff(), windows))
+
     def test_no_source_and_changed_source_cannot_prove_coverage(self):
-        for raw, expected in ((None, "SOURCE_NOT_SUPPLIED"), (self.source + b"\n", "SOURCE_HASH_MISMATCH")):
+        for raw, expected in ((None, "SOURCE_NOT_SUPPLIED"), (self.source + b"\n", "SOURCE_HASH_MISMATCH"),
+                              (self.source.replace(b"PHL 101", b"PHL 102"), "SOURCE_HASH_MISMATCH")):
             result = self.load(source_catalog_attributes_csv=raw)
             self.assertEqual(result["source_verification"], expected)
             self.assertTrue(result["attributes"][HUM]["courses"])
             self.assertFalse(result["attributes"][HUM]["coverage_complete"])
 
     def test_invalid_pinned_source_is_rejected(self):
-        for raw in (b"not,catalog\n1,2\n", b"\xff", csv_bytes([*self.source_rows, self.source_rows[0]])):
+        for raw in (b"not,catalog\r\n1,2\r\n", b"\xff", csv_bytes([*self.source_rows, self.source_rows[0]])):
             with patch.object(fc, "_SOURCE_SHA256", hashlib.sha256(raw).hexdigest()):
                 self.assertEqual(self.load(source_catalog_attributes_csv=raw)["source_verification"], "SOURCE_INVALID")
 
