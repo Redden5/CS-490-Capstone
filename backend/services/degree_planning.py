@@ -223,8 +223,10 @@ def fetch_core_ii_candidates(
     year = handoff["degree"]["catalog_year"]
     loaded = load_attribute_candidates(None, [], catalog_year=year)
     preflight = build_flexible_candidates(handoff, loaded, critical_thinking_candidates=critical_thinking_candidates)
-    names = sorted({r["category"] for r in preflight["requirements"]
-                    if r["reasons"] == ["MISSING_OR_MISMATCHED_CATALOG_DATA"]})
+    needed = {r["requirement_id"] for r in preflight["requirements"]
+              if r["reasons"] == ["MISSING_OR_MISMATCHED_CATALOG_DATA"]}
+    names = sorted({name for r in handoff["requirements"] if r["rule_id"] in needed
+                    for name in r["attribute_filter"]["attribute_names"]})
     if names:
         try:
             source = (_SOURCE_DIR / "catalog_attributes.csv").read_bytes()

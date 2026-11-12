@@ -51,11 +51,12 @@ def fixture(*, include_ct=False):
                     "catalog_year_id": 7, "source_url": url, "observed_at": stamp})
                 source.append({"course_code": code, "attribute_name": names[label],
                     "source_url": url, "catalog_year": YEAR, "catalog_level": "undergraduate", "observed_at_utc": stamp})
-    codes = sorted({c["course_code"] for c in attributes["course"]} | {"CS 110", "CS 120", "CS 210"})
+    codes = sorted({c["course_code"] for c in attributes["course"]} | {"CS 110", "CS 120", "CS 210", "SOC 201"})
     url = "https://catalog.marshall.edu/undergraduate/courses-az/cs/"
     metadata = [{"course_code": code, "catalog_year": YEAR, "source_url": url,
                  "field_label": "pre-req", "requirement_text": text} for code, text in [
         ("CS 210", "CS 110 with a minimum grade of C"),
+        ("SOC 201", "Consent of instructor."),
         ("PHL 101", "CS 110 with a minimum grade of C"),
         ("HST 101", "Consent of instructor."),
         ("HST 200", "CS 110"),
@@ -86,6 +87,16 @@ def fixture(*, include_ct=False):
         "catalog_year_id": 7, "source_url": url, "observed_at": "2026-10-14T18:03:02+00:00"})
     source.append({"course_code": "CS 210", "attribute_name": HUM, "source_url": url,
         "catalog_year": YEAR, "catalog_level": "undergraduate", "observed_at_utc": "2026-10-14T18:03:02+00:00"})
+    for attr_id, label, members in [(5, "Multicultural", ["PHL 101", "SOC 201"]),
+                                    (6, "International", ["ART 112", "SOC 201"])]:
+        tables["attribute"].append({"attribute_id": attr_id, "attribute_name": label})
+        for code in members:
+            course_url = "https://catalog.marshall.edu/undergraduate/courses-az/" + code.split()[0].lower() + "/"
+            stamp = "2026-10-14T18:03:02+00:00"
+            tables["courseattribute"].append({"course_id": ids[code], "attribute_id": attr_id,
+                "catalog_year_id": 7, "source_url": course_url, "observed_at": stamp})
+            source.append({"course_code": code, "attribute_name": label, "source_url": course_url,
+                "catalog_year": YEAR, "catalog_level": "undergraduate", "observed_at_utc": stamp})
     return tables, attribute_csv(source), csv_bytes([{"course_code": c} for c in codes]), csv_bytes(metadata)
 
 
@@ -263,6 +274,73 @@ class CoreIIPlanningTests(PlanningCliCase):
         self.assertEqual(block["course_requirement_memberships"]["HST 101"], ["t0_row_0012", "t0_row_0013"])
         self.assertEqual(block["candidate_course_codes"].count("HST 101"), 1)
         self.assertEqual(block["allocation_status"], "NOT_ALLOCATED_NO_DOUBLE_COUNTING_ASSUMED")
+
+    def test_multicultural_or_international_union_uses_one_prerequisite_batch(self):
+        with patch.object(eligibility, "load_prerequisite_rules", wraps=loader.load_prerequisite_rules) as load:
+            (_, handoff), _ = self.successful("--core-ii-candidates")
+        load.assert_called_once()
+        block = handoff["flexible_candidates"]
+        mi = next(r for r in block["requirements"] if r["requirement_id"] == "t0_row_0018")
+        self.assertEqual(mi["generation_status"], "GENERATED")
+        self.assertTrue(mi["coverage"]["coverage_complete"])
+        self.assertEqual([(c["course_code"], c["matched_attributes"], c["prerequisite_status"])
+                          for c in mi["candidates"]], [
+            ("ART 112", ["International"], "UNMET"),
+            ("PHL 101", ["Multicultural"], "MET"),
+            ("SOC 201", ["Multicultural", "International"], "UNKNOWN"),
+        ])
+        dual = mi["candidates"][-1]
+        self.assertEqual(dual["membership_status"], "MATCHES_REVIEWED_SOURCE")
+        self.assertEqual({s["attribute_id"] for s in dual["classification_sources"]}, {5, 6})
+        self.assertEqual(dual["course_eligibility_reference"], "SOC 201")
+        self.assertEqual(load.call_args.args[1].count("SOC 201"), 1)
+        self.assertEqual(block["course_requirement_memberships"]["SOC 201"], ["t0_row_0018"])
+        self.assertEqual(block["course_requirement_memberships"]["PHL 101"], ["t0_row_0012", "t0_row_0018"])
+
+    def test_either_designation_completes_the_slot_and_dual_credit_counts_once(self):
+        for code in ("PHL 101", "ART 112", "SOC 201"):
+            with self.subTest(code=code), patch.object(
+                    flexible, "load_attribute_candidates", wraps=flexible.load_attribute_candidates) as load:
+                (_, handoff), _ = self.successful("--core-ii-candidates", records=[code, code])
+                rule = next(r for r in handoff["requirements"] if r["rule_id"] == "t0_row_0018")
+                mi = next(r for r in handoff["flexible_candidates"]["requirements"] if r["requirement_id"] == "t0_row_0018")
+                self.assertEqual(rule["planning_disposition"], "CANDIDATE_COMPLETE")
+                self.assertEqual(rule["credit_progress"]["candidate_known_credit_subtotal"], 3)
+                self.assertEqual(mi["candidates"], [])
+                self.assertTrue({"Multicultural", "International"}.isdisjoint(load.call_args.args[1]))
+
+    def test_dual_designation_with_partial_credit_excludes_the_completed_course_once(self):
+        course = next(c for c in self.client.tables["course"] if c["course_code"] == "SOC 201")
+        course["min_credit_hours"] = course["max_credit_hours"] = 1
+        # The other designation still proves membership if one dated row is absent.
+        row = next(r for r in self.client.tables["courseattribute"]
+                   if r["course_id"] == course["course_id"] and r["attribute_id"] == 6)
+        self.client.tables["courseattribute"].remove(row)
+        (_, handoff), _ = self.successful("--core-ii-candidates", records=["SOC 201"])
+        mi = next(r for r in handoff["flexible_candidates"]["requirements"] if r["requirement_id"] == "t0_row_0018")
+        self.assertEqual(mi["remaining_credits_candidate"], 2)
+        self.assertEqual(mi["generation_status"], "PARTIAL")
+        self.assertEqual(mi["excluded_completed_course_codes"], ["SOC 201"])
+        self.assertEqual([c["course_code"] for c in mi["candidates"]], ["ART 112", "PHL 101"])
+
+    def test_incomplete_designation_keeps_verified_alternatives_and_reports_partial_coverage(self):
+        ids = {c["course_code"]: c["course_id"] for c in self.client.tables["course"]}
+        rows = self.client.tables["courseattribute"]
+        art = next(r for r in rows if r["course_id"] == ids["ART 112"] and r["attribute_id"] == 6)
+        art["catalog_year_id"] = 8
+        # PHL has a verified Multicultural match and an unexpected International match.
+        phl = next(r for r in rows if r["course_id"] == ids["PHL 101"] and r["attribute_id"] == 5)
+        rows.append({**phl, "attribute_id": 6})
+        (_, handoff), _ = self.successful("--core-ii-candidates")
+        mi = next(r for r in handoff["flexible_candidates"]["requirements"] if r["requirement_id"] == "t0_row_0018")
+        self.assertEqual(mi["generation_status"], "PARTIAL")
+        self.assertEqual([(c["course_code"], c["matched_attributes"]) for c in mi["candidates"]],
+                         [("PHL 101", ["Multicultural"]), ("SOC 201", ["Multicultural", "International"])])
+        self.assertEqual(mi["withheld_courses"], [])
+        self.assertEqual([r["course_code"] for r in mi["coverage"]["missing_source_memberships"]], ["ART 112"])
+        self.assertEqual(mi["coverage"]["unexpected_source_memberships"][0]["attribute_name"], "International")
+        rule = next(r for r in handoff["requirements"] if r["rule_id"] == "t0_row_0018")
+        self.assertFalse(rule["attribute_filter"]["eligible_catalog_course_options_included"])
 
     def test_completed_categories_have_no_candidates_or_attribute_candidate_queries(self):
         with patch.object(flexible, "load_attribute_candidates", wraps=flexible.load_attribute_candidates) as load:
