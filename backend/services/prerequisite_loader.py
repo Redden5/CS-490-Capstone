@@ -59,7 +59,7 @@ from backend.services.prerequisite_evaluator import _code
 # These are trust anchors, not caller-supplied assertions or deployment approval.
 _SOURCE_YEAR = "2026-2027"
 _CATALOG_SHA256 = "433675cec5f76c9761de6159fa2d7bc54c539ca92745d1a05e252d8a8a694a6d"
-_PREREQUISITE_SHA256 = "cd847bca8104e2c1a628a26fb0dea7d55cda3fa39cc405b6dd32e604a7d51ae5"
+_PREREQUISITE_SHA256 = "6b110e9d1f5a202fecbaa68d67f020ce0b0cad7695f2b6c0686dd95a49815ac9"
 _PARENT_FIELDS = (
     "course_id", "rule_type", "catalog_year_id", "raw_text", "source_url",
     "machine_checkable", "parse_status", "review_flags", "source_metadata",

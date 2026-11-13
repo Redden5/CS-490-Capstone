@@ -36,6 +36,7 @@ import httpx
 from bs4 import BeautifulSoup
 
 from backend.models import models
+from backend.scripts.parse_prerequisites import PREREQ_LABELS
 
 BASE_URL = "https://catalog.marshall.edu"
 
@@ -106,7 +107,7 @@ ATTRIBUTE_COLUMNS = (
 # Keeping CR/PR as a distinct label avoids guessing whether it is a prereq
 # or corequisite. No row means no metadata was found, NOT verified eligibility.
 PREREQUISITE_LABELS = {
-    "pre-req", "prereq", "pre-requisite", "prerequisite", "prerequisites",
+    "pr", "pre-req", "prereq", "pre-requisite", "prerequisite", "prerequisites",
     "concurrent pr", "concurrent prerequisite", "concurrent prerequisites",
     "corequisite", "corequisites", "co-requisite", "co-requisites",
     "co-req", "cr/pr",
@@ -217,6 +218,25 @@ def parse_metadata(after_heading):
 
     return fields
 
+def embedded_prerequisites(description):
+    """Read flat, top-level (PR: ...) groups from a balanced description."""
+    values = []
+    depth = 0
+    for index, char in enumerate(description):
+        if char == "(":
+            if depth == 0:
+                start = index + 1
+            depth += 1
+        elif char == ")":
+            if depth == 0:
+                return []
+            depth -= 1
+            if depth == 0:
+                match = re.fullmatch(r"\s*PR\s*:\s*([^()]+)", description[start:index], re.IGNORECASE)
+                if match and (value := normalize(match.group(1))):
+                    values.append(value)
+    return values if depth == 0 else []
+
 def parse_subject_page(soup, url, attribute_sink=None, prerequisite_sink=None):
 
     """Parse courses and optional attributes/prerequisite metadata.
@@ -323,6 +343,11 @@ def parse_subject_page(soup, url, attribute_sink=None, prerequisite_sink=None):
                 attribute_sink[course.course_code] = attributes
 
             if prerequisite_sink is not None:
+                primary_texts = {text for label in PREREQ_LABELS for text in fields.get(label, [])}
+                for text in embedded_prerequisites(description or ""):
+                    if text not in primary_texts:
+                        fields.setdefault("pr", []).append(text)
+                        primary_texts.add(text)
                 # Preserve distinct original metadata fields and their full
                 # unparsed text, including grades, OR/AND, and concurrency.
                 prerequisite_sink[course.course_code] = [

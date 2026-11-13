@@ -1,7 +1,7 @@
 {
   "catalog_year": "2026-2027",
   "review_status": "APPROVED",
-  "review_evidence": "Verified matching-capture provenance using user attestation: original courses.csv generated November 8 2026 20:15:28 America/New_York alongside prerequisite export; user verified copied bytes match original SHA256. Local checks: 6692 unique valid course identities, all 1935 metadata targets present, all target source URLs agree; raw metadata uniformly 2026-2027 at 2026-11-09T01:15:28.275649+00:00. Course CSV has no intrinsic capture fields; timestamp linkage relies on attestation and scraper paired-output implementation. PAS 530 absent from both files; retained as unresolved source coverage issue. This approval covers snapshot provenance only, not eligibility or deployment authorization.",
+  "review_evidence": "The original matching capture was verified by user attestation and the paired scraper outputs. The course CSV has no intrinsic timestamp. The regenerated metadata preserves all 2219 original rows and adds 411 parenthetical PR fields from the saved course descriptions. All 2630 rows match course URLs and catalog levels for 2168 of the 6692 distinct catalog courses and retain catalog year 2026-2027 and observation time 2026-11-09T01:15:28.275649+00:00. A fresh parse agrees with the reviewed artifact: 1306 ready rules and 970 needing review, including 107 deferred downgrades. PAS 530 remains absent from both exports. Approval covers source provenance only.",
   "catalog_sha256": "433675cec5f76c9761de6159fa2d7bc54c539ca92745d1a05e252d8a8a694a6d",
-  "metadata_sha256": "cd847bca8104e2c1a628a26fb0dea7d55cda3fa39cc405b6dd32e604a7d51ae5"
+  "metadata_sha256": "6b110e9d1f5a202fecbaa68d67f020ce0b0cad7695f2b6c0686dd95a49815ac9"
 }
