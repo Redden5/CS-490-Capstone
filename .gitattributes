@@ -1,0 +1,3 @@
+backend/scripts/courses.csv text eol=crlf
+backend/scripts/catalog_prerequisites.csv text eol=crlf
+backend/scripts/data/prerequisites/parsed_all_v2.json text eol=crlf

@@ -63,7 +63,7 @@ Supabase hosts PostgreSQL. The November 8 public schema exports describe tables 
 | Term offerings | `term` and `coursesection` establish when a course is offered. `sectionmeeting` describes meeting times and places, and `sectionattribute` describes a section. A catalog match alone gives no evidence of an offered section, open seat, or feasible timetable. |
 | Advising and student data | `sourcedocument` and `documentchunk` describe potential retrieval material. The supplied public schema lists no saved student coursework, semester plan, or conversation tables. |
 
-The reviewed 2026–2027 source manifest records 6,692 distinct course identities and 1,935 courses with prerequisite-related metadata. Coverage refers to that capture. The repository also contains catalog attribute exports, term sections and meetings, and raw/parsed degree artifacts. Only the resolved CS program/year is registered in the API. [Snapshot manifest](../backend/scripts/data/prerequisites/investigation/snapshot_manifest.json) · [Prerequisite pipeline and validation](../backend/scripts/PREREQUISITE_PIPELINE.md)
+The reviewed 2026–2027 source manifest covers 6,692 distinct course identities and 2,630 prerequisite metadata rows for 2,168 courses, including 411 fields recovered from the captured descriptions. Coverage refers to that capture. The repository also contains catalog attribute exports, term sections and meetings, and raw/parsed degree artifacts. Only the resolved CS program/year is registered in the API. [Snapshot manifest](../backend/scripts/data/prerequisites/investigation/snapshot_manifest.json) · [Prerequisite pipeline and validation](../backend/scripts/PREREQUISITE_PIPELINE.md)
 
 ### Science and laboratory requirements
 
