@@ -86,26 +86,3 @@ The Node tests cover request construction, response/error handling, source-link
 validation and preservation of grouped requirements. Live catalog/API checks
 also require the separately configured backend and Supabase access.
 
-
-## Generate a semester schedule
-
-1. Start the backend and frontend, then sign in.
-2. Enter coursework in Academic Info and evaluate it.
-3. Open Planner, choose an active academic term and target credits (up to 21),
-   then select **Generate Schedules**.
-4. Review the returned drafts, meeting times, excluded courses, warnings, and
-   required courses left for another semester. **Change section** and
-   **Change section or course** validate replacements against current offerings
-   and the other selected sections. A rejected change preserves the draft.
-
-The backend requires its server-side Supabase credentials and populated active
-terms, courses, sections, and section meetings. Frontend sign-in credentials do
-not configure the backend. Missing backend configuration produces a visible
-scheduling error.
-
-Generation uses the latest v2.1 audit's explicit required courses and supported
-single-course choices. Flexible Core II memberships, course/lab bundles, and
-v2.2 are not supported by this scheduler. Unknown prerequisites, section status,
-seats, or meetings remain visible as tentative evidence. Drafts are unofficial,
-remain in page memory, and do not save or register courses. Editing coursework
-requires a new audit before generation; a new evaluation clears generated drafts.

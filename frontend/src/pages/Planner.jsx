@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient.js";
 import DashboardCard from "../components/DashboardCard.jsx";
-import ScheduleGenerator from "../components/ScheduleGenerator.jsx";
 import "../styles/Planner.css";
 
 const PAGE_SIZE = 25;
@@ -206,8 +205,7 @@ function Planner() {
         <h1>Planner</h1>
         <p>Organize future semesters using recorded course offerings.</p>
       </div>
-      <ScheduleGenerator terms={terms} loadingTerms={loading} termError={error} />
-      <DashboardCard title="Manual Semester Plan">
+      <DashboardCard title="Semester Plan">
         <p>Your plan is temporary. Refreshing or leaving this page clears your selections.</p>
         <button className="planner-primary-button" type="button"
           onClick={() => setSemesters((current) => [...current, current.length + 1])}>Add Semester</button>

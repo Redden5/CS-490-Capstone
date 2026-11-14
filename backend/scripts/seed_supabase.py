@@ -1,12 +1,25 @@
 import csv
+import os
+
 from pathlib import Path
-
-from backend.db.supabase_client import supabase
+from supabase import create_client
 from backend.models.models import Course
+from dotenv import load_dotenv
 
+
+# Project root
+BASE_DIR = Path(__file__).resolve().parents[2]
+load_dotenv(BASE_DIR / ".env")
 
 # Assumes courses.csv is in the same folder as this script
 CSV_FILE = Path(__file__).resolve().parent / "courses.csv"
+
+
+# Connect to Supabase
+supabase = create_client(
+    os.environ["SUPABASE_URL"],
+    os.environ["SUPABASE_SECRET_KEY"]
+)
 
 
 courses = []
