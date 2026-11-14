@@ -102,6 +102,26 @@ class SchedulerTests(unittest.TestCase):
         self.assertIn("CS 120", accepted["sections"])
         self.assertNotIn("CS 205", accepted["sections"])
 
+    def test_invalid_weekday_keeps_meetings_tentative(self):
+        for day in [0, 8, True]:
+            result = s.generate_schedule_options(
+                {"CS 120": [section(101, "CS 120", meetings=[meeting(day, "09:00", "10:00")])]},
+                {"CS 120": 3}, {"CS 120"}, eligibility_statuses={"CS 120": "MET"})
+            self.assertEqual(result["options"][0]["status"], "TENTATIVE")
+
+    def test_course_swap_cannot_overfill_an_overlapping_choice_group(self):
+        alt = section(310, "CS 310", meetings=[meeting(1, "09:00", "10:00")])
+        groups = [
+            {"requirement_id": "one", "course_codes": ["CS 205", "CS 310"], "max_courses_this_term": 1},
+            {"requirement_id": "two", "course_codes": ["CS 120", "CS 310"], "max_courses_this_term": 1},
+        ]
+        original = {"CS 120": self.a1, "CS 205": self.b2}
+        result = s.replace_flexible_course(original, "CS 205", "CS 310", 310,
+            {**self.grouped, "CS 310": [alt]}, {**self.credits, "CS 310": 3}, set(), groups)
+        self.assertFalse(result["ok"])
+        self.assertEqual(result["errors"], ["CHOICE_GROUP_LIMIT_EXCEEDED"])
+        self.assertEqual(set(original), {"CS 120", "CS 205"})
+
     def test_credit_range_requires_selection(self):
         courses = [{"course_code": "CS 120", "min_credit_hours": 1, "max_credit_hours": 4,
                     "active_status": True}]
@@ -119,15 +139,13 @@ class SchedulerTests(unittest.TestCase):
         with patch.object(s, "get_course_ids", return_value=course_rows) as mocked_course, \
              patch.object(s, "_sections_for_ids", return_value=section_rows), \
              patch.object(s, "get_section_meetings", return_value=meeting_rows):
-            result = s.group_sections_by_course({"CS 120", "CS 205"}, 1)
+            result = s.group_sections_by_course({"CS 120", "CS 205"}, 1, client=object())
         self.assertEqual(mocked_course.call_count, 1)
         self.assertEqual(result["CS 120"][0]["meetings"], meeting_rows)
         self.assertEqual(result["CS 205"], [])
 
     def test_contract_fixture_keeps_review_required_science_out_of_autofill(self):
-        fixture = Path(__file__).parent / "fixtures" / "planning_handoff_v1_example.json"
-        if not fixture.exists():
-            self.skipTest("Optional fixture not supplied")
+        fixture = Path(__file__).resolve().parents[1] / "services" / "planning_handoff_v1_example.json"
         handoff = json.loads(fixture.read_text(encoding="utf-8"))
         plan = s.read_explicit_plan(handoff)
         self.assertEqual(len(plan["required_courses"]), 24)
@@ -135,8 +153,6 @@ class SchedulerTests(unittest.TestCase):
         self.assertTrue(any("CHOICE_GROUP_REQUIRES_REVIEW" in w for w in plan["warnings"]))
 
 
-if __name__ == "__main__":
-    unittest.main()
 
 # The suite's offline tests intentionally do not connect to Supabase. The production
 # integration can be validated with a staging project after credentials are configured.
@@ -171,7 +187,11 @@ class DegreePriorityTests(unittest.TestCase):
         with patch.object(s, "get_course_ids", return_value=courses), \
              patch.object(s, "_sections_for_ids", return_value=sections), \
              patch.object(s, "get_section_meetings", return_value=meetings):
-            output = s.generate_from_handoff(handoff, term_id=1, target_credits=6)
+            output = s.generate_from_handoff(handoff, term_id=1, client=object(), target_credits=6)
         self.assertEqual(output["options"][0]["total_credits"], 3.0)
         self.assertEqual(output["options"][0]["status"], "TENTATIVE")
         self.assertEqual(output["options"][0]["unscheduled_required"], ["CS 205"])
+
+
+if __name__ == "__main__":
+    unittest.main()

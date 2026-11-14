@@ -11,7 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from backend.models.planning import CourseCode, PlanningHandoff
 from backend.routes.planning import get_client_factory
-from backend.services.schedule_engine import (
+from backend.services.schedule_service import (
     course_credit_values,
     generate_from_handoff,
     get_course_ids,
@@ -22,7 +22,14 @@ from backend.services.schedule_engine import (
 )
 
 router = APIRouter(prefix="/api/v1/schedules", tags=["schedules"])
-ClientFactory = Annotated[Callable[[], Any], Depends(get_client_factory)]
+def get_schedule_client(client_factory: Annotated[Callable[[], Any], Depends(get_client_factory)]):
+    try:
+        return client_factory()
+    except (ImportError, OSError, ValueError, RuntimeError):
+        raise HTTPException(503, "Configure server-side Supabase credentials for scheduling.") from None
+
+
+ScheduleClient = Annotated[Any, Depends(get_schedule_client)]
 
 
 class GenerateRequest(BaseModel):
@@ -64,7 +71,7 @@ def _ensure_active_term(client: Any, term_id: int) -> None:
     Per-student administrator term grants are not yet represented by this API.
     """
     response = (client.table("term").select("term_id,active_status")
-                .eq("term_id", term_id).limit(1).execute())
+                .eq("term_id", term_id).range(0, 0).execute())
     if not response.data or response.data[0].get("active_status") is not True:
         raise HTTPException(422, "The requested academic term is not active.")
 
@@ -79,14 +86,13 @@ def _supported_codes(plan: dict) -> set[str]:
 def _handoff_plan(handoff: PlanningHandoff) -> dict:
     try:
         return read_explicit_plan(handoff.model_dump())
-    except ValueError:
+    except (ValueError, KeyError, TypeError):
         raise HTTPException(422, "Unsupported planning handoff.") from None
 
 
 @router.post("/generate")
-def generate(request: GenerateRequest, response: Response, client_factory: ClientFactory):
+def generate(request: GenerateRequest, response: Response, client: ScheduleClient):
     _handoff_plan(request.handoff)
-    client = client_factory()
     _ensure_active_term(client, request.term_id)
     try:
         result = generate_from_handoff(
@@ -101,8 +107,7 @@ def generate(request: GenerateRequest, response: Response, client_factory: Clien
 
 
 @router.post("/sections")
-def sections(request: SectionOptionsRequest, response: Response, client_factory: ClientFactory):
-    client = client_factory()
+def sections(request: SectionOptionsRequest, response: Response, client: ScheduleClient):
     _ensure_active_term(client, request.term_id)
     grouped = group_sections_by_course({request.course_code}, request.term_id, client=client)
     response.headers["Cache-Control"] = "no-store"
@@ -110,7 +115,7 @@ def sections(request: SectionOptionsRequest, response: Response, client_factory:
 
 
 @router.post("/swap-section")
-def swap_section(request: SwapSectionRequest, response: Response, client_factory: ClientFactory):
+def swap_section(request: SwapSectionRequest, response: Response, client: ScheduleClient):
     plan = _handoff_plan(request.handoff)
     current_codes = set(request.current_sections)
     allowed = _supported_codes(plan)
@@ -118,7 +123,6 @@ def swap_section(request: SwapSectionRequest, response: Response, client_factory
             or len(current_codes) > 21):
         raise HTTPException(422, "Selected courses do not match the degree-planning candidates.")
 
-    client = client_factory()
     _ensure_active_term(client, request.term_id)
     catalog = get_course_ids(current_codes, client=client)
     credits, _ = course_credit_values(catalog)
@@ -140,7 +144,7 @@ def swap_section(request: SwapSectionRequest, response: Response, client_factory
 
 
 @router.post("/swap-course")
-def swap_course(request: SwapCourseRequest, response: Response, client_factory: ClientFactory):
+def swap_course(request: SwapCourseRequest, response: Response, client: ScheduleClient):
     plan = _handoff_plan(request.handoff)
     current_codes = set(request.current_sections)
     allowed = _supported_codes(plan)
@@ -148,7 +152,6 @@ def swap_course(request: SwapCourseRequest, response: Response, client_factory: 
             or request.new_course_code not in allowed or len(current_codes) > 21):
         raise HTTPException(422, "Selected courses do not match the degree-planning candidates.")
 
-    client = client_factory()
     _ensure_active_term(client, request.term_id)
     requested_codes = current_codes | {request.new_course_code}
     catalog = get_course_ids(requested_codes, client=client)

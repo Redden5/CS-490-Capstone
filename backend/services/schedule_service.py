@@ -2,27 +2,24 @@
 
 Planning output is NEVER registration clearance or a verified degree audit.
 Works with the supplied v1/v2 handoff's explicit requirements. v2.1 Core II
-candidate expansion requires a separate, approved integration.
+candidate expansion and multi-course bundles are not included.
 """
 
 from datetime import time
 from decimal import Decimal, InvalidOperation
 from typing import Any
-from backend.db.supabase_client import supabase
 
 
 PAGE_SIZE = 1000
 HARD_CREDIT_LIMIT = Decimal("21")
 
 
-
-
 def _read_all(table: str, columns: str, *, filters: list[tuple[str, str, Any]] | None = None,
-              order_by: str) -> list[dict]:
+              order_by: str, client: Any) -> list[dict]:
     """Read every paginated matching row (don't silently truncate at 1000)."""
     rows: list[dict] = []
     while True:
-        query = supabase.table(table).select(columns)
+        query = client.table(table).select(columns)
         for operation, field, value in (filters or []):
             if operation == "eq":
                 query = query.eq(field, value)
@@ -48,45 +45,45 @@ def get_missing_required_course(handoff: dict) -> set[str]:
     return missing - set(handoff.get("completed_course_codes_entered") or [])
 
 
-def get_course_ids(course_codes: set[str]) -> list[dict]:
+def get_course_ids(course_codes: set[str], *, client: Any) -> list[dict]:
     if not course_codes:
         return []
     return _read_all("course", "course_id,course_code,min_credit_hours,max_credit_hours,active_status",
-                     filters=[("in", "course_code", sorted(course_codes))], order_by="course_id")
+                     filters=[("in", "course_code", sorted(course_codes))], order_by="course_id", client=client)
 
 
-def get_available_sections(course_codes: set[str], term_id: int) -> list[dict]:
+def get_available_sections(course_codes: set[str], term_id: int, *, client: Any) -> list[dict]:
     """Get all offered sections. Availability is assessed separately."""
-    courses = get_course_ids(course_codes)
-    return _sections_for_ids([c["course_id"] for c in courses], term_id)
+    courses = get_course_ids(course_codes, client=client)
+    return _sections_for_ids([c["course_id"] for c in courses], term_id, client=client)
 
 
-def _sections_for_ids(course_ids: list[int], term_id: int) -> list[dict]:
+def _sections_for_ids(course_ids: list[int], term_id: int, *, client: Any) -> list[dict]:
     if not course_ids:
         return []
     return _read_all("coursesection",
                      "section_id,course_id,term_id,crn,section_number,section_status,capacity,enrolled,delivery_mode",
                      filters=[("in", "course_id", course_ids), ("eq", "term_id", term_id)],
-                     order_by="section_id")
+                     order_by="section_id", client=client)
 
 
-def get_section_meetings(section_ids: list[int]) -> list[dict]:
+def get_section_meetings(section_ids: list[int], *, client: Any) -> list[dict]:
     if not section_ids:
         return []
     return _read_all("sectionmeeting",
                      "meeting_id,section_id,day_of_week,start_time,end_time,meeting_type",
-                     filters=[("in", "section_id", section_ids)], order_by="meeting_id")
+                     filters=[("in", "section_id", section_ids)], order_by="meeting_id", client=client)
 
 
 def group_sections_by_course(course_codes: set[str], term_id: int,
-                             *, catalog_courses: list[dict] | None = None) -> dict[str, list[dict]]:
+                             *, client: Any, catalog_courses: list[dict] | None = None) -> dict[str, list[dict]]:
     """Retrieve sections and attach each section's meetings without duplicate course reads."""
     grouped: dict[str, list[dict]] = {code: [] for code in sorted(course_codes)}
-    courses = catalog_courses if catalog_courses is not None else get_course_ids(course_codes)
+    courses = catalog_courses if catalog_courses is not None else get_course_ids(course_codes, client=client)
     id_to_code = {course["course_id"]: course["course_code"] for course in courses}
-    sections = _sections_for_ids(list(id_to_code), term_id)
+    sections = _sections_for_ids(list(id_to_code), term_id, client=client)
     meetings_by_id = {section["section_id"]: [] for section in sections}
-    for meeting in get_section_meetings(list(meetings_by_id)):
+    for meeting in get_section_meetings(list(meetings_by_id), client=client):
         meetings_by_id[meeting["section_id"]].append(meeting)
     for section in sections:
         section["meetings"] = meetings_by_id[section["section_id"]]
@@ -108,6 +105,8 @@ def _as_time(value: Any) -> time | None:
 def _valid_meeting(meeting: dict) -> bool:
     start, end = _as_time(meeting.get("start_time")), _as_time(meeting.get("end_time"))
     return (isinstance(meeting.get("day_of_week"), int)
+            and not isinstance(meeting["day_of_week"], bool)
+            and 1 <= meeting["day_of_week"] <= 7
             and start is not None and end is not None and start < end)
 
 
@@ -227,9 +226,9 @@ def read_explicit_plan(handoff: dict) -> dict:
         elif kind == "CREDIT_REQUIREMENT_DRAFT" and requirement.get("planning_disposition") != "CANDIDATE_COMPLETE":
             warnings.append(f"FLEXIBLE_CREDIT_REQUIREMENT_NOT_SCHEDULED:{requirement.get('rule_id')}")
 
-    # A separate teammate agreement is required before using v2.1 Core II memberships.
+    # Flexible membership allocation is outside the explicit-course scheduler.
     if version == "2.1.0" and handoff.get("flexible_candidates"):
-        warnings.append("V2_1_CORE_II_CANDIDATES_AWAIT_SCHEDULER_INTEGRATION_APPROVAL")
+        warnings.append("FLEXIBLE_CORE_II_OPTIONS_NOT_INCLUDED")
 
     eligibility = handoff.get("course_eligibility") or {}
     evaluated = eligibility.get("evaluation_status") in {"COMPLETED", "PARTIAL"}
@@ -452,6 +451,10 @@ def replace_flexible_course(schedule: dict[str, dict], old_code: str, new_code: 
     proposed = dict(schedule)
     del proposed[old_code]
     proposed[new_code] = replacement
+    for group in choice_groups:
+        selected_choices = (set(proposed) - required_courses) & set(group["course_codes"])
+        if len(selected_choices) > group["max_courses_this_term"]:
+            return {"ok": False, "errors": ["CHOICE_GROUP_LIMIT_EXCEEDED"]}
     if set(proposed) - set(credits):
         return {"ok": False, "errors": ["COURSE_CREDITS_UNAVAILABLE"]}
     cap = _credits(max_credits)
@@ -463,18 +466,18 @@ def replace_flexible_course(schedule: dict[str, dict], old_code: str, new_code: 
     return {"ok": True, "sections": proposed, **result}
 
 
-def generate_from_handoff(handoff: dict, term_id: int, *, target_credits: float = 15,
+def generate_from_handoff(handoff: dict, term_id: int, *, client: Any, target_credits: float = 15,
                           max_credits: float = 21, administrator_approved: bool = False,
                           credit_overrides: dict[str, Any] | None = None,
                           max_results: int = 5) -> dict:
-    """High-level read-only entry point for the FastAPI route to call later."""
+    """Generate draft schedules with the request-scoped read-only database client."""
     plan = read_explicit_plan(handoff)
     course_codes = set(plan["required_courses"])
     for group in plan["choice_groups"]:
         course_codes.update(group["course_codes"])
-    catalog = get_course_ids(course_codes)
+    catalog = get_course_ids(course_codes, client=client)
     credits, credit_problems = course_credit_values(catalog, credit_overrides)
-    grouped = group_sections_by_course(course_codes, term_id, catalog_courses=catalog)
+    grouped = group_sections_by_course(course_codes, term_id, client=client, catalog_courses=catalog)
     result = generate_schedule_options(
         grouped, credits, set(plan["required_courses"]),
         choice_groups=plan["choice_groups"],
