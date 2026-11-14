@@ -1,4 +1,5 @@
 import csv
+from pathlib import Path
 
 from backend.db.supabase_client import supabase
 from backend.models.models import Course
