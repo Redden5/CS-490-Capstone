@@ -112,3 +112,41 @@ server keys. [Supabase JWT verification](https://supabase.com/docs/guides/auth/j
 
 HTTP tests override the request dependency with a SELECT-only fixture and compare
 the complete response to a direct planning call.
+
+## Draft scheduling API
+
+The same FastAPI application registers `/api/v1/schedules`. These are read-only
+local development endpoints with the same authentication/deployment limits as
+planning. The handoff is client-submitted planning evidence, not registration
+clearance. Server-side Supabase configuration is required for schedule reads.
+
+| POST path | Request fields |
+| --- | --- |
+| `/api/v1/schedules/generate` | `handoff` (the complete v2.1 planning response), `term_id`, optional `target_credits` (default 15, up to 21), optional `max_results` (default 5, up to 5) |
+| `/api/v1/schedules/sections` | `course_code`, `term_id` |
+| `/api/v1/schedules/swap-section` | `handoff`, `term_id`, `current_sections` (course code → section ID), `course_code`, `new_section_id` |
+| `/api/v1/schedules/swap-course` | `handoff`, `term_id`, `current_sections`, `old_course_code`, `new_course_code`, `new_section_id` |
+
+Terms must be active. Generation returns `options`, `excluded_courses`,
+`search_truncated`, `required_courses`, `choice_groups`, `course_credit_hours`,
+`credit_problems`, and `handoff_warnings`. Each option includes selected
+`sections` with `meetings`, `total_credits`, `status`, `warnings`, and
+`unscheduled_required`. Search is bounded; truncation means better options may
+exist. Unknown evidence produces `TENTATIVE` drafts. Known full/closed sections,
+prerequisites marked `UNMET`, and known time conflicts are excluded.
+
+Swaps return `ok: true` with the revised selection, credits, status, and warnings,
+or `ok: false` with `errors`. Consumers must keep the previous selection when
+`ok` is false. Invalid terms, handoffs, and stale section selections return 422;
+missing server configuration returns 503; other backend failures return a sanitized
+500. Error responses retain CORS headers for allowed frontend origins. Successful
+responses use `no-store`.
+One request-scoped client is reused across all catalog/section readers.
+
+Only explicit requirements and reviewed single-course choice groups are used.
+Flexible Core II options, multi-course bundles, and v2.2 are not integrated.
+Variable-credit courses are omitted when their credit choice is unavailable.
+The service does not persist schedules, register students, or verify transcripts.
+
+Scheduler algorithm and HTTP fixture tests are included in the normal
+`unittest discover -s backend/tests` command. They require no live credentials.
