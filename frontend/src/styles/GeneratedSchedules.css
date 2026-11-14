@@ -1,0 +1,43 @@
+.schedule-generator {
+  margin-bottom: 18px;
+  padding: 20px;
+  border: 1px solid #d8e4dc;
+  border-radius: 11px;
+  background: #fff;
+  color: #26362c;
+}
+.schedule-generator h2 { margin: 0 0 10px; font-size: 1.25rem; }
+.schedule-generator h3 { margin: 15px 0 10px; font-size: 1.05rem; }
+.schedule-generator p { line-height: 1.45; }
+.schedule-generator .schedule-form { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; margin: 14px 0; }
+.schedule-generator label { display: grid; gap: 6px; font-weight: 600; }
+.schedule-generator input, .schedule-generator select {
+  min-height: 40px; max-width: 100%; padding: 8px;
+  border: 1px solid #99b6a3; border-radius: 6px; font: inherit;
+}
+.schedule-generator input { width: 110px; }
+.schedule-option-picker { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+.schedule-option {
+  padding: 8px 12px; border: 1px solid #a5c4b2; border-radius: 8px;
+  color: #1c6e36; background: #eef7f1; font: inherit; cursor: pointer;
+}
+.schedule-option.active { background: #006747; color: white; }
+.schedule-selected-sections { padding: 0; list-style: none; display: grid; gap: 8px; }
+.schedule-selected-sections li {
+  border: 1px solid #d8e4dc; border-radius: 7px; padding: 12px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.schedule-selected-sections p { margin: 4px 0 0; }
+.schedule-subtle { font-size: 0.85rem; color: #53665b; }
+.schedule-notice { padding: 10px; border-left: 3px solid #bc8338; background: #fff8ec; }
+.schedule-error { color: #a51d2d; }
+.schedule-swap { margin-top: 15px; padding: 14px; border: 1px solid #99b6a3; border-radius: 8px; }
+.schedule-swap label { margin-bottom: 12px; }
+.schedule-swap-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.schedule-generator details { margin: 12px 0; }
+.schedule-generator button:focus-visible { outline: 3px solid #008b2f; outline-offset: 2px; }
+@media (max-width: 620px) {
+  .schedule-selected-sections li { align-items: flex-start; flex-direction: column; }
+  .schedule-generator { padding: 14px; }
+}
+.schedule-row-actions { display: flex; flex-wrap: wrap; gap: 8px; }

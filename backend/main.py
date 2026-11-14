@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 
 from backend.models.planning import PlanningRequest
 from backend.routes.planning import router
+from backend.routes.schedules import router as schedules_router
 
 
 app = FastAPI(title="Degree Planning API", version="1")
@@ -17,6 +18,7 @@ app.add_middleware(
     allow_headers=["Content-Type"],
 )
 app.include_router(router)
+app.include_router(schedules_router)
 
 
 @app.exception_handler(RequestValidationError)
