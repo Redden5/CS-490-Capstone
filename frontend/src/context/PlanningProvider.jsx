@@ -6,7 +6,7 @@ export default function PlanningProvider({ children }) {
   const [input, setInput] = useState({ program: null, rows: [] });
   const [programs, setPrograms] = useState({ loading: true, data: [], error: null });
   const [programAttempt, setProgramAttempt] = useState(0);
-  const [evaluation, setEvaluation] = useState({ loading: false, data: null, error: null, fingerprint: null, revision: 0 });
+  const [evaluation, setEvaluation] = useState({ loading: false, data: null, error: null, fingerprint: null });
   const pending = useRef(null);
   const generation = useRef(0);
 
@@ -50,7 +50,7 @@ export default function PlanningProvider({ children }) {
       setEvaluation((current) => ({ ...current, loading: true, error: null }));
       const data = await evaluatePlanning(body, controller.signal);
       if (controller.signal.aborted || generation.current !== requestId) return false;
-      setEvaluation({ loading: false, data, error: null, fingerprint, revision: requestId });
+      setEvaluation({ loading: false, data, error: null, fingerprint });
       return true;
     } catch (error) {
       if (!controller.signal.aborted && generation.current === requestId) {

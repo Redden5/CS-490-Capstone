@@ -292,19 +292,3 @@
   background: #008f36;
   box-shadow: 0 3px 8px rgba(0, 80, 30, 0.22);
 }
-
-
-.planner-generator { margin-bottom: 20px; overflow-wrap: anywhere; }
-.planner-generator > h2 { margin-top: 0; }
-.planner-generation-form { display: flex; flex-wrap: wrap; gap: 14px; align-items: end; margin: 20px 0; }
-.planner-generation-form label { display: grid; gap: 8px; }
-.planner-generation-form input { width: 110px; min-height: 44px; padding: 8px; border: 1px solid #99b6a3; border-radius: 6px; font: inherit; }
-.planner-generated-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; margin-top: 20px; }
-.planner-generated-option { min-width: 0; }
-.planner-generated-option h3 { margin-top: 0; }
-.planner-generated-option .planner-course-slot p { font-size: 0.9rem; }
-.planner-generated-option button { margin-top: 10px; }
-.planner-generated-option summary { cursor: pointer; margin-top: 12px; }
-.planner-swap { border-top: 2px solid #99b6a3; padding-top: 12px; margin-top: 16px; }
-.planner-swap select { display: block; margin-top: 8px; }
-.planner-generator input:focus-visible { outline: 3px solid #008b2f; outline-offset: 3px; }
