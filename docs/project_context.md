@@ -8,7 +8,7 @@ This CS 490 senior capstone helps students answer two questions. Which degree re
 | --- | --- |
 | Academic data | Scrapers, parsers, and resolvers under `backend/scripts/` produce catalog, prerequisite, degree, and offering artifacts. Database import is a separate operator workflow. |
 | Degree Planning Engine | The Python backend evaluates the degree, identifies remaining options, and attaches catalog and prerequisite evidence. The CLI and FastAPI share one implementation. |
-| Student frontend | React/Vite pages use a publishable Supabase client for sign-in, course browsing, course details, and a temporary semester planner. Degree Audit contains placeholder progress. The Advisor page displays sample content. Connecting either page to backend planning is pending. |
+| Student frontend | React/Vite pages use a publishable Supabase client for sign-in, course browsing, course details, and a temporary semester planner. Academic Info submits reported coursework to the existing planning API; Degree Audit displays its v2.1 requirement progress, choice bundles, flexible options, and prerequisite evidence. The Advisor page still displays sample content. |
 | Schedule Generator | The scheduler checks term offerings, sections, seats, and time conflicts. Its intended input is the versioned planning handoff. A schedule-service prototype exists on the separate `origin/feature/schedule-service` tracking ref. Integration with this checkout is pending. |
 | RAG Advisor (planned) | The intended advisor would retrieve source material to ground answers to student questions. The schema includes source documents and chunks. This checkout has no retrieval or answer-generation service. |
 
@@ -25,6 +25,8 @@ Use PowerShell from the repository root with the Python 3.12 virtual environment
 | Run the offline backend regression suite | `.\.venv\Scripts\python.exe -B -m unittest discover -s backend/tests -p "test_*.py"` |
 
 For live catalog reads, the backend accepts `SUPABASE_URL` and `SUPABASE_SECRET_KEY` (fallback `SUPABASE_SERVICE_ROLE_KEY`) from the server environment or the root `.env`. Offline tests use fixtures. The frontend requires `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`. Keep privileged keys server-side. [Backend client](../backend/services/supabase_service.py) · [Browser client](../frontend/src/lib/supabaseClient.js)
+
+The frontend planning client defaults to `http://127.0.0.1:8000` in Vite development and same-origin API paths in production builds. `VITE_PLANNING_API_URL` overrides the API origin. Existing backend CORS and authentication limits still apply. [Frontend configuration](../frontend/README.md#academic-info-and-degree-audit)
 
 | Directory | Contents |
 | --- | --- |
@@ -50,6 +52,8 @@ For live catalog reads, the backend accepts `SUPABASE_URL` and `SUPABASE_SECRET_
 | `2.2.0` (opt-in) | `critical_thinking_candidates=True` | Extends the same pool with verified options for the additional 2026–2027 CS Core I slot. Applies the audit's explicit sibling reservations within this slot. [Preview usage](planning_handoff.md#internal-preview-v22-critical-thinking) |
 
 The FastAPI app at `backend.main:app` exposes `GET /api/v1/planning/programs` and `POST /api/v1/planning/evaluate`. Evaluation returns v2.1 by default or v2.2 when the request includes `critical_thinking_candidates: true`. A successful response uses `Cache-Control: no-store`. Submitted coursework stays in request memory. A consumer can join flexible results by requirement ID and eligibility by course code. Check per-requirement coverage and retrieval diagnostics even on HTTP 200. [App](../backend/main.py) · [Routes and registry](../backend/routes/planning.py) · [Request and response models](../backend/models/planning.py) · [API guide](planning_api.md) · [Handoff contract](planning_handoff.md)
+
+Academic Info discovers supported program/year combinations from that API. It accepts separate completed-course attempts, optional grades and reported credits, and unresolved-equivalency flags. A React provider shares input and the last successful report across authenticated routes. Edits cancel pending requests and mark old results as outdated; refresh, sign-out, or account changes clear the state. No student coursework is written to Supabase or browser storage. Degree Audit presents backend decisions rather than reimplementing academic rules, preserves all-course bundles and uncertain evidence, and labels credit subtotals as estimates. Planner and Advisor integration remain separate work. [API client](../frontend/src/lib/planningApi.js) · [Shared state](../frontend/src/context/PlanningProvider.jsx) · [Audit page](../frontend/src/pages/DegreeAudit.jsx)
 
 ## Database and academic evidence
 

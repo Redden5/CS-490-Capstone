@@ -1,12 +1,12 @@
 # Development handoff
 
-## Current state · 2026-11-11
+## Current state · 2026-11-14
 
-The local degree planning API is merged in `16c1d41` (PR #10). It evaluates student-reported coursework for Computer Science, B.S., catalog year `2026-2027`, and returns the v2.1 handoff by default. Frontend consumption and Schedule Generator integration are pending. [API guide](planning_api.md) · [Architecture and service interfaces](project_context.md)
+The local degree planning API is merged in `16c1d41` (PR #10). It evaluates student-reported coursework for Computer Science, B.S., catalog year `2026-2027`, and returns the v2.1 handoff by default. Academic Info and Degree Audit use the default v2.1 API on `frontend/planning-integration`. Schedule Generator integration is pending. [API guide](planning_api.md) · [Architecture and service interfaces](project_context.md)
 
-This handoff records the science-specific worktree on `feature/science-lab-requirements`, based on `d889101`.
+The science-specific work originated on `feature/science-lab-requirements`, based on `d889101`.
 
-On `feature/critical-thinking-api`, HTTP clients can request the existing v2.2 CT handoff by sending `critical_thinking_candidates: true` to the evaluation endpoint. Existing requests continue to receive v2.1. [API guide](planning_api.md#endpoints)
+HTTP clients can request the existing v2.2 CT handoff by sending `critical_thinking_candidates: true` to the evaluation endpoint. Existing requests continue to receive v2.1. [API guide](planning_api.md#endpoints)
 
 The current working tree supports the listed science pairs and PS 111 under the 2026–2027 CS working rules. The shared audit can recognize a documented four-credit Core II lab option and omit redundant major science candidates. The v2.1 API serves these results through its existing evaluation route. [Science and laboratory requirements](project_context.md#science-and-laboratory-requirements)
 
@@ -28,6 +28,8 @@ The current working tree supports the listed science pairs and PS 111 under the 
 | 2026-11-12 | The flexible provider now enumerates either dated designation for CS Multicultural or International (`t0_row_0018`) through the existing v2.1 route and internal v2.2 preview. Candidates retain their classification sources and share one prerequisite evaluation per course. | An offline replay of reviewed catalog data produced 159 distinct options (76 Multicultural, 83 International). Fixtures cover dual designations, partial credit, missing or unexpected associations, completed courses, and prerequisite results. Pytest passed 315 tests and 377 subtests with one Starlette deprecation warning. Unittest passed all 315 tests. Coverage remains bounded by the dated catalog evidence. |
 | 2026-11-12 | The prerequisite parser recognizes the reviewed Fall 2026 CS 120 registration rule. CS 110 or CS 110H with D or better meets it. The supplementary CR/PR text and discrepancy remain in the evidence. Only the CS 120 course record changed in the regenerated v2 seed artifact. | 141 focused tests passed. Full pytest passed 319 tests and 393 subtests with one Starlette deprecation warning. Unittest passed all 319. An offline planning replay returned UNKNOWN with the old graph and MET with the corrected graph for CS 110 graded A. [Prerequisite pipeline](../backend/scripts/PREREQUISITE_PIPELINE.md#meaning-and-conservative-decisions) |
 | 2026-11-12 | The catalog scraper extracts top-level parenthetical `PR` fields from balanced descriptions. The parser accepts the new label and sends differing prerequisite fields for review. | A local replay of the saved descriptions produced a single MS 302 rule for MS 351 and retained the grade and GPA conditions for STHM 390 as `NEEDS_REVIEW`. All 60 focused and 325 backend tests passed. |
+| 2026-11-12 | Academic Info and Degree Audit integrated the v2.1 API with course search, manual entry, cancellation and outdated-result notices. | Frontend lint, build and 11 Node tests passed. Chromium checks at 320, 375, 768 and 1440 pixels exercised requests, navigation, retry, cancellation and sign-out with a FastAPI fixture response and mocked HTTP, sign-in and course search. The original backend run passed 285 of 288 tests. The three CSV line-ending failures also reproduced on the branch base and were addressed by the loader fix recorded above. |
+| 2026-11-14 | Degree Audit explains backend exclusions for science choices, including a PHY 202 lab already counted with PHY 211. | After integrating `origin/main` at `e44c0fa`, all 12 frontend tests, ESLint, the production build and all 331 offline backend tests passed. These checks used no live student session. |
 
 The transactional Supabase import completed for the 2026–2027 catalog. The loader and manifest verify the 2,630-row source export. Supabase holds 2,276 rules: 1,306 ready and 970 requiring review. The team intentionally deferred 107 unresolved prerequisite discrepancies. The import restored 15 equivalent-field rules, ENG 354, and 22 reviewed English and Spanish coursework rules. SPN 411 retains its manual permission alternative in the source evidence. The second dry run found zero pending changes. All 331 backend tests and all 12 live Supabase smoke tests passed.
 
@@ -39,11 +41,13 @@ The transactional Supabase import completed for the 2026–2027 catalog. The loa
 | Critical Thinking | Review the opt-in v2.2 consumer contract and determine what evidence is needed for honors variants, transfer exemptions, and coursework origin. |
 | Prerequisites | Design interactive clarification for UNKNOWN results, including missing grades or equivalency evidence. Preserve uncertainty when catalog metadata itself is incomplete. |
 | Credit allocation | Resolve repeated credit slots, variable-credit evidence, and overlap across major and core requirements. Preserve potential matches until allocation policy is reviewed. |
-| Frontend and scheduling | Connect the frontend to the planning API. Agree with the scheduler owner on handoff version, choice bundles, flexible memberships, UNKNOWN results, and term-specific feasibility checks. |
+| Frontend and scheduling | Review the Academic Info/Degree Audit integration and verify it against the locally configured API and Supabase. Planner/Advisor consumption remains pending. Agree with the scheduler owner on handoff version, choice bundles, flexible memberships, UNKNOWN results, and term-specific feasibility checks. |
 | Full application and deployment | Exercise the student workflow end to end. Define and implement backend authentication and authorization, scheduler access, deployed origins, and operational limits. Browser sign-in already exists. |
 | RAG Advisor | Connect reviewed source material to retrieval and answers. The current Advisor page is a preview. |
 
 ## Next recommended action
+
+Verify Academic Info and Degree Audit in a signed-in browser against the configured planning API and Supabase using synthetic coursework.
 
 For the science progress report, demonstrate the v2.1 audit with a listed pair, PS 111 alone, and three complete pairs. Use the existing source flags to distinguish provisional planning from institutional approval. [Science handoff contract](planning_handoff.md#cs-science-with-lab-progress-across-handoff-versions)
 
