@@ -50,6 +50,7 @@ import re
 from typing import Any
 
 from backend.scripts.parse_prerequisites import canonical_code, parse_rows
+from backend.services import reviewed_csv_sha256
 # Keep Stage 1 unchanged while sharing its exact request-code normalization.
 from backend.services.prerequisite_evaluator import _code
 
@@ -58,7 +59,7 @@ from backend.services.prerequisite_evaluator import _code
 # These are trust anchors, not caller-supplied assertions or deployment approval.
 _SOURCE_YEAR = "2026-2027"
 _CATALOG_SHA256 = "433675cec5f76c9761de6159fa2d7bc54c539ca92745d1a05e252d8a8a694a6d"
-_PREREQUISITE_SHA256 = "cd847bca8104e2c1a628a26fb0dea7d55cda3fa39cc405b6dd32e604a7d51ae5"
+_PREREQUISITE_SHA256 = "6b110e9d1f5a202fecbaa68d67f020ce0b0cad7695f2b6c0686dd95a49815ac9"
 _PARENT_FIELDS = (
     "course_id", "rule_type", "catalog_year_id", "raw_text", "source_url",
     "machine_checkable", "parse_status", "review_flags", "source_metadata",
@@ -180,7 +181,8 @@ def _source(catalog_csv, prerequisite_csv, year):
         return "SOURCE_NOT_SUPPLIED", set(), {}
     if year != _SOURCE_YEAR:
         return "SOURCE_YEAR_UNSUPPORTED", set(), {}
-    if hashlib.sha256(catalog_csv).hexdigest() != _CATALOG_SHA256 or hashlib.sha256(prerequisite_csv).hexdigest() != _PREREQUISITE_SHA256:
+    if (reviewed_csv_sha256(catalog_csv) != _CATALOG_SHA256
+            or reviewed_csv_sha256(prerequisite_csv) != _PREREQUISITE_SHA256):
         return "SOURCE_HASH_MISMATCH", set(), {}
     try:
         catalog = list(csv.DictReader(io.StringIO(catalog_csv.decode("utf-8-sig"))))

@@ -29,13 +29,34 @@ YEAR = "2026-2027"
 HUM, SOCIAL, FINE = "Core II Humanities", "Core II Social Sciences", "Core II Fine Arts"
 
 
-def fixture():
+def fixture(*, include_ct=False):
     attributes, source = attribute_fixture()
-    codes = sorted({c["course_code"] for c in attributes["course"]} | {"CS 110", "CS 120", "CS 210"})
+    if include_ct:
+        ct_id = 4
+        attributes["attribute"].append({"attribute_id": ct_id, "attribute_name": "Critical Thinking"})
+        names = {r["attribute_id"]: r["attribute_name"] for r in attributes["attribute"]}
+        for code, credits, labels in [
+            ("MTH 229", 5, [ct_id]), ("MTH 229H", 5, [ct_id]), ("FYS 100", 3, []),
+            ("ANT 201", 3, [ct_id, 2]), ("CL 210", 3, [ct_id, 1]), ("ART 201", 3, [ct_id, 3]),
+        ]:
+            course_id = len(attributes["course"]) + 1
+            url = "https://catalog.marshall.edu/undergraduate/courses-az/" + code.split()[0].lower() + "/"
+            attributes["course"].append({
+                "course_id": course_id, "course_code": code, "course_title": code, "source_url": url,
+                "min_credit_hours": credits, "max_credit_hours": credits, "active_status": True,
+            })
+            for label in labels:
+                stamp = "2026-10-14T18:03:02+00:00"
+                attributes["courseattribute"].append({"course_id": course_id, "attribute_id": label,
+                    "catalog_year_id": 7, "source_url": url, "observed_at": stamp})
+                source.append({"course_code": code, "attribute_name": names[label],
+                    "source_url": url, "catalog_year": YEAR, "catalog_level": "undergraduate", "observed_at_utc": stamp})
+    codes = sorted({c["course_code"] for c in attributes["course"]} | {"CS 110", "CS 120", "CS 210", "SOC 201"})
     url = "https://catalog.marshall.edu/undergraduate/courses-az/cs/"
     metadata = [{"course_code": code, "catalog_year": YEAR, "source_url": url,
                  "field_label": "pre-req", "requirement_text": text} for code, text in [
         ("CS 210", "CS 110 with a minimum grade of C"),
+        ("SOC 201", "Consent of instructor."),
         ("PHL 101", "CS 110 with a minimum grade of C"),
         ("HST 101", "Consent of instructor."),
         ("HST 200", "CS 110"),
@@ -43,6 +64,10 @@ def fixture():
         ("ART 200", "CS 110 or CS 120"),
         ("ART 220", "CS 110"),
     ]]
+    if include_ct:
+        for code, expression in [("ANT 201", "CS 110"), ("ART 201", "CS 120")]:
+            metadata.append({"course_code": code, "catalog_year": YEAR, "source_url": url,
+                             "field_label": "pre-req", "requirement_text": expression})
     tables = tables_from_source(codes, parse_rows(metadata, set(codes)))
     by_code = {r["course_code"]: r for r in attributes["course"]}
     ids = {r["course_code"]: r["course_id"] for r in tables["course"]}
@@ -62,6 +87,16 @@ def fixture():
         "catalog_year_id": 7, "source_url": url, "observed_at": "2026-10-14T18:03:02+00:00"})
     source.append({"course_code": "CS 210", "attribute_name": HUM, "source_url": url,
         "catalog_year": YEAR, "catalog_level": "undergraduate", "observed_at_utc": "2026-10-14T18:03:02+00:00"})
+    for attr_id, label, members in [(5, "Multicultural", ["PHL 101", "SOC 201"]),
+                                    (6, "International", ["ART 112", "SOC 201"])]:
+        tables["attribute"].append({"attribute_id": attr_id, "attribute_name": label})
+        for code in members:
+            course_url = "https://catalog.marshall.edu/undergraduate/courses-az/" + code.split()[0].lower() + "/"
+            stamp = "2026-10-14T18:03:02+00:00"
+            tables["courseattribute"].append({"course_id": ids[code], "attribute_id": attr_id,
+                "catalog_year_id": 7, "source_url": course_url, "observed_at": stamp})
+            source.append({"course_code": code, "attribute_name": label, "source_url": course_url,
+                "catalog_year": YEAR, "catalog_level": "undergraduate", "observed_at_utc": stamp})
     return tables, attribute_csv(source), csv_bytes([{"course_code": c} for c in codes]), csv_bytes(metadata)
 
 
@@ -119,9 +154,11 @@ class Client:
         return Query(self, name)
 
 
-class CoreIIPlanningTests(unittest.TestCase):
+class PlanningCliCase(unittest.TestCase):
+    include_ct = False
+
     def setUp(self):
-        tables, attributes, catalog, prerequisites = fixture()
+        tables, attributes, catalog, prerequisites = fixture(include_ct=self.include_ct)
         self.client = Client(tables)
         self.files = {"catalog_attributes.csv": attributes, "courses.csv": catalog,
                       "catalog_prerequisites.csv": prerequisites}
@@ -164,6 +201,8 @@ class CoreIIPlanningTests(unittest.TestCase):
         self.assertEqual(err, "")
         return self.outputs(), out
 
+
+class CoreIIPlanningTests(PlanningCliCase):
     def test_cli_service_role_fallback_builds_one_client_for_core_ii(self):
         with patch.dict(os.environ, {"SUPABASE_SECRET_KEY": "", "SUPABASE_SERVICE_ROLE_KEY": "fixture-legacy"}):
             (_, handoff), _ = self.successful("--core-ii-candidates")
@@ -235,6 +274,73 @@ class CoreIIPlanningTests(unittest.TestCase):
         self.assertEqual(block["course_requirement_memberships"]["HST 101"], ["t0_row_0012", "t0_row_0013"])
         self.assertEqual(block["candidate_course_codes"].count("HST 101"), 1)
         self.assertEqual(block["allocation_status"], "NOT_ALLOCATED_NO_DOUBLE_COUNTING_ASSUMED")
+
+    def test_multicultural_or_international_union_uses_one_prerequisite_batch(self):
+        with patch.object(eligibility, "load_prerequisite_rules", wraps=loader.load_prerequisite_rules) as load:
+            (_, handoff), _ = self.successful("--core-ii-candidates")
+        load.assert_called_once()
+        block = handoff["flexible_candidates"]
+        mi = next(r for r in block["requirements"] if r["requirement_id"] == "t0_row_0018")
+        self.assertEqual(mi["generation_status"], "GENERATED")
+        self.assertTrue(mi["coverage"]["coverage_complete"])
+        self.assertEqual([(c["course_code"], c["matched_attributes"], c["prerequisite_status"])
+                          for c in mi["candidates"]], [
+            ("ART 112", ["International"], "UNMET"),
+            ("PHL 101", ["Multicultural"], "MET"),
+            ("SOC 201", ["Multicultural", "International"], "UNKNOWN"),
+        ])
+        dual = mi["candidates"][-1]
+        self.assertEqual(dual["membership_status"], "MATCHES_REVIEWED_SOURCE")
+        self.assertEqual({s["attribute_id"] for s in dual["classification_sources"]}, {5, 6})
+        self.assertEqual(dual["course_eligibility_reference"], "SOC 201")
+        self.assertEqual(load.call_args.args[1].count("SOC 201"), 1)
+        self.assertEqual(block["course_requirement_memberships"]["SOC 201"], ["t0_row_0018"])
+        self.assertEqual(block["course_requirement_memberships"]["PHL 101"], ["t0_row_0012", "t0_row_0018"])
+
+    def test_either_designation_completes_the_slot_and_dual_credit_counts_once(self):
+        for code in ("PHL 101", "ART 112", "SOC 201"):
+            with self.subTest(code=code), patch.object(
+                    flexible, "load_attribute_candidates", wraps=flexible.load_attribute_candidates) as load:
+                (_, handoff), _ = self.successful("--core-ii-candidates", records=[code, code])
+                rule = next(r for r in handoff["requirements"] if r["rule_id"] == "t0_row_0018")
+                mi = next(r for r in handoff["flexible_candidates"]["requirements"] if r["requirement_id"] == "t0_row_0018")
+                self.assertEqual(rule["planning_disposition"], "CANDIDATE_COMPLETE")
+                self.assertEqual(rule["credit_progress"]["candidate_known_credit_subtotal"], 3)
+                self.assertEqual(mi["candidates"], [])
+                self.assertTrue({"Multicultural", "International"}.isdisjoint(load.call_args.args[1]))
+
+    def test_dual_designation_with_partial_credit_excludes_the_completed_course_once(self):
+        course = next(c for c in self.client.tables["course"] if c["course_code"] == "SOC 201")
+        course["min_credit_hours"] = course["max_credit_hours"] = 1
+        # The other designation still proves membership if one dated row is absent.
+        row = next(r for r in self.client.tables["courseattribute"]
+                   if r["course_id"] == course["course_id"] and r["attribute_id"] == 6)
+        self.client.tables["courseattribute"].remove(row)
+        (_, handoff), _ = self.successful("--core-ii-candidates", records=["SOC 201"])
+        mi = next(r for r in handoff["flexible_candidates"]["requirements"] if r["requirement_id"] == "t0_row_0018")
+        self.assertEqual(mi["remaining_credits_candidate"], 2)
+        self.assertEqual(mi["generation_status"], "PARTIAL")
+        self.assertEqual(mi["excluded_completed_course_codes"], ["SOC 201"])
+        self.assertEqual([c["course_code"] for c in mi["candidates"]], ["ART 112", "PHL 101"])
+
+    def test_incomplete_designation_keeps_verified_alternatives_and_reports_partial_coverage(self):
+        ids = {c["course_code"]: c["course_id"] for c in self.client.tables["course"]}
+        rows = self.client.tables["courseattribute"]
+        art = next(r for r in rows if r["course_id"] == ids["ART 112"] and r["attribute_id"] == 6)
+        art["catalog_year_id"] = 8
+        # PHL has a verified Multicultural match and an unexpected International match.
+        phl = next(r for r in rows if r["course_id"] == ids["PHL 101"] and r["attribute_id"] == 5)
+        rows.append({**phl, "attribute_id": 6})
+        (_, handoff), _ = self.successful("--core-ii-candidates")
+        mi = next(r for r in handoff["flexible_candidates"]["requirements"] if r["requirement_id"] == "t0_row_0018")
+        self.assertEqual(mi["generation_status"], "PARTIAL")
+        self.assertEqual([(c["course_code"], c["matched_attributes"]) for c in mi["candidates"]],
+                         [("PHL 101", ["Multicultural"]), ("SOC 201", ["Multicultural", "International"])])
+        self.assertEqual(mi["withheld_courses"], [])
+        self.assertEqual([r["course_code"] for r in mi["coverage"]["missing_source_memberships"]], ["ART 112"])
+        self.assertEqual(mi["coverage"]["unexpected_source_memberships"][0]["attribute_name"], "International")
+        rule = next(r for r in handoff["requirements"] if r["rule_id"] == "t0_row_0018")
+        self.assertFalse(rule["attribute_filter"]["eligible_catalog_course_options_included"])
 
     def test_completed_categories_have_no_candidates_or_attribute_candidate_queries(self):
         with patch.object(flexible, "load_attribute_candidates", wraps=flexible.load_attribute_candidates) as load:
@@ -425,6 +531,142 @@ class CoreIIPlanningTests(unittest.TestCase):
         self.assertEqual((base, block, results), before)
         output["flexible_candidates"]["requirements"][0]["candidates"][0]["classification_sources"].clear()
         self.assertEqual((base, block, results), before)
+
+
+class CriticalThinkingPlanningTests(PlanningCliCase):
+    include_ct = True
+
+    def evaluate_ct(self, records):
+        (preview, handoff), _ = self.successful("--critical-thinking-candidates", records=records)
+        self.assertEqual(handoff["schema_version"], "2.2.0")
+        self.assertEqual(preview["flexible_candidates"], handoff["flexible_candidates"])
+        requirements = {r["rule_id"]: r for r in handoff["requirements"]}
+        ct = next(r for r in handoff["flexible_candidates"]["requirements"] if r["requirement_id"] == "t0_row_0005")
+        return handoff, requirements, ct
+
+    def test_open_slot_reserves_only_explicit_siblings_in_its_own_group(self):
+        for records in ([], ["FYS 100"], ["MTH 229"], ["FYS 100", "MTH 229"]):
+            with self.subTest(records=records):
+                handoff, rules, ct = self.evaluate_ct(records)
+                self.assertEqual(ct["remaining_credits_candidate"], 3)
+                self.assertEqual(ct["reserved_explicit_sibling_courses"], ["FYS 100", "MTH 229"])
+                self.assertEqual({c["course_code"] for c in ct["candidates"]}, {"ANT 201", "ART 201", "CL 210"})
+                for rule, code in [("t0_row_0003", "FYS 100"), ("t0_row_0004", "MTH 229"),
+                                   ("t0_row_0010", "MTH 229"), ("t0_row_0022", "MTH 229")]:
+                    self.assertEqual(rules[rule]["candidate_progress_status"],
+                                     "CANDIDATE_MET" if code in records else "CANDIDATE_NOT_MET")
+                    self.assertEqual(rules[rule]["remaining_required_course_codes"], [] if code in records else [code])
+                self.assertEqual(rules["t0_row_0005"]["candidate_progress_status"], "CANDIDATE_NOT_MET")
+                pool = {c["course_code"] for c in handoff["course_eligibility"]["courses"]}
+                self.assertEqual("MTH 229" in pool, "MTH 229" not in records)
+
+    def test_distinct_completed_ct_matches_multiple_requirements_once(self):
+        records = ["FYS 100", "MTH 229", "ANT 201", "ANT 201"]
+        handoff, rules, ct = self.evaluate_ct(records)
+        for key in ("t0_row_0003", "t0_row_0004", "t0_row_0005", "t0_row_0013", "t0_row_0022"):
+            self.assertEqual(rules[key]["candidate_progress_status"], "CANDIDATE_MET")
+        self.assertEqual(rules["t0_row_0005"]["source_status"], "NEEDS_REVIEW")
+        self.assertEqual(rules["t0_row_0005"]["credit_progress"]["candidate_known_credit_subtotal"], 3)
+        self.assertEqual(ct["generation_status"], "SKIPPED")
+        self.assertFalse(set(records) & {c["course_code"] for c in handoff["course_eligibility"]["courses"]})
+
+    def test_one_batch_all_statuses_and_shared_memberships(self):
+        with patch.object(eligibility, "load_prerequisite_rules", wraps=loader.load_prerequisite_rules) as load:
+            handoff, _, ct = self.evaluate_ct(["CS 110"])
+        load.assert_called_once()
+        codes = load.call_args.args[1]
+        self.assertEqual(len(codes), len(set(codes)))
+        self.assertEqual(handoff["flexible_candidates"]["course_requirement_memberships"]["ANT 201"],
+                         ["t0_row_0005", "t0_row_0013"])
+        by_code = {c["course_code"]: c for c in handoff["course_eligibility"]["courses"]}
+        for course in ct["candidates"]:
+            code = course["course_code"]
+            self.assertEqual(course["prerequisite_status"], {"ANT 201": "MET", "ART 201": "UNMET", "CL 210": "UNKNOWN"}[code])
+            self.assertEqual(by_code[course["course_eligibility_reference"]]["status"], course["prerequisite_status"])
+            self.assertTrue(course["classification_sources"])
+
+    def test_honors_evidence_remains_provisional(self):
+        handoff, _, ct = self.evaluate_ct([])
+        honors = next(c for c in ct["withheld_courses"] if c["course_code"] == "MTH 229H")
+        self.assertIn("HONORS_DISTINCT_SLOT_REVIEW_REQUIRED", honors["withheld_reasons"])
+        for records in (["MTH 229H"], ["MTH 229", "MTH 229H"]):
+            with self.subTest(records=records):
+                handoff, rules, ct = self.evaluate_ct(records)
+                for rule_id in ("t0_row_0004", "t0_row_0022"):
+                    self.assertEqual(rules[rule_id]["candidate_progress_status"],
+                                     "CANDIDATE_MET" if "MTH 229" in records else "CANDIDATE_NOT_MET")
+                slot = rules["t0_row_0005"]
+                self.assertEqual(slot["candidate_progress_status"], "INSUFFICIENT_EVIDENCE")
+                self.assertIsNone(slot["additional_coursework_indicated"])
+                self.assertIsNone(slot["credit_progress"]["additional_credits_indicated_candidate"])
+                self.assertEqual(slot["attribute_filter"]["candidate_course_codes_entered"], ["MTH 229H"])
+                self.assertEqual(ct["generation_status"], "INSUFFICIENT_EVIDENCE")
+                self.assertEqual(slot["remaining_policy_review_flags"], ct["reasons"])
+                self.assertEqual(ct["reasons"], ["HONORS_DISTINCT_SLOT_REVIEW_REQUIRED"])
+                self.assertFalse(ct["candidates"])
+                self.assertEqual(rules["t0_row_0005"]["transcript_verification_status"], "UNVERIFIED")
+                self.assertTrue(any("MTH 229H" in warning for warning in handoff["warnings"]))
+
+    def test_v21_uses_corrected_audit_with_existing_candidate_scope(self):
+        (_, handoff), _ = self.successful("--core-ii-candidates", records=["MTH 229H"])
+        slot = next(r for r in handoff["requirements"] if r["rule_id"] == "t0_row_0005")
+        self.assertEqual(slot["candidate_progress_status"], "INSUFFICIENT_EVIDENCE")
+        self.assertEqual(handoff["schema_version"], "2.1.0")
+        self.assertNotIn("Critical Thinking", [r["category"] for r in handoff["flexible_candidates"]["requirements"]])
+
+    def test_other_ct_course_can_establish_distinct_slot_with_honors_reported(self):
+        records = ["MTH 229", "MTH 229H", "ANT 201"]
+        _, rules, ct = self.evaluate_ct(records)
+        for rule_id in ("t0_row_0004", "t0_row_0005", "t0_row_0013", "t0_row_0022"):
+            self.assertEqual(rules[rule_id]["candidate_progress_status"], "CANDIDATE_MET")
+        self.assertEqual(ct["reasons"], ["REQUIREMENT_ALREADY_CANDIDATE_COMPLETE"])
+
+        # A second match with insufficient credits cannot independently establish completion.
+        ant = next(row for row in self.client.tables["course"] if row["course_code"] == "ANT 201")
+        ant["min_credit_hours"] = ant["max_credit_hours"] = 1
+        _, rules, ct = self.evaluate_ct(records)
+        self.assertEqual(rules["t0_row_0005"]["candidate_progress_status"], "INSUFFICIENT_EVIDENCE")
+        self.assertEqual(ct["reasons"], ["HONORS_DISTINCT_SLOT_REVIEW_REQUIRED"])
+
+    def test_wrong_year_hidden_row_and_unverified_source(self):
+        for row in self.client.tables["courseattribute"]:
+            if row["attribute_id"] == 4 and row["source_url"].endswith("/ant/"):
+                row["catalog_year_id"] = 6
+        _, _, ct = self.evaluate_ct([])
+        self.assertEqual(ct["generation_status"], "PARTIAL")
+        self.assertNotIn("ANT 201", [c["course_code"] for c in ct["candidates"]])
+        self.assertIn("ANT 201", [c["course_code"] for c in ct["coverage"]["missing_source_memberships"]])
+        self.files["catalog_attributes.csv"] += b"\n"
+        _, _, ct = self.evaluate_ct([])
+        self.assertEqual(ct["generation_status"], "PARTIAL")
+        self.assertFalse(ct["candidates"])
+
+    def test_failed_select_retains_explicit_courses_and_uncertainty(self):
+        def fail(query, response):
+            if query.table_name == "catalogyear":
+                raise RuntimeError("fixture failure")
+            return response
+        self.client.hook = fail
+        handoff, rules, ct = self.evaluate_ct([])
+        self.assertEqual(handoff["flexible_candidates"]["generation_status"], "UNAVAILABLE")
+        self.assertFalse(ct["candidates"])
+        self.assertEqual(rules["t0_row_0005"]["prerequisite_evaluation_status"], "CANDIDATES_NOT_ENUMERATED")
+        entry = next(c for c in handoff["course_eligibility"]["courses"] if c["course_code"] == "MTH 229")
+        self.assertEqual(entry["status"], "UNKNOWN")
+
+    def test_existing_modes_keep_original_scope_with_ct_in_catalog(self):
+        for flags, version in [((), "1.0.0"), (("--evaluate-prerequisites",), "2.0.0"),
+                               (("--core-ii-candidates",), "2.1.0")]:
+            with self.subTest(version=version):
+                (_, handoff), _ = self.successful(*flags, records=[])
+                self.assertEqual(handoff["schema_version"], version)
+                if version == "2.1.0":
+                    block = handoff["flexible_candidates"]
+                    self.assertNotIn("requested_categories", block)
+                    self.assertEqual(block["course_requirement_memberships"]["ANT 201"], ["t0_row_0013"])
+                    self.assertNotIn("Critical Thinking", [r["category"] for r in block["requirements"]])
+                else:
+                    self.assertNotIn("flexible_candidates", handoff)
 
 
 if __name__ == "__main__":

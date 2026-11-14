@@ -244,15 +244,23 @@ class AttributeLoaderTests(FixtureCase):
         self.client.tables["course"][0]["course_code"] = "unmapped"
         self.assertIn("INVALID_OR_AMBIGUOUS_COURSE_CODE", self.load()["attributes"][HUM]["issues"])
 
+    def test_line_endings_preserve_verified_attribute_candidates(self):
+        windows = self.load()
+        unix = self.load(source_catalog_attributes_csv=self.source.replace(b"\r\n", b"\n"))
+        self.assertEqual(windows["source_verification"], "HASH_VERIFIED_SOURCE")
+        self.assertEqual(unix, windows)
+        self.assertEqual(fc.build_flexible_candidates(handoff(), unix), fc.build_flexible_candidates(handoff(), windows))
+
     def test_no_source_and_changed_source_cannot_prove_coverage(self):
-        for raw, expected in ((None, "SOURCE_NOT_SUPPLIED"), (self.source + b"\n", "SOURCE_HASH_MISMATCH")):
+        for raw, expected in ((None, "SOURCE_NOT_SUPPLIED"), (self.source + b"\n", "SOURCE_HASH_MISMATCH"),
+                              (self.source.replace(b"PHL 101", b"PHL 102"), "SOURCE_HASH_MISMATCH")):
             result = self.load(source_catalog_attributes_csv=raw)
             self.assertEqual(result["source_verification"], expected)
             self.assertTrue(result["attributes"][HUM]["courses"])
             self.assertFalse(result["attributes"][HUM]["coverage_complete"])
 
     def test_invalid_pinned_source_is_rejected(self):
-        for raw in (b"not,catalog\n1,2\n", b"\xff", csv_bytes([*self.source_rows, self.source_rows[0]])):
+        for raw in (b"not,catalog\r\n1,2\r\n", b"\xff", csv_bytes([*self.source_rows, self.source_rows[0]])):
             with patch.object(fc, "_SOURCE_SHA256", hashlib.sha256(raw).hexdigest()):
                 self.assertEqual(self.load(source_catalog_attributes_csv=raw)["source_verification"], "SOURCE_INVALID")
 
@@ -365,11 +373,13 @@ class AttributeLoaderTests(FixtureCase):
     def test_actual_reviewed_export_hash_and_selected_memberships(self):
         raw = (ROOT / "backend/scripts/catalog_attributes.csv").read_bytes()
         source = list(csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))))
-        selected = [r for r in source if r["attribute_name"] in fc.SUPPORTED_ATTRIBUTES]
+        names = [HUM, SOCIAL, FINE, "Multicultural", "International"]
+        selected = [r for r in source if r["attribute_name"] in names]
         codes = sorted({r["course_code"] for r in selected})
         tables = {"catalogyear": deepcopy(self.tables["catalogyear"]),
                   "attribute": deepcopy(self.tables["attribute"]), "course": [], "courseattribute": []}
         ids = {c: i for i, c in enumerate(codes, 1)}
+        tables["attribute"] = [{"attribute_name": name, "attribute_id": i} for i, name in enumerate(names, 1)]
         attributes = {a["attribute_name"]: a["attribute_id"] for a in tables["attribute"]}
         for code, course_id in ids.items():
             tables["course"].append({"course_id": course_id, "course_code": code, "course_title": "Fixture",
@@ -379,10 +389,11 @@ class AttributeLoaderTests(FixtureCase):
                 "attribute_id": attributes[row["attribute_name"]], "source_url": row["source_url"],
                 "observed_at": row["observed_at_utc"], "catalog_year_id": 7})
         with patch.object(fc, "_SOURCE_SHA256", REAL_SOURCE_HASH):
-            result = self.load(client=SelectClient(tables, cap=7), source_catalog_attributes_csv=raw, batch_size=10)
+            result = self.load(names, client=SelectClient(tables, cap=7), source_catalog_attributes_csv=raw, batch_size=10)
         self.assertEqual(result["source_verification"], "HASH_VERIFIED_SOURCE")
         self.assertTrue(all(a["coverage_complete"] for a in result["attributes"].values()))
-        self.assertEqual({n: len(a["courses"]) for n, a in result["attributes"].items()}, {HUM: 60, SOCIAL: 43, FINE: 13})
+        self.assertEqual({n: len(a["courses"]) for n, a in result["attributes"].items()},
+                         {HUM: 60, SOCIAL: 43, FINE: 13, "Multicultural": 76, "International": 83})
 
 
 class CandidateBuilderTests(FixtureCase):
@@ -586,7 +597,7 @@ class AuditCompatibilityTests(FixtureCase):
         before = deepcopy(data)
         result = fc.build_flexible_candidates(data, self.load())
         self.assertEqual(data, before)
-        self.assertEqual(len(result["requirements"]), 3)
+        self.assertEqual(len(result["requirements"]), 4)
         by_category = {r["category"]: r for r in result["requirements"]}
         self.assertEqual(by_category[SOCIAL]["reasons"], ["REQUIREMENT_ALREADY_CANDIDATE_COMPLETE"])
         self.assertEqual(by_category[HUM]["remaining_credits_candidate"], 3)

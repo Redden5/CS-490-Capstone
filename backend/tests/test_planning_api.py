@@ -26,7 +26,7 @@ class PlanningApiTests(unittest.TestCase):
     def setUp(self):
         stack = ExitStack()
         self.addCleanup(stack.close)
-        tables, attributes, catalog, prerequisites = fixture()
+        tables, attributes, catalog, prerequisites = fixture(include_ct=True)
         self.db = Client(tables)
         self.factory = Mock(return_value=self.db)
         stack.enter_context(patch.dict(app.dependency_overrides, {planning.get_client_factory: lambda: self.factory}))
@@ -59,6 +59,39 @@ class PlanningApiTests(unittest.TestCase):
         self.assertEqual(len(courses), len({c["course_code"] for c in courses}))
         self.assertTrue(any(c["status"] == "UNKNOWN" and not c["loading"]["data_complete"] for c in courses))
 
+    def test_explicit_false_matches_default_v21(self):
+        default = self.post()
+        explicit = self.post(critical_thinking_candidates=False)
+        self.assertEqual(default.status_code, 200)
+        self.assertEqual(explicit.status_code, 200)
+        self.assertEqual(explicit.json(), default.json())
+        handoff = default.json()
+        self.assertEqual(handoff["schema_version"], "2.1.0")
+        self.assertNotIn("t0_row_0005", [r["requirement_id"] for r in handoff["flexible_candidates"]["requirements"]])
+
+    def test_ct_opt_in_returns_service_v22_with_shared_eligibility(self):
+        records = ["MTH 229", "CS 110"]
+        response = self.post(completed_courses=records, critical_thinking_candidates=True)
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.headers["cache-control"], "no-store")
+        handoff = response.json()
+        expected = run_degree_plan(json.loads(DRAFT.read_text(encoding="utf-8")), records,
+                                   critical_thinking_candidates=True, client=self.db).handoff
+        self.assertEqual(handoff, expected)
+        self.assertEqual(handoff["schema_version"], "2.2.0")
+        rules = {r["rule_id"]: r for r in handoff["requirements"]}
+        for rule_id in ("t0_row_0004", "t0_row_0022"):
+            self.assertEqual(rules[rule_id]["candidate_progress_status"], "CANDIDATE_MET")
+        flexible = handoff["flexible_candidates"]
+        ct = next(r for r in flexible["requirements"] if r["requirement_id"] == "t0_row_0005")
+        self.assertEqual(ct["remaining_credits_candidate"], 3)
+        self.assertNotIn("MTH 229", [c["course_code"] for c in ct["candidates"]])
+        self.assertEqual(flexible["course_requirement_memberships"]["ANT 201"], ["t0_row_0005", "t0_row_0013"])
+        ant = next(c for c in ct["candidates"] if c["course_code"] == "ANT 201")
+        matches = [c for c in handoff["course_eligibility"]["courses"] if c["course_code"] == ant["course_eligibility_reference"]]
+        self.assertEqual([c["status"] for c in matches], ["MET"])
+        self.assertEqual(ant["prerequisite_status"], "MET")
+
     def test_optional_grades_repeats_and_equivalency_reach_evaluator(self):
         graded = {"course_code": "CS 110", "grade": "B"}
         for records, expected in (
@@ -81,6 +114,7 @@ class PlanningApiTests(unittest.TestCase):
 
     def test_malformed_requests_are_rejected_before_client_creation(self):
         for fields in (
+            *({"critical_thinking_candidates": value} for value in ("true", 1, None)),
             {"completed_courses": None}, {"completed_courses": ["CS 1"]}, {"completed_courses": [42]},
             {"completed_courses": [{"course_code": "CS 110", "grade": 4}]},
             {"completed_courses": [{"course_code": "CS 110", "equivalency_verified": "false"}]},

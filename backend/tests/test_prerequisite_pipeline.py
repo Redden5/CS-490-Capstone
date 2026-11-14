@@ -17,6 +17,7 @@ from backend.scripts.parse_prerequisites import (
 from backend.scripts.seed_prerequisites import RuleStore, build_plan, main, seed, validate_artifact
 from backend.scripts.seed_prerequisites import validate_snapshot_manifest
 from backend.scripts.validate_prerequisites import make_report
+from backend.services.prerequisite_evaluator import evaluate_course_rules
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "backend" / "scripts"
@@ -195,12 +196,38 @@ class ParserTests(unittest.TestCase):
         self.assertFalse(actual("MUS 279A")["rules"][0]["machine_checkable"])
 
     def test_cr_pr_discrepancies(self):
-        for code in ["CS 120", "STA 564"]:
-            course = actual(code)
-            self.assertIn("cr_pr_course_discrepancy", course["review_flags"])
-            self.assertFalse(course["rules"][0]["machine_checkable"])
-        check = next(c for c in actual("STA 564")["additional_metadata_checks"] if c["field_label"] == "cr/pr")
+        course = actual("STA 564")
+        self.assertIn("cr_pr_course_discrepancy", course["review_flags"])
+        self.assertFalse(course["rules"][0]["machine_checkable"])
+        check = next(c for c in course["additional_metadata_checks"] if c["field_label"] == "cr/pr")
         self.assertTrue(check["normalizations"])
+
+    def test_cs120_schedule_review_is_limited_to_the_reviewed_fields(self):
+        course = actual("CS 120")
+        rule = course["rules"][0]
+        self.assertTrue(rule["machine_checkable"])
+        self.assertEqual(rule["dnf_clauses"], [
+            [{"course_code": code, "minimum_grade": "D", "concurrent_allowed": False}]
+            for code in ("CS 110", "CS 110H")
+        ])
+        check, = course["additional_metadata_checks"]
+        self.assertEqual(check["requirement_text"], "CS 110")
+        self.assertTrue(check["course_set_discrepancy"])
+        self.assertEqual(check["status"], "REVIEWED_SUPPLEMENTARY_METADATA")
+
+        primary = next(r for r in course["source_metadata"] if r["field_label"] == "pre-req")
+        extra, = course["additional_metadata"]
+        for rows in (
+            [{**r, "course_code": "CS 210"} for r in (primary, extra)],
+            [{**r, "catalog_year": "2027-2028"} for r in (primary, extra)],
+            [{**primary, "requirement_text": primary["requirement_text"].replace("grade of D", "grade of C")}, extra],
+            [primary, {**extra, "requirement_text": "CS 110H"}],
+            [primary, extra, extra],
+        ):
+            with self.subTest(rows=rows):
+                unreviewed, = parse_rows(rows, CODES)["courses"]
+                self.assertIn("cr_pr_semantics_not_interpreted", unreviewed["review_flags"])
+                self.assertFalse(unreviewed["rules"][0]["machine_checkable"])
 
     def test_missing_course_reference(self):
         course = parse_rows([row(text="CS 999")], CODES)["courses"][0]
@@ -212,6 +239,122 @@ class ParserTests(unittest.TestCase):
         course = parse_rows([row(), row(label="restrictions", text="Senior standing")], CODES)["courses"][0]
         self.assertIn("additional_enrollment_metadata_not_interpreted", course["review_flags"])
         self.assertFalse(course["rules"][0]["machine_checkable"])
+
+    def test_eng354_uses_four_explicit_alternatives_with_minimum_c(self):
+        rows = [r for r in RAW if r["course_code"] == "ENG 354"]
+        course, = parse_rows(rows, CODES)["courses"]
+        rule, = course["rules"]
+        alternatives = ["ENG 201", "ENG 200H", "ENG 201H", "SCLA 102"]
+        self.assertEqual(course["source_metadata"], rows)
+        self.assertEqual(rule["raw_text"], "\n".join(r["requirement_text"] for r in rows))
+        self.assertEqual(rule["dnf_clauses"], [
+            [{"course_code": code, "minimum_grade": "C", "concurrent_allowed": False}]
+            for code in alternatives
+        ])
+        data = {"course_code": "ENG 354", "catalog_year": course["catalog_year"],
+                "data_complete": course["complete_enrollment_conditions_machine_checkable"],
+                "rules": [{**rule, "parse_status": rule["status"], "clauses": rule["dnf_clauses"]}]}
+        for code in alternatives:
+            for grade, expected in (("C", "MET"), ("D", "UNMET"), ("F", "UNMET"),
+                                    ("C-", "UNKNOWN"), (None, "UNKNOWN")):
+                with self.subTest(code=code, grade=grade):
+                    result = evaluate_course_rules("ENG 354", [{"course_code": code, "grade": grade}],
+                                                   data, catalog_year=course["catalog_year"])
+                    self.assertEqual(result["status"], expected)
+
+    def test_eng354_resolution_is_limited_to_the_reviewed_pair(self):
+        explicit, summary = [r for r in RAW if r["course_code"] == "ENG 354"]
+        for pair in (
+            [{**r, "course_code": "ENG 344"} for r in (explicit, summary)],
+            [{**r, "catalog_year": "2027-2028"} for r in (explicit, summary)],
+            [{**explicit, "requirement_text": explicit["requirement_text"].replace("of C", "of B")}, summary],
+            [explicit, {**summary, "requirement_text": summary["requirement_text"] + " and Senior standing"}],
+        ):
+            with self.subTest(pair=pair):
+                course, = parse_rows(pair, CODES)["courses"]
+                self.assertIn("multiple_requirement_fields", course["review_flags"])
+                self.assertEqual(course["status"], "NEEDS_REVIEW")
+
+    def test_reviewed_flexible_coursework_alternatives(self):
+        composition = ["ENG 203", "ENG 207", "ENG 209", "ENG 210", "ENG 211", "ENG 212",
+                       "ENG 213", "ENG 214", "ENG 215", "ENG 220", "ENG 221", "ENG 225",
+                       "ENG 231", "ENG 232", "ENG 235", "ENG 236", "ENG 241", "ENG 242"]
+        for code in [*composition, "ENG 428", "ENG 429", "ENG 430", "SPN 411"]:
+            with self.subTest(code=code):
+                rows = [r for r in RAW if r["course_code"] == code]
+                course, = parse_rows(rows, CODES)["courses"]
+                rule, = course["rules"]
+                explicit = next(r["requirement_text"] for r in rows if r["field_label"] == "pre-req")
+                self.assertEqual(course["status"], "READY_FOR_SEED_REVIEW")
+                self.assertEqual(course["source_metadata"], rows)
+                self.assertEqual(rule["raw_text"], "\n".join(r["requirement_text"] for r in rows))
+                clauses = rule["dnf_clauses"]
+                self.assertEqual(clauses, parse_expression(explicit, CODES)["dnf_clauses"])
+                self.assertTrue(all(len(clause) == 1 for clause in clauses))
+                alternatives = {atom["course_code"] for atom, in clauses}
+                self.assertEqual(set(rule["reference_candidates"]), alternatives)
+                if code in composition:
+                    self.assertEqual(alternatives, {"ENG 201", "ENG 200H", "ENG 201H", "SCLA 102"})
+                elif code == "SPN 411":
+                    self.assertEqual(alternatives, {"SPN 315", "SPN 316", "SPN 323", "SPN 324"})
+                    self.assertIn("manual verification", course["additional_metadata_checks"][0]["reason"])
+                else:
+                    self.assertEqual(len(alternatives), 24)
+                data = {"course_code": code, "catalog_year": course["catalog_year"],
+                        "data_complete": course["complete_enrollment_conditions_machine_checkable"],
+                        "rules": [{**rule, "parse_status": rule["status"], "clauses": clauses}]}
+                for atom, in clauses:
+                    self.assertFalse(atom["concurrent_allowed"])
+                    self.assertEqual(atom["minimum_grade"], None if code == "SPN 411" else "C")
+                    grades = [(None, "MET")] if code == "SPN 411" else [("C", "MET"), ("D", "UNMET"), (None, "UNKNOWN")]
+                    for grade, expected in grades:
+                        completed = [{"course_code": atom["course_code"], "grade": grade}]
+                        result = evaluate_course_rules(code, completed, data, catalog_year=course["catalog_year"])
+                        self.assertEqual(result["status"], expected)
+                missing = evaluate_course_rules(code, [], data, catalog_year=course["catalog_year"])
+                self.assertEqual(missing["status"], "UNMET")
+                self.assertFalse(missing["registration_eligibility_determined"])
+
+    def test_reviewed_literature_fields_require_the_original_sources(self):
+        for code in ("ENG 428", "SPN 411"):
+            explicit, summary = [r for r in RAW if r["course_code"] == code]
+            for pair in ([explicit, {**summary, "requirement_text": summary["requirement_text"] + " and senior standing"}],
+                         [{**explicit, "requirement_text": "ENG 201"}, summary],
+                         [{**r, "catalog_year": "2027-2028"} for r in (explicit, summary)]):
+                with self.subTest(code=code, pair=pair):
+                    course, = parse_rows(pair, CODES)["courses"]
+                    self.assertIn("multiple_requirement_fields", course["review_flags"])
+                    self.assertEqual(course["status"], "NEEDS_REVIEW")
+
+    def test_equivalent_prerequisites_preserve_both_sources(self):
+        for first, second in [
+            ("BMS 600 .", "BMS 600"),
+            ("CS 110 with a minimum grade of C or CS 120 (may be taken concurrently)",
+             "CS 120 (may be taken concurrently) or CS 110 with a minimum grade of C"),
+        ]:
+            with self.subTest(first=first):
+                rows = [row(text=first), row(text=second, label="pr")]
+                course, = parse_rows(rows, CODES)["courses"]
+                rule, = course["rules"]
+                self.assertEqual(course["source_metadata"], rows)
+                self.assertEqual(rule["raw_text"], first + "\n" + second)
+                self.assertEqual(rule["status"], "READY_FOR_SEED_REVIEW")
+                self.assertEqual(rule["dnf_clauses"], parse_expression(first, CODES)["dnf_clauses"])
+
+    def test_different_or_unresolved_prerequisite_fields_stay_under_review(self):
+        for first, second in [
+            ("CS 110 with a minimum grade of C", "CS 110 with a minimum grade of D"),
+            ("CS 110 (may be taken concurrently)", "CS 110"),
+            ("CS 110 or CS 120", "CS 110 and CS 120"),
+            ("CS 110", "CS 110 and permission of instructor"),
+            ("CS 110", "CS 110 or"),
+            ("Consent", "Consent."),
+        ]:
+            with self.subTest(first=first, second=second):
+                course, = parse_rows([row(text=first), row(text=second, label="pr")], CODES)["courses"]
+                self.assertIn("multiple_requirement_fields", course["review_flags"])
+                self.assertEqual(course["status"], "NEEDS_REVIEW")
+                self.assertEqual(course["rules"][0]["dnf_clauses"], [])
 
     def test_separate_years(self):
         artifact = parse_rows([row(year="2026-2027"), row(year="2027-2028")], CODES)
@@ -451,10 +594,12 @@ class CatalogReportTests(unittest.TestCase):
         degree = json.loads((SCRIPTS / "data/degree_requirements/resolved/computer_science_bs_resolved.json").read_text(encoding="utf-8"))
         report = make_report(CATALOG, RAW, artifact, degree)
         self.assertEqual(len(CODES), 6692)
-        self.assertEqual(len(RAW), 2219)
-        self.assertEqual(len(artifact["courses"]), 1935)
+        self.assertEqual(len(RAW), 2630)
+        self.assertEqual(len(artifact["courses"]), 2168)
+        self.assertEqual(report["after"]["machine_checkable_rules"], 1306)
+        self.assertEqual(report["after"]["unresolved_parent_rules_without_children"], 970)
         self.assertEqual(report["after"]["corequisite_only_courses"], 73)
-        self.assertEqual(report["after"]["corroborated_concurrent_pr_courses"], 171)
+        self.assertEqual(report["after"]["corroborated_concurrent_pr_courses"], 164)
         self.assertEqual(report["after"]["unmatched_target_courses"], [])
         coverage = {c["course_code"]: c for c in report["computer_science_bs"]["courses"]}
         self.assertIn("BSC 120L", coverage)

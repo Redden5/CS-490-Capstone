@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import re
 import sys
@@ -43,8 +44,13 @@ LEXER = re.compile(
     re.IGNORECASE,
 )
 GRADE_VALUE = re.compile(r"\bof\s+([ABCDF][+-]?)\s*$", re.IGNORECASE)
-PREREQ_LABELS = {"pre-req", "prereq", "prerequisite", "prerequisites", "pre-requisite", "pre-requisites"}
+PREREQ_LABELS = {"pr", "pre-req", "prereq", "prerequisite", "prerequisites", "pre-requisite", "pre-requisites"}
 COREQ_LABELS = {"co-req", "corequisite", "corequisites", "co-requisite", "co-requisites"}
+COMPOSITION_PREREQUISITE_COURSES = {
+    "ENG 203", "ENG 207", "ENG 209", "ENG 210", "ENG 211", "ENG 212", "ENG 213", "ENG 214",
+    "ENG 215", "ENG 220", "ENG 221", "ENG 225", "ENG 231", "ENG 232", "ENG 235", "ENG 236",
+    "ENG 241", "ENG 242", "ENG 354",
+}
 MAX_DNF_CLAUSES = 256
 
 
@@ -340,6 +346,20 @@ def parse_expression(text: str, catalog_codes: set[str] | None = None) -> dict[s
     }
 
 
+def equivalent_prerequisite_pair(fields: list[dict], catalog_codes: set[str] | None) -> dict | None:
+    try:
+        first, second = [parse_expression(field["requirement_text"], catalog_codes) for field in fields]
+    except PrerequisiteParseError:
+        return None
+    if not first["prerequisite_expression_machine_checkable"] or not second["prerequisite_expression_machine_checkable"]:
+        return None
+    # DNF clauses are unique and their atoms are sorted. Only OR order can differ.
+    left, right = first["dnf_clauses"], second["dnf_clauses"]
+    if len(left) == len(right) and all(clause in right for clause in left):
+        return first
+    return None
+
+
 def concurrency_annotated_courses(node: dict[str, Any]) -> set[str]:
     """Course codes explicitly marked '(may be taken concurrently)' in the primary expression."""
     if node["op"] == "COURSE":
@@ -410,18 +430,59 @@ def audit_additional_metadata(expression: dict | None, additional: list[dict],
                 flags.append("concurrent_pr_metadata_requires_review")
                 assessment["reason"] = "Concurrent metadata Boolean expression differs from inline annotation view or cannot be parsed"
         elif label == "cr/pr":
-            flags.append("cr_pr_semantics_not_interpreted")
             assessment["reason"] = "CR/PR semantics are unverified; never inferred to mean concurrency or prior completion"
             primary_codes = {a["course_code"] for a in course_atoms(expression["ast"])} if expression else set()
             listed_codes = set(assessment.get("listed_course_codes", []))
             assessment["primary_course_codes"] = sorted(primary_codes)
             assessment["course_set_discrepancy"] = primary_codes != listed_codes
+            # Fall 2026 registration lists these two prior-completion alternatives for CS 120.
+            if (row.get("course_code") == "CS 120" and row.get("catalog_year") == "2026-2027"
+                    and row.get("source_url") == "https://catalog.marshall.edu/undergraduate/courses-az/cs/"
+                    and len(additional) == 1 and row["requirement_text"] == "CS 110"
+                    and expression and not expression["normalizations"]
+                    and expression["normalized_text"] == (
+                        "CS 110 with a minimum grade of D or CS 110H with a minimum grade of D")):
+                assessment["status"] = "REVIEWED_SUPPLEMENTARY_METADATA"
+                assessment["reason"] = "Fall 2026 registration (term 202701, CRN 1874) confirms the primary prerequisite."
+                continue
+            flags.append("cr_pr_semantics_not_interpreted")
             if primary_codes != listed_codes:
                 flags.append("cr_pr_course_discrepancy")
         else:
             flags.append("additional_enrollment_metadata_not_interpreted")
             assessment["reason"] = "Unsupported additional enrollment field"
     return list(dict.fromkeys(flags)), checks
+
+
+def reviewed_coursework_field(code, year, fields):
+    """Select the explicit field only for these reviewed pairs of catalog texts."""
+    if year != "2026-2027" or len(fields) != 2:
+        return None
+    by_label = {r["field_label"]: r for r in fields}
+    if by_label.keys() != {"pre-req", "pr"}:
+        return None
+    subject = code.split()[0].lower()
+    url = f"https://catalog.marshall.edu/undergraduate/courses-az/{subject}/"
+    if any(r.get("source_url") != url for r in fields):
+        return None
+    text = by_label["pre-req"]["requirement_text"]
+    summary = by_label["pr"]["requirement_text"]
+    if code in COMPOSITION_PREREQUISITE_COURSES and summary == "Completion of Core II Composition Requirement":
+        # ENG 203 and 207 list the same graded alternatives in a different order.
+        honors = ("ENG 201H", "ENG 200H") if code in {"ENG 203", "ENG 207"} else ("ENG 200H", "ENG 201H")
+        alternatives = ("ENG 201", *honors, "SCLA 102")
+        if text == " or ".join(f"{course} with a minimum grade of C" for course in alternatives) + ".":
+            return by_label["pre-req"]
+    elif code in {"ENG 428", "ENG 429", "ENG 430"} and summary == (
+        "any 200-level or 300-level ENG course EXCEPT 200, 204, 205, 314, or 354; or permission of chair"
+    ):
+        # Bind the shared 24-alternative source text without duplicating its course list.
+        if hashlib.sha256(text.encode()).hexdigest() == "442e59fbe5c0762ae0088e1879963afb544b82c0f90fad35dcb5e51c0ead78b4":
+            return by_label["pre-req"]
+    elif (code == "SPN 411" and text == "SPN 315 or SPN 316 or SPN 323 or SPN 324 ."
+          and summary == "SPN 315 /316 or SPN 323 /324 or permission."):
+        return by_label["pre-req"]
+    return None
 
 
 def parse_rows(rows: list[dict[str, str]], catalog_codes: set[str] | None = None) -> dict[str, Any]:
@@ -449,19 +510,24 @@ def parse_rows(rows: list[dict[str, str]], catalog_codes: set[str] | None = None
             issues.append("target_course_not_in_catalog")
         rules = []
         expression = None
+        explicit = reviewed_coursework_field(code, year, primary)
         for rule_type, fields in [("PREREQUISITE", primary), ("COREQUISITE", coreq)]:
             if not fields:
                 continue
             parsed, rule_flags = None, []
-            if len(fields) != 1:
-                rule_flags.append("multiple_requirement_fields")
+            coursework_fields = [explicit] if rule_type == "PREREQUISITE" and explicit else fields
+            if len(coursework_fields) != 1:
+                if rule_type == "PREREQUISITE" and len(fields) == 2:
+                    parsed = equivalent_prerequisite_pair(fields, catalog_codes)
+                if parsed is None:
+                    rule_flags.append("multiple_requirement_fields")
             else:
                 try:
-                    parsed = parse_expression(fields[0]["requirement_text"], catalog_codes)
+                    parsed = parse_expression(coursework_fields[0]["requirement_text"], catalog_codes)
                     rule_flags.extend(parsed["issues"])
                 except PrerequisiteParseError as error:
                     rule_flags.append(f"expression_parse_failed: {error}")
-            candidates = sorted({ref for field in fields for ref in reference_candidates(field["requirement_text"])})
+            candidates = sorted({ref for field in coursework_fields for ref in reference_candidates(field["requirement_text"])})
             missing = sorted(ref for ref in candidates if catalog_codes is not None and ref not in catalog_codes)
             if missing:
                 rule_flags.append("missing_course_references")
@@ -491,6 +557,11 @@ def parse_rows(rows: list[dict[str, str]], catalog_codes: set[str] | None = None
                           "reference_candidates": sorted({ref for item in items for ref in reference_candidates(item["requirement_text"])}),
                           "review_flags": ["no_primary_requirement_fields"]})
         extra_flags, checks = audit_additional_metadata(expression, additional, catalog_codes)
+        if explicit and code == "SPN 411":
+            checks.append({"field_label": "pr", "requirement_text": next(
+                r["requirement_text"] for r in primary if r["field_label"] == "pr"),
+                "status": "REVIEWED_SUPPLEMENTARY_METADATA",
+                "reason": "Only coursework is evaluated. The alternative permission route requires manual verification."})
         issues.extend(extra_flags)
         issues = list(dict.fromkeys(issues))
         complete = bool(rules) and not issues

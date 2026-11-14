@@ -1,4 +1,4 @@
-# Degree planning handoff: v1, opt-in v2, and opt-in v2.1
+# Degree planning handoff (v1 through v2.2)
 
 The handoff is unofficial planning evidence, not an approved degree audit,
 verified transcript, graduation determination, or registration clearance.
@@ -23,10 +23,10 @@ handoff = result.handoff
 The two positional inputs are the resolved draft and a list of course codes or
 coursework records. Optional keyword inputs include `reported_credits` (course
 codes mapped to credit amounts, or pairs), the existing `core_ii_listing`, and
-the three mode flags `supabase_attributes`, `evaluate_prerequisites`, and
-`core_ii_candidates`. All flags default to false. The default result includes
+the mode flags `supabase_attributes`, `evaluate_prerequisites`, `core_ii_candidates`,
+and `critical_thinking_candidates`. All flags default to false. The default result includes
 both the preview and the v1 handoff. With `include_handoff=False`, a legacy
-preview-only call returns `None` for the handoff. Either enrichment mode always
+preview-only call returns `None` for the handoff. Prerequisite or flexible enrichment always
 builds the handoff. An injected `client` serves every requested Supabase lookup
 and bypasses environment and SDK setup. Without an injected client, the first
 lookup that needs the database creates one client for that evaluation. The
@@ -38,7 +38,7 @@ The service builds the handoff with `build_planning_handoff()`, whose
 `finalize_planning_handoff_v1()` creates explicit candidate placeholders. Optional
 prerequisite enrichment happens **after** that finalizer returns.
 
-Without `--evaluate-prerequisites` or `--core-ii-candidates`, legacy code-list inputs produce the same
+With prerequisite and flexible candidate modes off, legacy code-list inputs produce the same
 preview and `1.0.0` handoff. No prerequisite source files, environment loading,
 client creation or queries occur. The existing independent `--supabase-attributes`
 option retains its behavior. Neither option is implied by the other.
@@ -145,9 +145,19 @@ or UNKNOWN. No course is added from prerequisite diagnostics.
 
 Attribute-only requirements, including Core II categories, remain intact. Their
 candidate options are **not generated in v1/v2.0 mode**. Existing
-`candidate_option_coverage` and attribute-option warnings remain unchanged.
+`candidate_option_coverage` includes unfinished credit requirements that lack an attribute mapping.
 `NO_CANDIDATES` means no explicit candidate codes, not that every flexible
 requirement is complete or that the degree has no remaining work.
+
+### CS Science with Lab progress across handoff versions
+
+For the 2026–2027 CS B.S., `t0_row_0058` retains all five listed lecture/lab bundles. Read `choice_progress.maximum_nonoverlapping_choices_entered` and `choices_remaining_candidate` for progress toward three. With both Physics I lectures and PHY 202 entered, two bundles match and only one choice counts. Three distinct pairs with at least 12 known candidate credits give `CANDIDATE_COMPLETE`. If credit evidence is missing, the count still closes the list of major science recommendations. The source rule and its “or above” alternatives retain their review flags.
+
+In `course_options`, `missing_codes_to_complete_option` describes the original bundle. An optional `candidate_exclusion_reason` explains why that bundle contributes no courses to the eligibility pool. Reasons are `LISTED_CHOICE_COUNT_MET`, `LAB_ALREADY_USED_IN_MAJOR_CHOICE`, and `PHYSICS_I_LECTURE_ALREADY_ENTERED`. For example, after PHY 211 alone, PHY 202 remains a candidate through the PHY 211 option. After PHY 202 alone, either lecture remains an alternative. Other requirement memberships and prerequisite results apply independently.
+
+For `t0_row_0011`, the planner checks a single completed option against year-scoped Core II Natural Sciences memberships for **every** member and at least four known credits. It considers the documented integrated lab PS 111 first, followed by the resolved major pairs in draft order. The qualifying option appears in `attribute_filter.candidate_course_codes_entered` when the disposition is `CANDIDATE_COMPLETE`. The same pair can contribute to provisional major progress, while distinct credit totals count each course once. PS 111 contributes only to Core II. A four-credit lecture alone, unrelated classified courses, and unverified substitutions leave the slot under review. The preview retains raw classification matches and their catalog sources.
+
+Core II science progress requires the entered-course attribute lookup, available through the API, `--supabase-attributes`, or `--core-ii-candidates`. Broader Core II lab options remain unenumerated. Source review and transcript verification still apply. [CS degree requirements](https://catalog.marshall.edu/undergraduate/programs-az/engineering-computer-sciences/computer-science/computer-science-bs/) · [PS 111 catalog entry](https://catalog.marshall.edu/undergraduate/courses-az/ps/)
 
 ## V2 eligibility contract
 
@@ -255,9 +265,14 @@ Example invocation (performs read-only live catalog/prerequisite queries):
 .venv\Scripts\python.exe -m backend.scripts.preview_degree_audit --input backend/scripts/data/degree_requirements/resolved/computer_science_bs_resolved.json --completed-file completed.json --core-ii-candidates --output preview.json --planning-output planning.json
 ```
 
-Only Humanities, Social Sciences (the draft's "Social Studies"), and Fine Arts
-are supported. Science with Lab, Critical Thinking, and other policy-dependent
-requirements remain deferred. No term availability, sections, scheduling,
+Flexible catalog enumeration covers Humanities, Social Sciences (the draft's
+"Social Studies"), Fine Arts, and the 2026–2027 CS Multicultural or International
+requirement (`t0_row_0018`). Either dated designation can supply credits toward
+its three-credit target. A course appears once for this requirement and retains
+the matched designations and their classification sources. Coverage under
+`by_attribute` shows the evidence for each designation. An incomplete list for
+either designation keeps overall coverage partial. The shared audit evaluates documented completed
+science options and generates major pair candidates. No term availability, sections, scheduling,
 preference ranking or interactive prerequisite clarification is implemented.
 
 The workflow is:
@@ -325,7 +340,8 @@ required by an explicit requirement still belongs in the combined pool.
 
 `course_eligibility.candidate_scope` becomes
 `EXPLICIT_AND_CORE_II_REQUIREMENT_COURSES`. Its courses are the sorted, deduplicated
-union. Its summary counts the union once, not requirement occurrences. The original
+union, including the Multicultural or International options in v2.1. Its summary
+counts each course once across all requirement memberships. The original
 degree `summary` remains unchanged.
 
 The standalone provider's `prerequisites_evaluated: false` is retained in the
@@ -352,8 +368,9 @@ Existing requirement structures retain their IDs, options, progress and credit
 fields. For supported categories only, `eligible_catalog_course_options_included`
 is true when the provider reports GENERATED with complete membership coverage.
 Partial/withheld enumeration leaves it false. Global
-`unmet_attribute_option_lists_enumerated` is recomputed conservatively; it remains
-false while any unmet attribute category is unenumerated. Existing warnings remain,
+`unmet_attribute_option_lists_enumerated` is true only when every unfinished credit requirement explicitly includes a complete
+candidate list. Unsupported or unmapped credit requirements, including Writing Intensive and
+Free Electives, keep the flag false while unfinished. A missing inclusion flag counts as false. Existing warnings remain,
 with an added supported-scope warning and updated coverage note.
 
 For a flexible requirement, `prerequisites_evaluated` requires complete enumeration,
@@ -394,6 +411,23 @@ UNKNOWN results without silently accepting them. Category approval does not prov
 offerings, open seats, schedule feasibility or permission to double-count credits.
 No consumer code or schema migration is changed here. Existing consumers can keep
 requesting unchanged v1/v2.0 output until v2.1 support is agreed.
+
+<a id="internal-preview-v22-critical-thinking"></a>
+
+## Opt-in v2.2 (Critical Thinking)
+
+From the repository root, preview the additional CS Core I slot alongside existing Core II options:
+
+```powershell
+.\.venv\Scripts\python.exe -m backend.scripts.preview_degree_audit --input backend/scripts/data/degree_requirements/resolved/computer_science_bs_resolved.json --completed "FYS 100,MTH 229" --critical-thinking-candidates --planning-output planning.json
+```
+
+Python callers select `run_degree_plan(..., critical_thinking_candidates=True)`. The preview includes Core II and prerequisite evaluation in the same pass and emits `schema_version: "2.2.0"`. HTTP clients select the same handoff by sending the JSON boolean `critical_thinking_candidates: true` to `POST /api/v1/planning/evaluate`. Omitting the field or sending `false` preserves v2.1. The v2.2 handoff uses the candidate scope `EXPLICIT_CORE_II_AND_CRITICAL_THINKING_REQUIREMENT_COURSES`.
+
+- **Open slot.** For the CS B.S. 2026–2027 rule `t0_row_0005`, the audit must establish a positive shortfall. A prospective course needs an active, year-scoped CT membership reconciled to the reviewed catalog export and enough catalog credits for the single course slot. Inspect `generation_status`, `coverage`, and `withheld_courses` when reads or classifications are incomplete.
+- **Distinct courses.** The builder uses the audit's `reserved_explicit_sibling_courses` when reconciling entered coursework and listing options. FYS 100 and MTH 229 remain available to their explicit rules. Completing MTH 229 provisionally meets both its Core I and major occurrences. Completing ANT 201 as well can fill the additional CT slot and match Social Sciences. Same-group reservation never consumes the course globally.
+- **Consumer joins.** An uncompleted ANT 201 can be an alternative for both `t0_row_0005` and `t0_row_0013`. Both memberships reference the same course-level prerequisite result. MET, UNMET, and UNKNOWN describe student-reported prerequisite evidence. Each entry retains its classification sources. Cross-requirement credits remain unallocated.
+- **Academic review.** The standard draft lacks admission category, transfer-waiver evidence, and where a completed course was taken. The builder withholds MTH 229H from the additional slot pending confirmation of distinct credit with MTH 229. When completion depends on MTH 229H, the audit and the v2.2 candidate list both report `INSUFFICIENT_EVIDENCE` with `HONORS_DISTINCT_SLOT_REVIEW_REQUIRED`. The audit retains the dated classification and potential credit subtotal, and leaves the credit shortfall unknown. Another entered CT course with sufficient known credits can independently fill the slot. The v2.1 API uses the same corrected audit and keeps its existing schema and candidate scope.
 
 ## Reusable candidate-provider interface
 

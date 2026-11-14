@@ -98,7 +98,7 @@ def main() -> int:
     parser.add_argument("--completed-file", type=Path, help="JSON list of course codes or {course_code, grade?} records")
     parser.add_argument(
         "--reported-credits",
-        help='Student-reported credits for variable-credit courses, e.g. "CS 475=6"; requires --supabase-attributes or --core-ii-candidates',
+        help='Student-reported credits for variable-credit courses, e.g. "CS 475=6"; requires an attribute-enabled mode',
     )
     parser.add_argument("--core-ii-json", type=Path, help="Optional current Core II listing for candidate matches")
     parser.add_argument(
@@ -115,6 +115,10 @@ def main() -> int:
         help="Read completed-course attributes, generate Core II options and evaluate the combined pool; emit v2.1",
     )
     parser.add_argument(
+        "--critical-thinking-candidates", action="store_true",
+        help="Include the CS Core I Critical Thinking slot alongside Core II options; emit internal v2.2",
+    )
+    parser.add_argument(
         "--planning-output", type=Path,
         help="Optional preliminary JSON input contract for the schedule generator",
     )
@@ -127,6 +131,7 @@ def main() -> int:
             draft, coursework, reported_credits=_reported_credit_entries(args.reported_credits),
             core_ii_listing=core_ii_listing, supabase_attributes=args.supabase_attributes,
             evaluate_prerequisites=args.evaluate_prerequisites, core_ii_candidates=args.core_ii_candidates,
+            critical_thinking_candidates=args.critical_thinking_candidates,
             include_handoff=args.planning_output is not None,
         )
         if args.planning_output:
@@ -148,14 +153,15 @@ def main() -> int:
         print(f"Prerequisite evidence: {eligibility['evaluation_status']} — "
               + ", ".join(f"{state}: {count}" for state, count in eligibility["summary"].items()))
         print("Optional grades are used for prerequisites; report only successfully completed courses."
-              if args.core_ii_candidates else PREREQUISITE_SCOPE_WARNING)
+              if args.core_ii_candidates or args.critical_thinking_candidates else PREREQUISITE_SCOPE_WARNING)
         if eligibility["evaluation_status"] in ("PARTIAL", "UNAVAILABLE"):
             print("WARNING: Prerequisite evidence is incomplete or unavailable; affected courses remain UNKNOWN.")
-    if args.core_ii_candidates:
+    if args.core_ii_candidates or args.critical_thinking_candidates:
+        categories = "Core II and Critical Thinking" if args.critical_thinking_candidates else "Core II"
         flexible = preview["flexible_candidates"]
-        print(f"Core II candidates: {flexible['generation_status']} — {len(flexible['candidate_course_codes'])} distinct courses")
+        print(f"{categories} candidates: {flexible['generation_status']} — {len(flexible['candidate_course_codes'])} distinct courses")
         if flexible["generation_status"] in ("PARTIAL", "UNAVAILABLE"):
-            print("WARNING: Core II candidate coverage is incomplete or unavailable; inspect flexible_candidates diagnostics.")
+            print(f"WARNING: {categories} candidate coverage is incomplete or unavailable; inspect flexible_candidates diagnostics.")
     print(f"Required-course rule occurrences matched: {summary['ready_required_course_occurrences_matched']}")
     print(f"Required-course rule occurrences not entered: {summary['ready_required_course_occurrences_not_entered']}")
     print(f"Distinct explicitly required courses entered: {summary['unique_explicit_required_courses_entered']}/{summary['unique_explicit_required_courses']}")

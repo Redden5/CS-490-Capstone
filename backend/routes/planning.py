@@ -63,7 +63,8 @@ def evaluate(
     try:
         result = run_degree_plan(
             draft, coursework, reported_credits=request.reported_credits,
-            core_ii_candidates=True, client_factory=client_factory,
+            core_ii_candidates=True, critical_thinking_candidates=request.critical_thinking_candidates,
+            client_factory=client_factory,
         )
     except ReportedCreditError:
         raise HTTPException(422, "Reported credits could not be matched to the catalog course and credit range.") from None

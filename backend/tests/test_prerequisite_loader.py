@@ -191,8 +191,25 @@ class LoaderTests(unittest.TestCase):
         self.assertFalse(result["courses"]["CS 210"]["rule_data"]["data_complete"])
         self.assertEqual(self.evaluate(result, [{"course_code": "CS 110", "grade": "A"}, "CS 120"])["status"], "UNKNOWN")
 
+    def test_line_endings_preserve_verified_prerequisite_evidence(self):
+        windows = self.load()
+        self.assertEqual(windows["source_verification"], "HASH_VERIFIED_SOURCE")
+        for catalog in (self.catalog, self.catalog.replace(b"\r\n", b"\n")):
+            for raw in (self.raw, self.raw.replace(b"\r\n", b"\n")):
+                with self.subTest(catalog_lf=catalog != self.catalog, prerequisites_lf=raw != self.raw):
+                    result = loader.load_prerequisite_rules(
+                        SelectClient(self.tables), ["CS 210"], source_catalog_csv=catalog, source_prerequisite_csv=raw,
+                    )
+                    self.assertEqual(result, windows)
+                    completed = [{"course_code": "CS 110", "grade": "A"}, "CS 120"]
+                    self.assertEqual(self.evaluate(result, completed)["status"], "MET")
+
     def test_modified_source_bytes_fail_hash_verification(self):
-        for catalog, raw in [(self.catalog + b"\n", self.raw), (self.catalog, self.raw + b"\n")]:
+        for catalog, raw in [
+            (self.catalog + b"\n", self.raw), (self.catalog, self.raw + b"\n"),
+            (self.catalog.replace(b"CS 110", b"CS 111"), self.raw),
+            (self.catalog, self.raw.replace(b"grade of C", b"grade of D")),
+        ]:
             with self.subTest(catalog_changed=catalog != self.catalog):
                 result = loader.load_prerequisite_rules(SelectClient(self.tables), ["CS 210"],
                                                         source_catalog_csv=catalog, source_prerequisite_csv=raw)
@@ -496,6 +513,24 @@ class LoaderTests(unittest.TestCase):
 
 
 class ReviewedSourceIntegrationTests(unittest.TestCase):
+    def test_cs120_reviewed_rule_evaluates_either_intro_course(self):
+        root = Path(__file__).resolve().parents[1] / "scripts"
+        catalog = (root / "courses.csv").read_bytes()
+        raw = (root / "catalog_prerequisites.csv").read_bytes()
+        rows = [r for r in csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))) if r["course_code"] == "CS 120"]
+        codes = {"CS 120", "CS 110", "CS 110H"}
+        client = SelectClient(tables_from_source(codes, parse_rows(rows, codes)))
+        loaded = loader.load_prerequisite_rules(client, ["CS 120"], catalog_year=YEAR,
+                                                source_catalog_csv=catalog, source_prerequisite_csv=raw)
+        data = loaded["courses"]["CS 120"]["rule_data"]
+        self.assertTrue(data["data_complete"])
+        self.assertEqual(evaluate_course_rules("CS 120", [], data, catalog_year=YEAR)["status"], "UNMET")
+        for code in ("CS 110", "CS 110H"):
+            for grade, expected in (("A", "MET"), ("D", "MET"), ("F", "UNMET"), (None, "UNKNOWN")):
+                with self.subTest(code=code, grade=grade):
+                    completed = [{"course_code": code, "grade": grade}]
+                    self.assertEqual(evaluate_course_rules("CS 120", completed, data, catalog_year=YEAR)["status"], expected)
+
     def test_real_pinned_source_matches_existing_seeder_and_evaluator(self):
         # Local source reads only; the loader itself has no filesystem dependency.
         root = Path(__file__).resolve().parents[1] / "scripts"
