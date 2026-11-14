@@ -1,7 +1,7 @@
 import test, { afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { buildPlanningRequest, fetchPrograms, evaluatePlanning } from '../src/lib/planningApi.js';
-import { requirementGroups, safeSourceUrl } from '../src/lib/planningPresentation.js';
+import { choiceProgressText, requirementGroups, safeSourceUrl } from '../src/lib/planningPresentation.js';
 const originalFetch = globalThis.fetch;
 afterEach(() => { globalThis.fetch = originalFetch; });
 const program = { program_key: 'computer-science-bs', program_title: 'Computer Science, B.S.', catalog_year: '2026-2027' };
@@ -87,6 +87,16 @@ test('groups requirements without flattening choice bundles or recalculating pro
   assert.equal(groups[0][0], 'Major');
   assert.equal(groups[0][1][0], requirement);
   assert.equal(requirement.planning_disposition, 'REVIEW_REQUIRED');
+});
+test('explains why PHY 201 cannot reuse the PHY 202 lab from the completed PHY 211 option', () => {
+  const completed = { kind: 'ALL_OF', course_codes: ['PHY 211', 'PHY 202'], fully_entered: true, missing_codes_to_complete_option: [] };
+  const alternative = { kind: 'ALL_OF', course_codes: ['PHY 201', 'PHY 202'], fully_entered: false, missing_codes_to_complete_option: ['PHY 201'] };
+  assert.equal(choiceProgressText(completed), 'All courses reported completed.');
+  assert.equal(choiceProgressText(alternative), 'Still needed for this option: PHY 201');
+  assert.equal(
+    choiceProgressText({ ...alternative, candidate_exclusion_reason: 'LAB_ALREADY_USED_IN_MAJOR_CHOICE' }),
+    'Option excluded. This lab already counts toward another science option in your major.',
+  );
 });
 test('only allows ordinary web source links', () => {
   assert.equal(safeSourceUrl('https://catalog.marshall.edu/undergraduate/'), 'https://catalog.marshall.edu/undergraduate/');

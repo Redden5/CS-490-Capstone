@@ -1,5 +1,8 @@
 const labels = {
   CANDIDATE_COMPLETE: 'Provisionally satisfied', CANDIDATE_COURSEWORK_REMAINING: 'Coursework remaining',
+  LAB_ALREADY_USED_IN_MAJOR_CHOICE: 'This lab already counts toward another science option in your major.',
+  LISTED_CHOICE_COUNT_MET: 'You have already completed enough of the listed options.',
+  PHYSICS_I_LECTURE_ALREADY_ENTERED: 'You have already reported a Physics I lecture for this requirement.',
   REVIEW_REQUIRED: 'Needs review', EVIDENCE_MISSING: 'Evidence missing', UNSUPPORTED: 'Needs review',
   MET: 'Met by reported evidence', UNMET: 'Condition not met', UNKNOWN: 'Uncertain',
   MISSING_REPORTED_GRADE: 'A required grade has not been reported.',
@@ -19,6 +22,13 @@ export function explain(value) {
   const code = typeof value === 'object' ? value.code : value;
   if (typeof code !== 'string') return 'Additional review needed';
   return labels[code] ?? code.replaceAll('_', ' ').toLowerCase();
+}
+export function choiceProgressText(option) {
+  if (option.candidate_exclusion_reason) {
+    return `Option excluded. ${explain(option.candidate_exclusion_reason)}`;
+  }
+  if (option.fully_entered) return 'All courses reported completed.';
+  return `Still needed for this option: ${option.missing_codes_to_complete_option.join(', ') || 'Needs review'}`;
 }
 export function requirementGroups(requirements) {
   const groups = new Map();

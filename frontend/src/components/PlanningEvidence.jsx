@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { explain, safeSourceUrl } from '../lib/planningPresentation.js';
+import { choiceProgressText, explain, safeSourceUrl } from '../lib/planningPresentation.js';
 
 export function StatusBadge({ status }) {
   const tone = ['MET', 'CANDIDATE_COMPLETE'].includes(status) ? 'met'
@@ -99,8 +99,8 @@ export function RequirementEvidence({ requirement: r, flexible, eligibility }) {
         <p>Choose {r.choice_progress.required_choices ?? 'the required number of'} options. Options still needed: {r.choice_progress.choices_remaining_candidate ?? 'Needs review'}.</p>
         <ul className="planning-choice-options">{(r.course_options ?? []).map((option, index) => <li key={index}>
           <strong>Option {index + 1}: {option.course_codes.join(option.kind === 'ALL_OF' ? ' + ' : ', ')}</strong>
-          {option.kind === 'ALL_OF' && <p>All courses in this option are required to complete the bundle.</p>}
-          <p>{option.fully_entered ? 'All courses reported completed.' : `Still needed for this option: ${option.missing_codes_to_complete_option.join(', ') || 'Needs review'}`}</p>
+          {!option.candidate_exclusion_reason && option.kind === 'ALL_OF' && <p>All courses in this option are required to complete the bundle.</p>}
+          <p>{choiceProgressText(option)}</p>
           <Reasons items={option.review_flags} />
         </li>)}</ul>
       </>}
