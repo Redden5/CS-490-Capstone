@@ -13,7 +13,7 @@ async function post(path, payload, signal) {
     });
   } catch (error) {
     if (signal?.aborted) throw error;
-    throw new Error('The schedule service could not be reached. Check that FastAPI is running.');
+    throw new Error('The schedule service could not be reached. Check that FastAPI is running.', { cause: error });
   }
   const data = await response.json().catch(() => null);
   if (!response.ok) {
