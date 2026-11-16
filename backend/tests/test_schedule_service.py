@@ -5,7 +5,7 @@ from decimal import Decimal
 from pathlib import Path
 from unittest.mock import patch
 
-from backend.services import schedule_service as s
+from backend.services import schedule_engine as s
 
 
 def section(section_id, code, *, meetings=None, status="OPEN", cap=30, enrolled=10):
@@ -119,7 +119,7 @@ class SchedulerTests(unittest.TestCase):
         with patch.object(s, "get_course_ids", return_value=course_rows) as mocked_course, \
              patch.object(s, "_sections_for_ids", return_value=section_rows), \
              patch.object(s, "get_section_meetings", return_value=meeting_rows):
-            result = s.group_sections_by_course({"CS 120", "CS 205"}, 1)
+            result = s.group_sections_by_course({"CS 120", "CS 205"}, 1, client=object())
         self.assertEqual(mocked_course.call_count, 1)
         self.assertEqual(result["CS 120"][0]["meetings"], meeting_rows)
         self.assertEqual(result["CS 205"], [])
@@ -133,10 +133,6 @@ class SchedulerTests(unittest.TestCase):
         self.assertEqual(len(plan["required_courses"]), 24)
         self.assertEqual(plan["eligibility_statuses"], {})
         self.assertTrue(any("CHOICE_GROUP_REQUIRES_REVIEW" in w for w in plan["warnings"]))
-
-
-if __name__ == "__main__":
-    unittest.main()
 
 # The suite's offline tests intentionally do not connect to Supabase. The production
 # integration can be validated with a staging project after credentials are configured.
@@ -171,7 +167,10 @@ class DegreePriorityTests(unittest.TestCase):
         with patch.object(s, "get_course_ids", return_value=courses), \
              patch.object(s, "_sections_for_ids", return_value=sections), \
              patch.object(s, "get_section_meetings", return_value=meetings):
-            output = s.generate_from_handoff(handoff, term_id=1, target_credits=6)
+            output = s.generate_from_handoff(handoff, term_id=1, client=object(), target_credits=6)
         self.assertEqual(output["options"][0]["total_credits"], 3.0)
         self.assertEqual(output["options"][0]["status"], "TENTATIVE")
         self.assertEqual(output["options"][0]["unscheduled_required"], ["CS 205"])
+
+if __name__ == "__main__":
+    unittest.main()
