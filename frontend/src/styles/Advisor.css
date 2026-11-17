@@ -147,7 +147,7 @@
 .advisor-chat-heading-copy > .advisor-icon { width: 26px; height: 26px; margin-top: 3px; color: #006747; }
 .advisor-chat-heading p { margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: #53665b; }
 .advisor-chat-toggle { display: inline-flex; align-items: center; gap: 10px; min-height: 38px; padding: 4px 0; border: 0; background: transparent; color: #006747; font: inherit; font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
-.advisor-messages { display: grid; gap: 18px; padding: 18px 22px; }
+.advisor-messages { display: grid; gap: 18px; padding: 18px 22px; max-height: 520px; overflow-y: auto; }
 .advisor-message { display: flex; align-items: flex-start; gap: 12px; }
 .advisor-message p { margin: 0; font-size: 15px; line-height: 1.5; }
 .advisor-user-message { justify-content: flex-end; }
@@ -156,6 +156,9 @@
 .advisor-user-message .advisor-avatar { background: #f3f6f4; }
 .advisor-message-bubble { padding: 12px 16px; border-radius: 12px 12px 12px 3px; background: #f1f4f2; max-width: 85%; }
 .advisor-message-bubble .advisor-chat-source { margin-top: 4px; color: #53665b; font-size: 13px; }
+.advisor-answer { white-space: pre-line; }
+.advisor-chat-source { margin-bottom: 4px; padding-left: 20px; }
+.advisor-feedback { margin: 0 22px 12px; color: #53665b; font-size: 14px; }
 .advisor-chat-source .advisor-text-button { min-height: 24px; }
 .advisor-composer { display: flex; gap: 12px; padding: 0 16px 12px; }
 .advisor-composer input { flex: 1; min-width: 0; min-height: 44px; padding: 12px 16px; border: 1px solid #9eafa5; border-radius: 7px; color: #26362c; background: #fff; font: inherit; }

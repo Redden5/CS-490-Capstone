@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import CompletedCourseSearch from '../components/CompletedCourseSearch.jsx';
+import TranscriptImport from '../components/TranscriptImport.jsx';
 import { usePlanning } from '../context/planningContext.js';
 import '../styles/Planning.css';
 
@@ -11,6 +12,16 @@ export default function AcademicInfo() {
   function addCourse(code = '') {
     const row = { id: crypto.randomUUID(), code, grade: '', credits: '', unresolvedEquivalency: false };
     updateInput((current) => ({ ...current, rows: [...current.rows, row] }));
+  }
+  function addTranscriptCourses(courses) {
+    const rows = courses.map((course) => ({
+      id: crypto.randomUUID(),
+      code: course.course_code,
+      grade: course.grade,
+      credits: course.credits ?? '',
+      unresolvedEquivalency: course.is_transfer,
+    }));
+    updateInput((current) => ({ ...current, rows: [...current.rows, ...rows] }));
   }
   function editRow(id, field, value) {
     updateInput((current) => ({ ...current, rows: current.rows.map((row) => row.id === id ? { ...row, [field]: value } : row) }));
@@ -48,6 +59,7 @@ export default function AcademicInfo() {
           ) : <p>No programs are available. <button className="planning-link" type="button" onClick={refreshPrograms}>Refresh programs</button></p>}
           <p className="planning-muted">Choose the catalog year that applies to your program. Only supported combinations are listed.</p>
         </section>
+        <TranscriptImport onImport={addTranscriptCourses} />
         <CompletedCourseSearch onAdd={addCourse} />
       </div>
 

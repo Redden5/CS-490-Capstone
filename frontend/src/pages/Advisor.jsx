@@ -1,25 +1,28 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { askAdvisor } from "../lib/advisorApi.js";
 import "../styles/Advisor.css";
 
 const COURSE_EXAMPLES = [
   {
-    code: "CS 215", title: "Data Structures",
+    code: "CS 215", title: "Adv Data Struct and Algorithms",
     reason: "Explore a core computer science course.",
-    source: "CS 210 and math requirements apply.",
+    source: "Marshall course catalog",
   },
   {
     code: "CS 410", title: "Database Engineering",
     reason: "Compare against your completed coursework.",
-    source: "CS 210 with a minimum grade of D.",
+    source: "Marshall course catalog",
   },
 ];
 
 const DRAFT_EXAMPLES = [
-  { code: "CS 215", title: "Data Structures", credits: 3 },
-  { code: "MTH 229", title: "Calculus", credits: 3 },
-  { code: "ENG 201", title: "Writing", credits: 3 },
+  { code: "CS 215", title: "Adv Data Struct and Algorithms", credits: 3 },
+  { code: "MTH 229", title: "Calculus / Analytic Geometry I", credits: 5 },
+  { code: "ENG 201", title: "Advanced Composition", credits: 3 },
 ];
+
+const INTRO = { id: 'welcome', answer: 'Ask about a Marshall course, its prerequisites, available schedule records, or degree requirements. Try “What are the prerequisites for CS 215?”' };
 
 const ICON_PATHS = {
   calendar: "M8 2v4 M16 2v4 M3 10h18 M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2",
@@ -39,6 +42,47 @@ function AdvisorIcon({ name }) {
 
 function Advisor() {
   const [chatExpanded, setChatExpanded] = useState(true);
+  const [messages, setMessages] = useState([INTRO]);
+  const [question, setQuestion] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const pending = useRef(null);
+  const courseCodes = useRef([]);
+  const chatLog = useRef(null);
+  const messageInput = useRef(null);
+
+  useEffect(() => () => pending.current?.abort(), []);
+  useEffect(() => {
+    if (chatExpanded && chatLog.current) chatLog.current.scrollTop = chatLog.current.scrollHeight;
+  }, [messages, chatExpanded, loading]);
+
+  async function submit(event) {
+    event.preventDefault();
+    const text = question.trim();
+    if (!text || pending.current) return;
+    const controller = new AbortController();
+    pending.current = controller;
+    const id = crypto.randomUUID();
+    setQuestion('');
+    setError('');
+    setLoading(true);
+    setMessages((current) => [...current.slice(-38), { id, question: text }]);
+    try {
+      const result = await askAdvisor(text, courseCodes.current, controller.signal);
+      if (controller.signal.aborted) return;
+      courseCodes.current = result.course_codes;
+      setMessages((current) => [...current, { id: `${id}-reply`, ...result }]);
+    } catch (problem) {
+      if (!controller.signal.aborted) {
+        setMessages((current) => current.filter((message) => message.id !== id));
+        setQuestion(text);
+        setError(problem.message);
+      }
+    } finally {
+      pending.current = null;
+      if (!controller.signal.aborted) setLoading(false);
+    }
+  }
 
   return (
     <main className="advisor-page">
@@ -47,7 +91,6 @@ function Advisor() {
           <h1>AI Advisor</h1>
           <p>Plan your next semester and get answers grounded in your course catalog.</p>
         </div>
-        <span className="advisor-preview-badge">Design preview · Sample data</span>
       </header>
 
       <section className="advisor-context" aria-label="Sample academic context">
@@ -55,7 +98,7 @@ function Advisor() {
         <div><span>Catalog</span><strong>2026–2027</strong></div>
         <div>
           <span>About this workspace</span>
-          <p>Get course recommendations, build a next-semester draft, and ask questions about courses, prerequisites, and policies.</p>
+          <p>Ask about course details, prerequisites, schedule records, and degree requirements.</p>
         </div>
       </section>
 
@@ -69,7 +112,7 @@ function Advisor() {
               </select>
             </label>
           </div>
-          <p className="advisor-panel-intro">Recommended courses to explore for your next semester, based on your program and catalog.</p>
+          <p className="advisor-panel-intro">Example courses from the Computer Science catalog.</p>
           <div className="advisor-course-list">
             {COURSE_EXAMPLES.map((course) => (
               <article className="advisor-course-card" key={course.code}>
@@ -79,7 +122,12 @@ function Advisor() {
                   <p className="advisor-course-source"><span>Source:</span> {course.source}</p>
                 </div>
                 <div className="advisor-course-actions">
-                  <button type="button" className="advisor-text-button" disabled>
+                  <button type="button" className="advisor-text-button" disabled={loading} onClick={() => {
+                    setChatExpanded(true);
+                    setError('');
+                    setQuestion(`What are the prerequisites for ${course.code}?`);
+                    requestAnimationFrame(() => messageInput.current?.focus());
+                  }}>
                     View requirements <AdvisorIcon name="external" />
                   </button>
                   <button type="button" className="advisor-outline-button" disabled>
@@ -93,7 +141,7 @@ function Advisor() {
 
         <section className="advisor-panel advisor-draft" aria-labelledby="advisor-draft-title">
           <h2 id="advisor-draft-title">Next semester draft</h2>
-          <p className="advisor-draft-summary">Sample draft · 9 credits</p>
+          <p className="advisor-draft-summary">Sample draft · 11 credits</p>
           <ul className="advisor-draft-courses">
             {DRAFT_EXAMPLES.map((course) => (
               <li key={course.code}>
@@ -113,7 +161,7 @@ function Advisor() {
             <AdvisorIcon name="chat" />
             <div>
               <h2 id="advisor-chat-title">Ask about your plan</h2>
-              <p>Get help with semester planning, prerequisites, course options, and university policies.</p>
+              <p>Get help with course details, prerequisites, scheduling, and degree requirements.</p>
             </div>
           </div>
           <button type="button" className="advisor-chat-toggle" aria-expanded={chatExpanded}
@@ -124,28 +172,41 @@ function Advisor() {
           </button>
         </div>
         <div id="advisor-conversation" hidden={!chatExpanded}>
-          <div className="advisor-messages" aria-label="Sample conversation">
-            <div className="advisor-message advisor-user-message">
-              <p>How should I balance this semester?</p>
-              <span className="advisor-avatar"><span className="sr-only">Student</span><AdvisorIcon name="user" /></span>
-            </div>
-            <div className="advisor-message advisor-assistant-message">
-              <span className="advisor-avatar"><span className="sr-only">Advisor</span><AdvisorIcon name="assistant" /></span>
-              <div className="advisor-message-bubble">
-                <p>Compare course workloads and confirm each requirement before adding courses to your plan.</p>
-                <p className="advisor-chat-source">Source: <button type="button" className="advisor-text-button" disabled>
-                  View catalog requirements <AdvisorIcon name="external" />
-                </button></p>
+          <div className="advisor-messages" role="log" aria-label="Advisor conversation" ref={chatLog}>
+            {messages.map((message) => message.question ? (
+              <div key={message.id} className="advisor-message advisor-user-message">
+                <p>{message.question}</p>
+                <span className="advisor-avatar"><span className="sr-only">Student</span><AdvisorIcon name="user" /></span>
               </div>
-            </div>
+            ) : (
+              <div key={message.id} className="advisor-message advisor-assistant-message">
+                <span className="advisor-avatar"><span className="sr-only">Advisor</span><AdvisorIcon name="assistant" /></span>
+                <div className="advisor-message-bubble">
+                  <p className="advisor-answer">{message.answer}</p>
+                  {message.sources?.length > 0 && <ul className="advisor-chat-source" aria-label="Sources">
+                    {message.sources.map((source) => (
+                      <li key={source.title}>{source.url
+                        ? <a className="advisor-text-button" href={source.url} target="_blank" rel="noreferrer">
+                          {source.title} <AdvisorIcon name="external" />
+                        </a>
+                        : source.title}</li>
+                    ))}
+                  </ul>}
+                  {message.action === 'planner' && <Link className="advisor-text-button" to="/planner">Open Planner</Link>}
+                  {message.action === 'audit' && <Link className="advisor-text-button" to="/academic-info">Open Academic Info</Link>}
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="advisor-composer">
+          {error && <p className="advisor-feedback" role="alert">{error}</p>}
+          {loading && <p className="advisor-feedback" role="status">Looking up academic records…</p>}
+          <form className="advisor-composer" onSubmit={submit}>
             <label className="sr-only" htmlFor="advisor-message">Ask a follow-up</label>
-            <input id="advisor-message" placeholder="Ask a follow-up…" disabled aria-describedby="advisor-preview-note" />
-            <button className="advisor-primary-button" type="button" disabled><AdvisorIcon name="send" /> Send</button>
-          </div>
+            <input id="advisor-message" ref={messageInput} placeholder="Ask about a course or your plan…" value={question}
+              maxLength={500} onChange={(event) => setQuestion(event.target.value)} readOnly={loading} />
+            <button className="advisor-primary-button" type="submit" disabled={loading || !question.trim()}><AdvisorIcon name="send" /> Send</button>
+          </form>
         </div>
-        <p className="advisor-preview-note" id="advisor-preview-note">Recommendations, draft courses, and conversation are examples. Chat and recommendation actions are not available yet.</p>
       </section>
     </main>
   );
