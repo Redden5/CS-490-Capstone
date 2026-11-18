@@ -32,7 +32,7 @@ function listSummary(items) {
   return items?.length ? items.join(', ') : 'None';
 }
 
-export default function GeneratedSchedules({ terms, loadingTerms }) {
+export default function GeneratedSchedules({ terms, loadingTerms, onUseSchedule }) {
   const { evaluation, stale } = usePlanning();
   const handoff = stale ? null : evaluation.data;
   const [termId, setTermId] = useState('');
@@ -43,6 +43,7 @@ export default function GeneratedSchedules({ terms, loadingTerms }) {
   const [error, setError] = useState('');
   const [swap, setSwap] = useState(null);
   const request = useRef(null);
+  const [addedOption, setAddedOption] = useState(null);
 
   const validGeneration = generation?.handoff === handoff &&
     generation.termId === termId ? generation.result : null;
@@ -169,6 +170,31 @@ export default function GeneratedSchedules({ terms, loadingTerms }) {
             aria-pressed={index === optionIndex}
             onClick={() => { setOptionIndex(index); setSwap(null); }}>Option {index + 1} · {option.total_credits} credits</button>)}
         </div>
+
+        <button type="button" className="planner-primary-button" 
+          disabled={loading || 
+                    Boolean(swap) || 
+                    addedOption === chosen} 
+          onClick={() => {
+            onUseSchedule({
+              termId,
+              option: chosen,
+              creditHours: validGeneration.course_credit_hours,
+              handoffWarnings: validGeneration.handoff_warnings ?? [],
+            });
+            setAddedOption(chosen);
+          }}>
+            {addedOption === chosen
+              ? "Added to semester plan"
+              : "Use this schedule"}
+          </button>
+
+          {addedOption === chosen && (
+            <p role="status">
+              A new semester with this schedule has been added to your plan below.
+            </p>
+          )}
+
         <p><strong>Status:</strong> {chosen.status === 'TENTATIVE' ? 'Tentative: unresolved checks' : 'Known checks passed (not registration clearance)'}</p>
         <ul className="schedule-selected-sections">
           {Object.entries(chosen.sections).map(([code, section]) => <li key={code}>
