@@ -40,6 +40,15 @@ export async function request(path, { signal, body, method = body ? 'POST' : 'GE
       404: 'This program and catalog year are no longer supported. Refresh the available programs.',
       422: 'Check the course codes, grades, and reported credits. Credits must match the catalog range for each completed course.',
     };
+    if (path.startsWith('student/planner')) {
+      const plannerMessages = {
+        401: 'Sign in again to access your saved plans.',
+        409: 'This semester changed elsewhere. Reload Planner to get the saved version.',
+        422: 'Check the semester details and try again.',
+        503: 'Saved plans are temporarily unavailable. Try again.',
+      };
+      throw new PlanningError(plannerMessages[response.status] ?? 'Unable to complete the Planner request.', response.status);
+    }
     throw new PlanningError(messages[response.status] ?? 'The planning service could not complete the request. Please try again.', response.status, fields);
   }
   return data;

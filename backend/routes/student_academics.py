@@ -92,23 +92,23 @@ def get_student_client(
 StudentClient = Annotated[httpx.Client, Depends(get_student_client)]
 
 
-def academic_rpc(client: httpx.Client, name: str, arguments: dict) -> Any:
+def student_rpc(client: httpx.Client, name: str, arguments: dict, *, resource: str = "coursework") -> Any:
     try:
         result = client.post(f"/rest/v1/rpc/{name}", json=arguments)
         if result.status_code == 409:
-            raise HTTPException(409, "Coursework changed elsewhere. Reload it before saving again.")
+            raise HTTPException(409, f"Saved {resource} changed elsewhere. Reload before saving again.")
         if result.status_code in {401, 403}:
             raise HTTPException(401, "Sign in again to access your coursework.")
         result.raise_for_status()
-        return result.json()
+        return result.json() if result.content else None
     except (httpx.HTTPError, ValueError):
-        raise HTTPException(503, "Saved coursework is temporarily unavailable.") from None
+        raise HTTPException(503, f"Saved {resource} is temporarily unavailable.") from None
 
 
 @router.get("", response_model=AcademicRecord | None)
 def read_academics(response: Response, client: StudentClient):
     response.headers["Cache-Control"] = "no-store"
-    return academic_rpc(client, "read_student_academics", {})
+    return student_rpc(client, "read_student_academics", {})
 
 
 @router.put("", response_model=AcademicRecord)
@@ -119,7 +119,7 @@ def save_academics(request: SaveAcademics, response: Response, client: StudentCl
         raise HTTPException(422, "Coursework attempt IDs must be unique.")
     request.planning_request()
     record = request.model_dump(mode="json", exclude={"expected_revision"})
-    revision = academic_rpc(client, "save_student_academics", {
+    revision = student_rpc(client, "save_student_academics", {
         "expected_revision": str(request.expected_revision) if request.expected_revision else None,
         "selected_program": request.program_key,
         "selected_year": request.catalog_year,
@@ -136,7 +136,7 @@ def evaluate_academics(
     client: StudentClient,
     client_factory: Annotated[Callable[[], Any], Depends(get_client_factory)],
 ):
-    saved = academic_rpc(client, "read_student_academics", {})
+    saved = student_rpc(client, "read_student_academics", {})
     if saved is None or saved["revision"] != str(request.revision):
         raise HTTPException(409, "Coursework changed elsewhere. Reload it before evaluating again.")
     record = AcademicRecord.model_validate(saved)

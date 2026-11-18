@@ -136,3 +136,25 @@ All requests below require the student's Supabase bearer token:
 
 The reporting scope remains the CS B.S. program for 2026–2027. Developer setup
 still requires both FastAPI and the Vite app.
+
+## Saved semester plans
+
+Apply [migration 004](../backend/migrations/004_student_semester_plans.sql)
+after migration 003. Planner uses the same Supabase bearer token and server
+configuration as saved coursework.
+
+- `GET /api/v1/student/planner` returns the signed-in student's saved semesters
+  and generator settings.
+- `PUT /api/v1/student/planner/semesters` saves a complete semester and its
+  ordered course snapshots. Send a client-generated UUID and null
+  `expected_revision` on creation. Retrying that creation with the same
+  ID and payload returns the existing revision. Edits send the last revision.
+- `DELETE /api/v1/student/planner/semesters/{plan_id}` takes
+  `expected_revision` in the request body.
+- `PUT /api/v1/student/planner/preferences` saves the selected term and target
+  credits. Generating a schedule also saves those settings.
+
+Stale edits or deletes return HTTP 409. A generated schedule is saved when the
+student chooses **Use this schedule**. A manually edited semester is saved when
+the student clicks **Save Semester**. Course and section labels are snapshots
+so older plans remain readable when catalog data changes.
