@@ -112,3 +112,27 @@ server keys. [Supabase JWT verification](https://supabase.com/docs/guides/auth/j
 
 HTTP tests override the request dependency with a SELECT-only fixture and compare
 the complete response to a direct planning call.
+
+## Saved academic information
+
+Apply [migration 003](../backend/migrations/003_student_academic_records.sql) in a
+development Supabase project. Server configuration also needs
+`SUPABASE_PUBLISHABLE_KEY` (or the legacy `SUPABASE_ANON_KEY`) from the same project.
+FastAPI verifies the Supabase access token, then calls the academic record RPCs
+with that token so PostgreSQL can identify the owner. The existing privileged
+Supabase client remains responsible for catalog evidence reads during evaluation.
+
+All requests below require the student's Supabase bearer token:
+
+- `GET /api/v1/student/academics` returns the saved program, catalog year,
+  revision and ordered coursework attempts. It returns JSON null for a new account.
+- `PUT /api/v1/student/academics` saves a complete academic record. Include
+  `expected_revision` from the previous read, or null for the first save.
+  Each attempt has a stable UUID and can include a grade, reported credits,
+  and an equivalency flag. A stale revision returns HTTP 409.
+- `POST /api/v1/student/academics/evaluate` takes the saved revision and
+  evaluates the corresponding record. The audit is regenerated from saved
+  coursework and current catalog evidence.
+
+The reporting scope remains the CS B.S. program for 2026–2027. Developer setup
+still requires both FastAPI and the Vite app.
