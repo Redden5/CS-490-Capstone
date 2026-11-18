@@ -11,44 +11,6 @@ function creditLabel(min, max) {
   return min === max ? `${min}` : `${min}–${max}`;
 }
 
-
-function useGeneratedSchedule({
-  termId,
-  option,
-  creditHours,
-  handoffWarnings,
-}) {
-  const courses = Object.entries(option.sections).map(
-    ([courseCode, section]) => ({
-      course_id: section.course_id,
-      course_code: courseCode,
-      course_title: section.course_title ?? "",
-      min_credit_hours: creditHours[courseCode],
-      max_credit_hours: creditHours[courseCode],
-      selectedSection: structuredClone(section),
-    })
-  );
-
-  const generatedSummary = {
-    status: option.status,
-    warnings: [
-      ...(option.warnings ?? []),
-      ...handoffWarnings,
-    ],
-    unscheduledRequired: [...(option.unscheduled_required ?? [])],
-  };
-
-  setSemesters((current) => [
-    ...current,
-    {
-      id: current.length + 1,
-      termId: String(termId),
-      courses,
-      generatedSummary,
-    },
-  ]);
-}
-
 function CoursePicker({ term, selected, onSelect, onClose }) {
   const dialog = useRef(null);
   const [input, setInput] = useState("");
@@ -152,7 +114,15 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
   );
 }
 
-function SemesterColumn({ semesterId, terms, loadingTerms, termError, initialTermId = "catalog", initialCourses = [], generatedSummary = null }) {
+function SemesterColumn({
+  semesterId,
+  terms,
+  loadingTerms,
+  termError,
+  initialTermId = "catalog",
+  initialCourses = [],
+  generatedSummary = null,
+}) {
   const [termId, setTermId] = useState(String(initialTermId));
   const term = terms.find((item) => String(item.term_id) === termId);
   const title = `Semester ${semesterId}`;
@@ -181,69 +151,47 @@ function SemesterColumn({ semesterId, terms, loadingTerms, termError, initialTer
       </p>
       <p>{creditLabel(min, max)} planned credits</p>
 
-{generatedSummary && (
-  <div className="planner-term-help">
-    <p>
-      Created from a generated schedule
-      {generatedSummary.status === "TENTATIVE"
-        ? " with unresolved checks."
-        : "."}
-      {" "}Manual changes are not automatically checked for conflicts
-      or prerequisites.
-    </p>
-
-    {generatedSummary.unscheduledRequired.length > 0 && (
-      <p>
-        Required courses left out of the original option:{" "}
-        {generatedSummary.unscheduledRequired.join(", ")}
-      </p>
-    )}
-
-    {generatedSummary.warnings.length > 0 && (
-      <details>
-        <summary>Original schedule warnings</summary>
-        <ul>
-          {generatedSummary.warnings.map((warning, index) => (
-            <li key={index}>{warning}</li>
-          ))}
-        </ul>
-      </details>
-    )}
-  </div>
-)}
-
-{!courses.length && (
-  <p className="planner-empty">No courses added yet.</p>
-)}
+      {generatedSummary && (
+        <div className="planner-term-help">
+          <p>
+            Created from a generated schedule
+            {generatedSummary.status === "TENTATIVE"
+              ? " with unresolved checks."
+              : "."}
+            {" "}Manual changes are not automatically checked for conflicts
+            or prerequisites.
+          </p>
+          {generatedSummary.unscheduledRequired.length > 0 && (
+            <p>
+              Required courses left out of the original option:{" "}
+              {generatedSummary.unscheduledRequired.join(", ")}
+            </p>
+          )}
+          {generatedSummary.warnings.length > 0 && (
+            <details>
+              <summary>Original schedule warnings</summary>
+              <ul>
+                {generatedSummary.warnings.map((warning, index) => (
+                  <li key={index}>{warning}</li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </div>
+      )}
+      {!courses.length && <p className="planner-empty">No courses added yet.</p>}
       <ul className="planner-course-list">
         {courses.map((course) => (
           <li className="planner-course-slot planner-course-slot-filled" key={course.course_id}>
             <div className="planner-course-title"><strong>{course.course_code}</strong><span>{course.course_title}</span></div>
             <p>{creditLabel(course.min_credit_hours, course.max_credit_hours)} credits</p>
-            <p>
-  {creditLabel(course.min_credit_hours, course.max_credit_hours)} credits
-</p>
-
-{course.selectedSection && (
-  <p className="planner-term-help">
-    Section {course.selectedSection.section_number}
-    {" · "}
-    CRN {course.selectedSection.crn}
-  </p>
-)}
-
-<button
-  type="button"
-  className="planner-remove-button"
-  aria-label={`Remove ${course.course_code} from ${title}`}
-  onClick={() =>
-    setCourses(courses.filter(
-      (item) => item.course_id !== course.course_id
-    ))
-  }
->
-  Remove
-</button>
+            {course.selectedSection && (
+              <p className="planner-term-help">
+                Section {course.selectedSection.section_number}
+                {" · "}
+                CRN {course.selectedSection.crn}
+              </p>
+            )}
             <button type="button" className="planner-remove-button" aria-label={`Remove ${course.course_code} from ${title}`}
               onClick={() => setCourses(courses.filter((item) => item.course_id !== course.course_id))}>Remove</button>
           </li>
@@ -265,44 +213,46 @@ function Planner() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
-  const [semesters, setSemesters] = useState([{id: 1, termId: "catalog", courses: []}, ]);
-
-  function useGeneratedSchedule({
-  termId,
-  option,
-  creditHours,
-  handoffWarnings,
-}) {
-  const courses = Object.entries(option.sections).map(
-    ([courseCode, section]) => ({
-      course_id: section.course_id,
-      course_code: courseCode,
-      course_title: section.course_title ?? "",
-      min_credit_hours: creditHours[courseCode],
-      max_credit_hours: creditHours[courseCode],
-      selectedSection: structuredClone(section),
-    })
-  );
-
-  const generatedSummary = {
-    status: option.status,
-    warnings: [
-      ...(option.warnings ?? []),
-      ...handoffWarnings,
-    ],
-    unscheduledRequired: [...(option.unscheduled_required ?? [])],
-  };
-
-  setSemesters((current) => [
-    ...current,
-    {
-      id: current.length + 1,
-      termId: String(termId),
-      courses,
-      generatedSummary,
-    },
+  const [semesters, setSemesters] = useState([
+    { id: 1, termId: "catalog", courses: [] },
   ]);
-}
+
+  function handleUseGeneratedSchedule({
+    termId,
+    option,
+    creditHours,
+    handoffWarnings,
+  }) {
+    const courses = Object.entries(option.sections).map(
+      ([courseCode, section]) => ({
+        course_id: section.course_id,
+        course_code: courseCode,
+        course_title: section.course_title ?? "",
+        min_credit_hours: creditHours[courseCode],
+        max_credit_hours: creditHours[courseCode],
+        selectedSection: structuredClone(section),
+      })
+    );
+
+    const generatedSummary = {
+      status: option.status,
+      warnings: [
+        ...(option.warnings ?? []),
+        ...handoffWarnings,
+      ],
+      unscheduledRequired: [...(option.unscheduled_required ?? [])],
+    };
+
+    setSemesters((current) => [
+      ...current,
+      {
+        id: current.length + 1,
+        termId: String(termId),
+        courses,
+        generatedSummary,
+      },
+    ]);
+  }
 
   useEffect(() => {
     const controller = new AbortController();
@@ -339,7 +289,7 @@ function Planner() {
         <h1>Planner</h1>
         <p>Organize future semesters using recorded course offerings.</p>
       </div>
-        <GeneratedSchedules terms={terms} loadingTerms={loading} onUseSchedule={useGeneratedSchedule} />
+      <GeneratedSchedules terms={terms} loadingTerms={loading} onUseSchedule={handleUseGeneratedSchedule} />
       <DashboardCard title="Semester Plan">
         <p>Your plan is temporary. Refreshing or leaving this page clears your selections.</p>
         <button className="planner-primary-button" type="button"
@@ -349,7 +299,18 @@ function Planner() {
         ) : !terms.length ? <p>No active terms are listed. You can still add courses from the catalog; semester availability is unverified.</p> : null}
       </DashboardCard>
       <div className="planner-semester-grid">
-        {semesters.map((semester) => <SemesterColumn semesterId={semester.id} termId={semester.termId} courses={semester.courses} terms={terms} loadingTerms={loading} termError={error} key={semester.id} generatedSummary={semester.generatedSummary} />)}
+        {semesters.map((semester) => (
+          <SemesterColumn
+            key={semester.id}
+            semesterId={semester.id}
+            initialTermId={semester.termId}
+            initialCourses={semester.courses}
+            terms={terms}
+            loadingTerms={loading}
+            termError={error}
+            generatedSummary={semester.generatedSummary}
+          />
+        ))}
       </div>
     </main>
   );

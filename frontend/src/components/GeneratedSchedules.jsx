@@ -185,13 +185,13 @@ export default function GeneratedSchedules({ terms, loadingTerms, onUseSchedule 
             setAddedOption(chosen);
           }}>
             {addedOption === chosen
-              ? "added to semester plan"
+              ? "Added to semester plan"
               : "Use this schedule"}
           </button>
 
           {addedOption === chosen && (
             <p role="status">
-              A new semester with this schedule has been added to your plane below.
+              A new semester with this schedule has been added to your plan below.
             </p>
           )}
 
