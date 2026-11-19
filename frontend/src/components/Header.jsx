@@ -13,7 +13,7 @@ function Header({ onSignOut }) {
     <header className="site-header">
       <Link className="brand" to="/" aria-label="Marshall Course Advisor home">
         <span className="brand-mark" aria-hidden="true" />
-        <span className="brand-name">MARSHALL</span>
+        <span className="brand-name">MARSHALL</span>{" "}
         <span className="brand-title">Course Advisor</span>
       </Link>
 

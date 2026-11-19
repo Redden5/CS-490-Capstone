@@ -1,0 +1,35 @@
+/* Legacy pages keep their current reset and cascade during the migration. */
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme) prefix(mu);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(mu);
+
+@theme {
+  --color-canvas: #f2f6f2;
+  --color-paper: #ffffff;
+  --color-forest: #103d2c;
+  --color-herd: #176444;
+  --color-mint: #e4f2e7;
+  --color-leaf: #bce8cb;
+  --color-ink: #132b21;
+  --color-muted: #466052;
+  --color-line: #d7e4da;
+  --color-audit-tint: #f1f8f1;
+  --color-review-ink: #725016;
+  --color-review-tint: #faf0dc;
+  --font-campus: "Aptos", "Segoe UI", system-ui, sans-serif;
+  --font-display: Georgia, "Times New Roman", serif;
+  --text-page: clamp(2.5rem, 5vw, 4.25rem);
+  --text-page--line-height: 1.03;
+  --radius-panel: 1.125rem;
+  --radius-banner: 1.5rem;
+  --spacing-course-row: 4.75rem;
+  --spacing-record-list: calc(3 * var(--mu-spacing-course-row));
+  --shadow-panel: 0 1px 2px #19372708, 0 8px 25px #16362609;
+}
+
+@utility student-focus {
+  &:focus-visible {
+    outline: 2px solid var(--mu-color-herd);
+    outline-offset: 3px;
+  }
+}
