@@ -86,3 +86,19 @@ The Node tests cover request construction, response/error handling, source-link
 validation and preservation of grouped requirements. Live catalog/API checks
 also require the separately configured backend and Supabase access.
 
+
+## Tailwind conventions
+
+The Dashboard uses Tailwind CSS v4 through the Vite plugin. Add new utilities
+with the `mu:` prefix, including before responsive and state variants
+(`mu:md:grid-cols-2`, `mu:motion-safe:transition-colors`). Theme tokens live in
+`src/styles/tailwind.css`. Use the forest and herd colors for primary actions,
+mint for emphasis, and muted ink for secondary information. Use the campus
+sans-serif stack for UI text and the display serif for prominent page titles.
+
+Tailwind loads its theme and utility layers. Existing routes keep the shared
+styles in `src/index.css` and their page-specific stylesheets. Keep page-specific
+decorations and native control selectors alongside the page. Use
+`mu:student-focus` for custom focusable controls and preserve native labels,
+headings, and visible focus. Motion utilities should use the `motion-safe`
+variant.
