@@ -93,16 +93,9 @@ a:focus-visible {
 }
 
 .dashboard h1 {
-  margin: 0 0 6px;
+  margin: 0 0 16px;
   color: #172b20;
   font-size: 28px;
-}
-
-.dashboard-intro {
-  margin: 0 0 20px;
-  color: #6b7971;
-  font-size: 14px;
-  line-height: 1.4;
 }
 
 .dashboard-overview {
@@ -134,57 +127,59 @@ a:focus-visible {
   font-size: 16px;
 }
 
-.placeholder-bars {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.placeholder-bars span {
-  width: 67%;
-  height: 10px;
-  border-radius: 6px;
-  background: #eaf2ed;
-}
-
-.placeholder-bars span:last-child {
-  width: 46%;
-}
-
-.coursework-empty {
-  margin: 0;
-  color: #6b7971;
-  font-size: 13px;
+.dashboard-note {
+  margin: 4px 0 0;
+  color: #53635b;
+  font-size: 14px;
   line-height: 1.4;
 }
 
-.dashboard-actions {
-  flex: 1;
+.dashboard-program {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-audit {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: 16px;
+  gap: 10px;
+  margin: 14px 0 0;
 }
 
-.dashboard-actions .dashboard-card {
-  min-height: 280px;
-}
-
-.action-links,
-.quick-links {
+.dashboard-audit div {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  justify-content: space-between;
   gap: 12px;
 }
 
-.action-links a {
-  max-width: 100%;
+.dashboard-audit dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.dashboard-records {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   overflow-wrap: anywhere;
-  padding: 11px 12px;
-  border-radius: 7px;
-  background: #f4faf6;
-  font-size: 13px;
-  line-height: 1.2;
+}
+
+.dashboard-records > li + li {
+  border-top: 1px solid #dcebe1;
+  padding-top: 10px;
+}
+
+.dashboard-planned-courses {
+  margin: 5px 0 0;
+  padding-left: 18px;
+}
+
+.quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
 }
 
 .quick-links a {
@@ -204,7 +199,6 @@ a:focus-visible {
   background: #00b638;
 }
 
-.action-links a:hover,
 .quick-links a:hover {
   background: #dbeedf;
 }
@@ -248,14 +242,6 @@ a:focus-visible {
     grid-column: 1 / -1;
   }
 
-  .dashboard-actions {
-    grid-template-columns: 1fr;
-    flex: initial;
-  }
-
-  .dashboard-actions .dashboard-card {
-    min-height: auto;
-  }
 }
 
 
@@ -269,7 +255,6 @@ a:focus-visible {
   }
 
   .main-nav a,
-  .action-links a,
   .quick-links a {
     display: flex;
     align-items: center;
