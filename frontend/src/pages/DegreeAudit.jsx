@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { usePlanning } from '../context/planningContext.js';
 import { CourseEvidence, RequirementEvidence } from '../components/PlanningEvidence.jsx';
@@ -28,8 +28,13 @@ function PrerequisiteResults({ courses }) {
 }
 
 export default function DegreeAudit() {
-  const { input, programs, refreshPrograms, evaluation, evaluate, stale } = usePlanning();
+  const { programs, record, reloadAcademics, canSave, saving, saveError, dirty, evaluation, evaluate, stale } = usePlanning();
   const result = evaluation.data;
+  useEffect(() => {
+    if (record.revision && canSave && !dirty && !result && !evaluation.loading && !evaluation.error && !saveError) {
+      void evaluate();
+    }
+  }, [record.revision, canSave, dirty, result, evaluation.loading, evaluation.error, saveError, evaluate]);
   const eligibility = Object.fromEntries((result?.course_eligibility.courses ?? []).map((course) => [course.course_code, course]));
   const flexible = Object.fromEntries((result?.flexible_candidates.requirements ?? []).map((requirement) => [requirement.requirement_id, requirement]));
   const complete = result?.summary.candidate_met_rule_occurrences ?? 0;
@@ -48,11 +53,16 @@ export default function DegreeAudit() {
     {stale && <p className="planning-notice warning" role="status">Outdated results: your academic information has changed. The report below reflects your last successful evaluation.</p>}
     {evaluation.error && <div className="planning-notice warning" role="alert"><p>{evaluation.error.message}</p>
       {result && <p>Your last successful report is still shown below.</p>}
-      {evaluation.error.status === 404 && <button type="button" className="planning-link" onClick={refreshPrograms}>Refresh programs</button>}
+      {[404, 409].includes(evaluation.error.status) && <button type="button" className="planning-link" onClick={reloadAcademics}>Reload saved coursework</button>}
     </div>}
-    {programs.error && <p role="alert">{programs.error} <button className="planning-link" type="button" onClick={refreshPrograms}>Retry loading programs</button></p>}
+    {record.loading && <p role="status">Loading saved coursework…</p>}
+    {record.error && <p role="alert">{record.error.message}{' '}
+      <button className="planning-link" type="button" onClick={reloadAcademics}>Retry loading coursework</button></p>}
+    {saveError && <p role="alert">{saveError.message}{' '}
+      <Link to="/academic-info">Open Academic Info</Link></p>}
+    {programs.error && <p role="alert">{programs.error} <button className="planning-link" type="button" onClick={reloadAcademics}>Retry loading programs</button></p>}
     <div className="planning-actions">
-      <button className="planning-button" type="button" disabled={evaluation.loading || programs.loading || Boolean(programs.error) || !input.program} onClick={evaluate}>
+      <button className="planning-button" type="button" disabled={evaluation.loading || !canSave || saving} onClick={evaluate}>
         {result ? 'Re-evaluate coursework' : 'Evaluate coursework'}
       </button>
       <Link className="planning-button secondary" to="/planner">Open Planner</Link>

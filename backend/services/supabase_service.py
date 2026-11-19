@@ -5,8 +5,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 
-def create_supabase_client(*, load_env_file: bool = True):
-    """Create a synchronous backend client. Callers can inject it into run_degree_plan."""
+def _supabase_credentials(*key_names: str, load_env_file: bool = True) -> tuple[str, str]:
     if load_env_file:
         from dotenv import load_dotenv
 
@@ -16,7 +15,7 @@ def create_supabase_client(*, load_env_file: bool = True):
             raise ValueError("Unable to read server-side Supabase configuration") from None
 
     url = os.environ.get("SUPABASE_URL", "")
-    key = os.environ.get("SUPABASE_SECRET_KEY") or os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+    key = next((value for name in key_names if (value := os.environ.get(name))), "")
     try:
         parsed = urlsplit(url)
         valid_url = (
@@ -29,7 +28,19 @@ def create_supabase_client(*, load_env_file: bool = True):
         valid_url = False
     valid_key = key and key.isascii() and key.isprintable() and " " not in key
     if not valid_url or not valid_key:
-        raise ValueError("Configure an HTTPS SUPABASE_URL and SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY")
+        raise ValueError(f"Configure an HTTPS SUPABASE_URL and {' or '.join(key_names)}")
+    return url, key
+
+
+def student_supabase_credentials() -> tuple[str, str]:
+    return _supabase_credentials("SUPABASE_PUBLISHABLE_KEY", "SUPABASE_ANON_KEY")
+
+
+def create_supabase_client(*, load_env_file: bool = True):
+    """Create a synchronous backend client. Callers can inject it into run_degree_plan."""
+    url, key = _supabase_credentials(
+        "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY", load_env_file=load_env_file,
+    )
 
     from supabase import ClientOptions, create_client
 
