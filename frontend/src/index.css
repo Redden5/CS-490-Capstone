@@ -62,6 +62,8 @@ a:focus-visible {
 }
 
 .main-nav {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
@@ -75,13 +77,40 @@ a:focus-visible {
   border-radius: 6px;
 }
 
-.main-nav a:hover {
+.main-nav a:not(.active):hover {
   background: #edf7ef;
 }
 
 .main-nav a.active {
   color: #145b32;
+}
+
+.main-nav-indicator {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  border-radius: 6px;
   background: #c5e4c0;
+  pointer-events: none;
+}
+
+.main-nav-indicator[hidden] ~ a.active {
+  background: #c5e4c0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .main-nav-indicator {
+    transition: transform 260ms cubic-bezier(.22, 1, .36, 1),
+      width 260ms cubic-bezier(.22, 1, .36, 1),
+      height 260ms cubic-bezier(.22, 1, .36, 1);
+  }
+}
+
+@media (forced-colors: active) {
+  .main-nav a.active {
+    text-decoration: underline;
+  }
 }
 
 .dashboard-card {
