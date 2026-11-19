@@ -17,7 +17,12 @@ from backend.services.degree_planning import run_degree_plan
 router = APIRouter(prefix="/api/v1/planning", tags=["planning"])
 _RESOLVED = Path(__file__).resolve().parents[1] / "scripts/data/degree_requirements/resolved"
 PROGRAMS = {
-    ("computer-science-bs", "2026-2027"): ("Computer Science, B.S.", _RESOLVED / "computer_science_bs_resolved.json"),
+    # Marshall's 2026–2027 CS B.S. catalog plan lists 120 total credit hours.
+    ("computer-science-bs", "2026-2027"): (
+        SupportedProgram(program_key="computer-science-bs", catalog_year="2026-2027",
+                         program_title="Computer Science, B.S.", required_credits=120),
+        _RESOLVED / "computer_science_bs_resolved.json",
+    ),
 }
 
 
@@ -35,10 +40,7 @@ def get_client_factory() -> Iterator[Callable[[], Any]]:
 
 @router.get("/programs")
 def supported_programs() -> list[SupportedProgram]:
-    return [
-        SupportedProgram(program_key=key, catalog_year=year, program_title=title)
-        for (key, year), (title, _) in PROGRAMS.items()
-    ]
+    return [program for program, _ in PROGRAMS.values()]
 
 
 @router.post("/evaluate", response_model=PlanningHandoff, responses={
@@ -54,9 +56,9 @@ def evaluate(
     program = PROGRAMS.get((request.program_key, request.catalog_year))
     if program is None:
         raise HTTPException(404, "Unsupported program and catalog year.")
-    title, path = program
+    metadata, path = program
     draft = json.loads(path.read_text(encoding="utf-8-sig"))
-    if draft["catalog_year"] != request.catalog_year or draft["program_title"] != title:
+    if draft["catalog_year"] != request.catalog_year or draft["program_title"] != metadata.program_title:
         raise RuntimeError("Registered degree artifact has inconsistent metadata")
 
     coursework = request.model_dump(include={"completed_courses"}, exclude_unset=True)["completed_courses"]

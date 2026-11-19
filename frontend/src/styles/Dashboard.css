@@ -1,0 +1,414 @@
+.dashboard {
+  --dashboard-ink: #152d22;
+  --dashboard-muted: #53675d;
+  --dashboard-border: #d9e8de;
+  --dashboard-highlight: #126744;
+  --dashboard-course-row: 4.25rem;
+  width: min(1500px, 100%);
+  flex: 1;
+  align-self: center;
+  padding: clamp(20px, 3vw, 44px) clamp(16px, 3.5vw, 56px) 48px;
+  color: var(--dashboard-ink);
+}
+
+.dashboard-banner {
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  min-height: 9.5rem;
+  margin-bottom: 22px;
+  padding: clamp(22px, 3.5vw, 42px);
+  border: 1px solid #195639;
+  border-radius: 20px;
+  color: #f5fff9;
+  background:
+    repeating-radial-gradient(circle at 93% 118%, transparent 0 25px, #c5f0d322 26px 27px, transparent 28px 42px),
+    radial-gradient(ellipse at right bottom, #288457, transparent 66%),
+    linear-gradient(115deg, #102d21, #15533a);
+  box-shadow: 0 12px 28px #123b2222;
+}
+
+.dashboard-banner h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -.045em;
+}
+
+.dashboard-banner p {
+  max-width: 36ch;
+  margin: 0;
+  color: #e0f3e7;
+  font-size: .95rem;
+  line-height: 1.4;
+}
+
+.dashboard-overview {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr;
+  gap: 18px;
+}
+
+.dashboard-panel {
+  --panel-tint: #e8f6ed;
+  --panel-ink: #126744;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--dashboard-border);
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 5px 16px #133b2410;
+}
+
+.dashboard-panel--progress {
+  border-color: #bddcc9;
+  background: linear-gradient(140deg, #f1fbf5 0%, #fff 60%);
+}
+
+.dashboard-panel--coursework {
+  --panel-tint: #e8f5f1;
+  --panel-ink: #22685e;
+}
+
+.dashboard-panel--plans {
+  --panel-tint: #f1f4e4;
+  --panel-ink: #546628;
+}
+
+.dashboard-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0;
+  padding: 18px 18px 12px;
+}
+
+.dashboard-panel-heading h2,
+.dashboard-quick h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  letter-spacing: -.018em;
+}
+
+.dashboard-panel-count {
+  margin-left: auto;
+  padding: 4px 7px;
+  border-radius: 6px;
+  color: var(--panel-ink);
+  background: var(--panel-tint);
+  font-size: .75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboard-panel-icon {
+  position: relative;
+  display: grid;
+  flex: 0 0 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--panel-ink);
+  background: var(--panel-tint);
+}
+
+.dashboard-panel-icon::before,
+.dashboard-panel-icon::after {
+  content: "";
+  position: absolute;
+}
+
+.dashboard-panel--progress .dashboard-panel-icon::before {
+  bottom: 10px;
+  left: 10px;
+  width: 4px;
+  height: 6px;
+  border-radius: 2px 2px 0 0;
+  background: currentColor;
+  box-shadow: 6px -4px, 12px -8px;
+}
+
+.dashboard-panel--progress .dashboard-panel-icon::after {
+  bottom: 10px;
+  width: 16px;
+  border-bottom: 2px solid;
+}
+
+.dashboard-panel--coursework .dashboard-panel-icon::before,
+.dashboard-panel--plans .dashboard-panel-icon::before {
+  width: 14px;
+  height: 16px;
+  border: 1.5px solid;
+  border-radius: 3px;
+}
+
+.dashboard-panel--coursework .dashboard-panel-icon::after {
+  width: 6px;
+  border-top: 1.5px solid;
+  box-shadow: 0 4px;
+}
+
+.dashboard-panel--plans .dashboard-panel-icon::before {
+  width: 17px;
+  height: 15px;
+}
+
+.dashboard-panel--plans .dashboard-panel-icon::after {
+  top: 15px;
+  width: 17px;
+  border-top: 1.5px solid;
+}
+
+.dashboard-panel-body {
+  flex: 1;
+  min-width: 0;
+  min-height: calc(3 * var(--dashboard-course-row));
+  padding: 0 18px 10px;
+}
+
+.dashboard-panel-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 46px;
+  padding: 10px 18px;
+  border-top: 1px solid var(--dashboard-border);
+  border-radius: 0 0 16px 16px;
+  color: var(--panel-ink);
+  font-size: .875rem;
+  font-weight: 700;
+}
+
+.dashboard-panel-link:hover,
+.dashboard-quick a:hover {
+  background: var(--panel-tint, #e4f3e9);
+}
+
+.dashboard-note {
+  margin: 4px 0 0;
+  color: var(--dashboard-muted);
+  font-size: .825rem;
+  line-height: 1.38;
+}
+
+.dashboard-program {
+  padding: 6px 0 14px;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-program h3,
+.dashboard-semesters h3 {
+  margin: 0;
+  font-size: .95rem;
+}
+
+.dashboard-program span {
+  display: block;
+  margin-top: 4px;
+  color: var(--dashboard-muted);
+  font-size: .825rem;
+}
+
+.dashboard-credit-numbers {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-bottom: 8px;
+}
+
+.dashboard-credit-numbers strong {
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+.dashboard-credit-numbers span {
+  color: var(--dashboard-muted);
+  font-size: .825rem;
+}
+
+.dashboard-credit-numbers .dashboard-credit-percent {
+  color: var(--dashboard-highlight);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboard-credit-progress progress {
+  display: block;
+  width: 100%;
+  height: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  appearance: none;
+  background: #dcece3;
+  color: var(--dashboard-highlight);
+}
+
+.dashboard-credit-progress progress::-webkit-progress-bar {
+  border-radius: 999px;
+  background: #dcece3;
+}
+
+.dashboard-credit-progress progress::-webkit-progress-value {
+  border-radius: 999px;
+  background: linear-gradient(90deg, #116b47, #40a971);
+}
+
+.dashboard-credit-progress progress::-moz-progress-bar {
+  border-radius: 999px;
+  background: linear-gradient(90deg, #116b47, #40a971);
+}
+
+.dashboard-coursework,
+.dashboard-semesters {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dashboard-scroll {
+  max-block-size: calc(3 * var(--dashboard-course-row));
+  overflow-y: auto;
+  scrollbar-color: #94b5a2 transparent;
+  scrollbar-width: thin;
+}
+
+.dashboard-scroll:focus-visible {
+  outline: 2px solid var(--dashboard-highlight);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.dashboard-coursework > li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  block-size: var(--dashboard-course-row);
+  padding-right: 6px;
+}
+
+.dashboard-coursework > li + li,
+.dashboard-semesters > li + li {
+  border-top: 1px solid var(--dashboard-border);
+}
+
+.dashboard-course-mark {
+  flex: 0 0 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3d8a70;
+}
+
+.dashboard-course-info {
+  min-width: 0;
+}
+
+.dashboard-course-info strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboard-course-info p {
+  display: -webkit-box;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.dashboard-semesters > li {
+  padding: 10px 8px 11px 0;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-planned-courses {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: .85rem;
+  line-height: 1.5;
+}
+
+.dashboard-load-error {
+  font-size: .875rem;
+}
+
+.dashboard-load-error button {
+  padding: 7px 10px;
+  border: 1px solid var(--dashboard-border);
+  border-radius: 7px;
+  color: var(--dashboard-highlight);
+  background: #f4faf6;
+  font: inherit;
+  cursor: pointer;
+}
+
+.dashboard-quick {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 18px;
+  margin-top: 18px;
+  padding: 14px 18px;
+  border: 1px solid var(--dashboard-border);
+  border-radius: 15px;
+  background: #fafffc;
+}
+
+.dashboard-quick div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dashboard-quick a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid var(--dashboard-border);
+  border-radius: 8px;
+  color: var(--dashboard-highlight);
+  font-size: .875rem;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .dashboard-overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-panel--progress {
+    grid-column: 1 / -1;
+  }
+
+  .dashboard-panel--progress .dashboard-panel-body {
+    min-height: 0;
+    padding-bottom: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-overview {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .dashboard-banner {
+    margin-bottom: 15px;
+    background-position: center;
+  }
+
+  .dashboard-quick {
+    margin-top: 12px;
+  }
+}

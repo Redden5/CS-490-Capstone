@@ -31,7 +31,7 @@ request completion.
 Use the keys and years from this list when constructing requests.
 
 ```json
-[{"program_key":"computer-science-bs","program_title":"Computer Science, B.S.","catalog_year":"2026-2027"}]
+[{"program_key":"computer-science-bs","program_title":"Computer Science, B.S.","catalog_year":"2026-2027","required_credits":120}]
 ```
 
 **POST `/api/v1/planning/evaluate`** accepts JSON with the three required fields
