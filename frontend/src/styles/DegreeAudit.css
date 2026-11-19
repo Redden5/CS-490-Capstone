@@ -1,116 +1,33 @@
-.degree-audit-page {
-  padding: 28px 40px 40px;
+.audit-hero {
+  background-image:
+    repeating-radial-gradient(ellipse at 104% 138%, transparent 0 23px, #d7f5df24 24px 25px, transparent 26px 43px),
+    linear-gradient(115deg, #103d2c 44%, #1b6c49);
 }
 
-.degree-audit-heading {
-  margin-bottom: 18px;
+.audit-link,
+.audit-text-link {
+  color: var(--mu-color-herd);
 }
 
-.degree-audit-heading h1 {
-  margin: 0 0 4px;
-  font-size: 2rem;
+.audit-text-link {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
-.degree-audit-heading p {
-  margin: 0;
-  color: #6f776f;
+.audit-summary::-webkit-details-marker {
+  display: none;
 }
 
-.degree-progress-track {
-  width: 100%;
-  height: 14px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #dcebe3;
+.audit-chevron {
+  border-right: 2px solid var(--mu-color-herd);
+  border-bottom: 2px solid var(--mu-color-herd);
+  transform: rotate(-45deg);
 }
 
-.degree-progress-fill {
-  width: 72%;
-  height: 100%;
-  border-radius: inherit;
-  background: #00a63c;
+details[open] > .audit-summary .audit-chevron {
+  transform: rotate(45deg);
 }
 
-.degree-audit-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin: 18px 0;
-}
-
-.summary-bar {
-  width: 38%;
-  height: 10px;
-  margin-bottom: 12px;
-  border-radius: 999px;
-  background: #e5efe9;
-}
-
-.summary-value {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #5f675f;
-}
-
-.degree-audit-content {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
-  gap: 16px;
-  align-items: start;
-}
-
-.degree-audit-sidebar {
-  display: grid;
-  gap: 16px;
-}
-
-.requirement-list {
-  display: grid;
-  gap: 12px;
-}
-
-.requirement-row {
-  width: 100%;
-  padding: 15px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 0;
-  border-radius: 7px;
-  background: #f0f7f3;
-  color: #333;
-  text-align: left;
-  cursor: pointer;
-}
-
-.requirement-row:hover {
-  background: #e7f2eb;
-}
-
-.requirement-arrow {
-  font-size: 1.35rem;
-  color: #6d756f;
-}
-
-.eligibility-list {
-  display: grid;
-  gap: 12px;
-}
-
-.open-planner-button {
-  border: 0;
-  border-radius: 7px;
-  font: inherit;
-  font-weight: 400;
-  cursor: pointer;
-  padding: 9px 14px;
-  background: #00a83f;
-  color: #ffffff;
-  margin-right: 10px;
-  transition: background-color 160ms ease, box-shadow 160ms ease, transform 100ms ease;
-}
-
-.open-planner-button:hover {
-  background: #008f36;
-  box-shadow: 0 3px 8px rgba(0, 80, 30, 0.22);
+.audit-hero-link:focus-visible {
+  outline-color: var(--mu-color-leaf);
 }
