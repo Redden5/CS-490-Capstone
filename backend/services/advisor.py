@@ -206,6 +206,42 @@ def format_record(record, crn):
     return f"{record.title}\n" + "\n".join(excerpt)
 
 
+@lru_cache(maxsize=1)
+def related_courses():
+    """Index prerequisite references without treating alternatives as eligibility."""
+    reverse = defaultdict(list)
+    for course in dataset("prerequisites/parsed_all_v2.json")["courses"]:
+        for rule in course["rules"]:
+            if rule["rule_type"] != "PREREQUISITE":
+                continue
+            references = {atom["course_code"] for clause in rule.get("dnf_clauses", [])
+                          for atom in clause if atom.get("course_code")}
+            for reference in references:
+                reverse[reference].append(Record(
+                    f"{course['course_code']} · After {reference} ({course['catalog_year']})",
+                    f"References {reference} as a prerequisite. {clean(rule['raw_text'])}",
+                    "prerequisites", official_url(course["source_url"]), (course["course_code"],),
+                ))
+    return reverse
+
+
+def relationship_answer(question, codes, records):
+    if re.search(r"\b(?:opens? up|unlocks?|after|leads? to|depend\w* on)\b", question):
+        matches = [record for code in codes for record in related_courses().get(code, [])]
+        intro = "These courses reference your selected course in their prerequisite rules. Additional prerequisites, alternative paths, grades, and concurrent conditions still apply."
+    elif re.search(r"\b(?:alternatives?|same (?:elective|requirement)|other.*elective)\b", question):
+        matches = [record for record in records if record.topic == "degree"
+                   and set(codes).intersection(record.codes)]
+        intro = "These degree requirement groups include your selected course. Check each selection instruction and catalog year."
+    else:
+        return None
+    if not matches:
+        return reply("No matching course relationships were found in the saved academic data.", codes=codes)
+    matches = list(dict.fromkeys(matches))[:3]
+    answer = intro + "\n\n" + "\n\n".join(format_record(record, None) for record in matches)
+    return reply(answer, matches, tuple(dict.fromkeys(code for record in matches for code in record.codes))[:3])
+
+
 def answer_question(question, previous_codes=()):
     records, known_codes, indexed_words = index()
     question_lower = question.lower()
@@ -213,7 +249,21 @@ def answer_question(question, previous_codes=()):
         return reply(AUDIT_NOTE, action="audit")
     explicit = tuple(dict.fromkeys(f"{subject.upper()} {number.upper()}" for subject, number in COURSE_CODE.findall(question)))
     codes = tuple(code for code in explicit if code in known_codes)[:3]
+    relationship = relationship_answer(question_lower, codes, records) if codes else None
+    if relationship:
+        return relationship
     topic = select_topic(question_lower, bool(codes))
+    similar_query = bool(codes and re.search(r"\b(?:similar|related|like)\b", question_lower))
+    if similar_query:
+        from backend.services.advisor_ollama import semantic_matches
+        originals = [record for record in records if record.topic == "courses" and set(codes).intersection(record.codes)]
+        related = semantic_matches(" ".join(record.title + " " + record.text for record in originals), records)
+        matches = [record for record in related if not set(codes).intersection(record.codes)][:3]
+        if not matches:
+            return reply("No semantic course matches are available yet. Try a course topic or check the local embedding index.", codes=codes)
+        return reply("These courses cover related topics. Degree credit and equivalency require separate review.\n\n"
+                     + "\n\n".join(format_record(record, None) for record in matches), matches,
+                     tuple(record.codes[0] for record in matches))
     query = words(question)
     follow_up = re.search(r"\b(?:it|that class|that course|those courses|them)\b", question_lower)
     # Use prior course identities for short follow-ups that do not name another subject.
@@ -271,6 +321,20 @@ def answer_question(question, previous_codes=()):
     if ranked and not codes:
         ranked = [item for item in ranked if item[0] == ranked[0][0]]
     matches = [record for _, record in ranked[:3]]
+    if topic == "courses" and not codes:
+        from backend.services.advisor_ollama import semantic_matches
+        semantic = semantic_matches(question, records)
+        credit_match = re.search(r"\b(\d+(?:\.\d+)?)\s*[- ]?credits?\b", question_lower)
+        if credit_match:
+            desired = float(credit_match[1])
+            def matches_credits(record):
+                credit_text = re.match(r"(\d+(?:\.\d+)?)(?:–(\d+(?:\.\d+)?))? credits", record.text)
+                return bool(credit_text and float(credit_text[1]) <= desired <= float(credit_text[2] or credit_text[1]))
+            matches = [record for record in matches if matches_credits(record)]
+            semantic = [record for record in semantic if matches_credits(record)]
+        # Semantic results complement exact title matches and keyword retrieval.
+        exact_titles = [record for record in matches if query and query <= words(record.title)]
+        matches = list(dict.fromkeys([*exact_titles, *semantic, *matches]))[:3]
     if not matches:
         if topic == "schedules":
             return reply("I could not find matching sections in the saved snapshot. Use Planner to check term offerings and assemble a schedule.", codes=codes, action="planner")

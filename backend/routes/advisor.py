@@ -10,6 +10,7 @@ from fastapi import APIRouter, HTTPException, Request, Response
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
 from backend.services.advisor import answer_question
+from backend.services.advisor_ollama import generate_answer
 
 
 router = APIRouter(prefix="/api/v1/advisor", tags=["advisor"])
@@ -76,4 +77,4 @@ def chat(payload: AdvisorQuestion, request: Request, response: Response):
             "Retry-After": str(retry_after), "Cache-Control": "no-store",
         })
     response.headers["Cache-Control"] = "no-store"
-    return answer_question(payload.question, payload.course_codes)
+    return generate_answer(payload.question, answer_question(payload.question, payload.course_codes))
