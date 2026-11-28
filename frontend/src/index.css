@@ -51,19 +51,6 @@ a:focus-visible {
   height: auto;
 }
 
-.brand-mark {
-  width: 29px;
-  height: 29px;
-  border-radius: 7px;
-  background: #00b638;
-}
-
-.brand-name {
-  color: #117436;
-  font-size: 15px;
-  letter-spacing: 0.4px;
-}
-
 .brand-title {
   color: #26362c;
 }

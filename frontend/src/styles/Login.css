@@ -1,224 +1,89 @@
-
-/* ======================================
-   LOGIN PAGE
-====================================== */
+@reference "./tailwind.css";
 
 .login-page {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  width: min(440px, calc(100% - 32px));
-  margin: 40px auto;
-  padding: 36px;
-
-  background: #ffffff;
-  border: 1px solid #dcebe1;
-  border-radius: 12px;
-
-  box-shadow: 0 8px 30px rgba(23, 43, 32, 0.06);
+  @apply mu:grid mu:w-full mu:flex-1 mu:place-items-center mu:bg-canvas mu:px-4 mu:py-6 mu:font-campus mu:text-ink mu:sm:px-8 mu:sm:py-10;
+  background-image: radial-gradient(ellipse at 10% 95%, var(--mu-color-mint), transparent 70%);
 }
 
-/* Login heading */
-
-.login-page h1 {
-  margin: 0 0 8px;
-
-  color: #172b20;
-  font-size: 28px;
-  font-weight: 700;
-  text-align: center;
+.login-card {
+  @apply mu:grid mu:w-full mu:max-w-[61rem] mu:min-w-0 mu:overflow-hidden mu:rounded-banner mu:border mu:border-solid mu:border-line mu:bg-paper mu:shadow-panel mu:md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)];
 }
 
-.login-page > p {
-  margin: 0 0 28px;
-
-  color: #6b7971;
-  font-size: 14px;
-  line-height: 1.5;
-  text-align: center;
+.login-brand {
+  @apply mu:min-w-0 mu:bg-forest mu:px-6 mu:py-6 mu:text-paper mu:sm:px-9 mu:sm:py-8 mu:md:min-h-[32rem] mu:lg:px-12 mu:lg:py-11;
+  background-image:
+    repeating-radial-gradient(ellipse at 110% 150%, transparent 0 25px, #d7f5df24 26px 27px, transparent 28px 43px),
+    linear-gradient(115deg, var(--mu-color-forest) 44%, #1b6c49);
 }
 
-/* Login form */
-
-.login-page form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  width: 100%;
-}
-
-.login-page form > div {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* Input labels */
-
-.login-page label {
-  color: #26362c;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* Email and password inputs */
-
-.login-page input {
-  width: 100%;
-  min-height: 45px;
-  padding: 11px 13px;
-
-  background: #ffffff;
-  color: #2d302b;
-
-  border: 1px solid #dcebe1;
-  border-radius: 7px;
-
-  font-family: inherit;
-  font-size: 14px;
-
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.login-page input::placeholder {
-  color: #9ca9a0;
-}
-
-.login-page input:hover {
-  border-color: #b8ddc4;
-}
-
-.login-page input:focus {
-  outline: none;
-  border-color: #00b638;
-  box-shadow: 0 0 0 3px rgba(0, 182, 56, 0.12);
-}
-
-/* Sign In button */
-
-.login-page button[type="submit"] {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 100%;
-  min-height: 46px;
-  margin-top: 6px;
-  padding: 12px 20px;
-
-  background: #00b638;
-  color: #ffffff;
-
-  border: 1px solid #00b638;
-  border-radius: 7px;
-
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.login-page button[type="submit"]:hover:not(:disabled) {
-  background: #008b2f;
-  border-color: #008b2f;
-  transform: translateY(-1px);
-}
-
-.login-page button[type="submit"]:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.login-page button[type="submit"]:focus-visible {
-  outline: 3px solid #80c5a6;
-  outline-offset: 3px;
-}
-
-.login-page button[type="submit"]:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-/* Authentication error */
-
-.login-page [role="alert"] {
-  margin: 0;
-  padding: 12px 14px;
-
-  color: #a12626;
-  background: #fff1f1;
-
-  border: 1px solid #f4caca;
-  border-radius: 7px;
-
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-/* Responsive styling */
-
-@media (max-width: 600px) {
-  .login-page {
-    width: calc(100% - 32px);
-    margin: 24px auto;
-    padding: 26px 20px;
-  }
-
-  .login-page h1 {
-    font-size: 25px;
-  }
-
-  .login-page input,
-  .login-page button[type="submit"] {
-    min-height: 44px;
+@media (min-width: 48rem) {
+  .login-brand {
+    background-image:
+      repeating-radial-gradient(ellipse at 110% 156%, transparent 0 25px, #d7f5df24 26px 27px, transparent 28px 43px),
+      linear-gradient(180deg, #103d2c 37%, #103d2cf7 48%, #103d2c85 69%, #103d2c22 100%),
+      url("../assets/dashboard-campus.webp");
+    background-position: center, center, 65% bottom;
+    background-repeat: no-repeat;
+    background-size: cover, cover, auto 64%;
   }
 }
 
-
-/* Marshall branding on login page */
-
-.login-page .login-brand {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-
-  width: 100%;
-  margin-bottom: 28px;
-  padding-bottom: 24px;
-
-  border-bottom: 1px solid #dcebe1;
+.login-logo {
+  @apply mu:block mu:h-auto mu:w-20 mu:rounded-lg mu:bg-paper mu:p-1.5 mu:sm:w-24 mu:lg:w-28;
 }
 
-.login-page .login-brand .brand-mark {
-  display: inline-block;
-  width: 29px;
-  height: 29px;
-  flex-shrink: 0;
-  border-radius: 7px;
-  background: #00b638;
+.login-product-name {
+  @apply mu:m-0 mu:mt-4 mu:font-display mu:text-[clamp(2rem,6vw,4.25rem)] mu:leading-none mu:tracking-tight mu:md:max-w-[9ch] mu:md:text-page;
 }
 
-.login-page .login-brand .brand-name {
-  color: #00b638;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
+.login-brand-description {
+  @apply mu:m-0 mu:mt-3 mu:max-w-[27ch] mu:text-sm mu:leading-relaxed mu:text-leaf mu:sm:text-base;
 }
 
-.login-page .login-brand .brand-title {
-  color: #26362c;
-  font-size: 14px;
-  font-weight: 600;
+.login-panel {
+  @apply mu:grid mu:min-w-0 mu:content-center mu:px-6 mu:py-7 mu:sm:px-10 mu:sm:py-10 mu:lg:px-12;
+}
+
+.login-panel-content {
+  @apply mu:mx-auto mu:w-full mu:max-w-sm;
+}
+
+.login-panel h1 {
+  @apply mu:m-0 mu:font-display mu:text-3xl mu:leading-tight mu:font-normal mu:tracking-tight mu:text-forest mu:sm:text-4xl;
+}
+
+.login-intro {
+  @apply mu:mt-2 mu:mb-0 mu:text-sm mu:leading-relaxed mu:text-muted;
+}
+
+.login-form {
+  @apply mu:mt-6 mu:grid mu:gap-4 mu:sm:mt-8;
+}
+
+.login-field {
+  @apply mu:grid mu:gap-1.5 mu:text-sm mu:font-semibold;
+}
+
+.login-field input {
+  @apply mu:min-h-11 mu:w-full mu:min-w-0 mu:rounded-lg mu:border mu:border-solid mu:border-muted mu:bg-paper mu:px-3 mu:py-2 mu:[font-family:inherit] mu:text-base mu:font-normal mu:text-ink mu:motion-safe:transition-colors;
+}
+
+.login-field input:focus {
+  @apply mu:border-herd;
+}
+
+.login-submit {
+  @apply mu:mt-1 mu:inline-flex mu:min-h-11 mu:cursor-pointer mu:items-center mu:justify-center mu:rounded-lg mu:border mu:border-solid mu:border-herd mu:bg-herd mu:px-4 mu:py-2 mu:[font-family:inherit] mu:text-sm mu:font-semibold mu:text-paper mu:hover:bg-forest mu:motion-safe:transition-colors;
+}
+
+.login-submit:disabled {
+  @apply mu:cursor-wait mu:border-line mu:bg-mint mu:text-forest;
+}
+
+.login-form :is(input, button) {
+  @apply mu:student-focus;
+}
+
+.login-error {
+  @apply mu:m-0 mu:rounded-lg mu:border mu:border-solid mu:border-review-ink/30 mu:bg-review-tint mu:px-3 mu:py-2.5 mu:text-sm mu:leading-relaxed mu:text-review-ink mu:wrap-anywhere;
 }

@@ -1,74 +1,84 @@
-
 import { useState } from "react";
-import { supabase } from "../lib/supabaseClient";
+import marshallLogo from "../assets/marshall-header-logo.webp";
+import { supabase } from "../lib/supabaseClient.js";
 import "../styles/Login.css";
 
 function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    async function handleLogin(e) {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
+  async function handleLogin(event) {
+    event.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    setError("");
 
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-
-        if (error) {
-            setError(error.message);
-        }
-
-        setLoading(false);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) setError(error.message);
+    } catch {
+      setError("Unable to sign in right now. Please try again.");
+    } finally {
+      setLoading(false);
     }
+  }
 
-    return (
-        <main className="login-page">
+  return (
+    <main className="login-page">
+      <div className="login-card">
+        <header className="login-brand">
+          <img className="login-logo" src={marshallLogo} width="240" height="163" alt="Marshall University" />
+          <p className="login-product-name">Course Advisor</p>
+          <p className="login-brand-description">Review your degree progress and plan your next semester.</p>
+        </header>
 
-            <div className="login-brand">
-                <span className="brand-mark" aria-hidden="true" />
-                <span className="brand-name">MARSHALL</span>
-                <span className="brand-title">Course Advisor</span>
-            </div>
+        <section className="login-panel" aria-labelledby="login-title">
+          <div className="login-panel-content">
+            <h1 id="login-title">Student sign in</h1>
+            <p className="login-intro">Use your Course Advisor account to continue.</p>
 
-            <h1>Student Login</h1>
-            <p>Sign in to your Course Advisor Assistant</p>
+            <form className="login-form" aria-labelledby="login-title" onSubmit={handleLogin}>
+              <div className="login-field">
+                <label htmlFor="email">Email</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="username"
+                  autoCapitalize="none"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  required
+                />
+              </div>
 
-            <form onSubmit={handleLogin}>
-                <div>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
+              <div className="login-field">
+                <label htmlFor="password">Password</label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  required
+                />
+              </div>
 
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
+              {error && <p className="login-error" role="alert">{error}</p>}
 
-                {error && <p role="alert">{error}</p>}
-
-                <button type="submit" disabled={loading}>
-                    {loading ? "Signing in..." : "Sign In"}
-                </button>
+              <button className="login-submit" type="submit" disabled={loading}>
+                {loading ? "Signing in…" : "Sign In"}
+              </button>
             </form>
-        </main>
-    );
+            <p className="sr-only" role="status">{loading ? "Signing in…" : ""}</p>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
 }
 
 export default Login;
