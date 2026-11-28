@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient.js";
 import CourseDetailCard from "../components/CourseDetailCard.jsx";
 import CourseRequirements from "../components/CourseRequirements.jsx";
+import "../styles/Courses.css";
 import "../styles/CourseDetails.css";
 
 const DAYS = [null, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -94,32 +95,37 @@ function CourseDetails() {
   const { course, rules, sections } = result;
 
   return (
-    <main className="course-details-page" aria-busy={result.loading}>
+    <main className="catalog-page course-details-page" aria-busy={result.loading}>
       {location.state?.fromCourses ? (
-        <button className="course-back-link" type="button" onClick={() => navigate(-1)}>← Back to courses</button>
-      ) : <Link className="course-back-link" to="/courses">← Back to courses</Link>}
+        <button className="catalog-button course-back-link" type="button" onClick={() => navigate(-1)}><span aria-hidden="true">←</span> Back to courses</button>
+      ) : <Link className="catalog-button course-back-link" to="/courses"><span aria-hidden="true">←</span> Back to courses</Link>}
 
-      {result.loading ? <p role="status">Loading course details…</p> : result.error ? (
-        <>
+      {result.loading ? (
+        <section className="catalog-panel">
+          <p className="catalog-notice" role="status">Loading course details…</p>
+          <div className="catalog-result-placeholder" aria-hidden="true"><span /><span /></div>
+        </section>
+      ) : result.error ? (
+        <section className="catalog-panel course-detail-error">
           <h1 ref={heading} tabIndex={-1}>Unable to load course</h1>
-          <p role="alert">{result.error}</p>
-          <button type="button" onClick={() => setAttempt(attempt + 1)}>Try again</button>
-        </>
+          <p className="catalog-notice catalog-warning" role="alert">{result.error}</p>
+          <button className="catalog-button catalog-button-primary" type="button" onClick={() => setAttempt(attempt + 1)}>Try again</button>
+        </section>
       ) : !course ? (
-        <>
+        <section className="catalog-panel course-detail-error">
           <h1 ref={heading} tabIndex={-1}>Course not found</h1>
-          <p>This course is unavailable or you don’t have access to it.</p>
-        </>
+          <p className="catalog-notice">This course is unavailable or you don’t have access to it.</p>
+        </section>
       ) : (
         <>
-          <header className="course-details-heading">
-            <p>{course.course_code}</p>
-            <div className="course-title-line">
-              <h1 ref={heading} tabIndex={-1}>{course.course_title}</h1>
-              <span className={`course-status-badge${course.active_status ? "" : " course-status-inactive"}`}>
+          <header className="catalog-hero course-details-heading">
+            <div className="course-heading-meta">
+              <span className="course-heading-code">{course.course_code}</span>
+              <span className={`course-status-badge${course.active_status ? "" : " catalog-inactive"}`}>
                 {course.active_status ? "Active" : "Inactive"}
               </span>
             </div>
+            <h1 ref={heading} tabIndex={-1}>{course.course_title}</h1>
             <dl className="course-facts course-summary-facts">
               <div><dt>Credits:</dt><dd>{course.min_credit_hours === course.max_credit_hours
                 ? course.min_credit_hours : `${course.min_credit_hours}–${course.max_credit_hours}`}</dd></div>
@@ -134,10 +140,10 @@ function CourseDetails() {
               </CourseDetailCard>
 
               <CourseDetailCard title="Course sections" className="course-sections-card">
-                {sections.error ? <p role="alert">Sections could not be loaded. Try reloading the course.</p>
+                {sections.error ? <p className="catalog-notice catalog-warning" role="alert">Sections could not be loaded. Try reloading the course.</p>
                   : sections.data?.length ? (
                     <>
-                      <p>All recorded terms are shown. Enrollment information may change.</p>
+                      <p className="catalog-muted">All recorded terms are shown. Enrollment information may change.</p>
                       <div className="course-sections">
                         {sections.data.map((section) => <Section section={section} key={section.section_id} />)}
                       </div>
@@ -148,13 +154,13 @@ function CourseDetails() {
             <aside className="course-requirements-sidebar" aria-label="Course requirements">
               {rules.error ? (
                 <CourseDetailCard title="Prerequisites and corequisites" className="course-requirements-card">
-                  <p role="alert">Requirements could not be loaded. Try reloading the course.</p>
+                  <p className="catalog-notice catalog-warning" role="alert">Requirements could not be loaded. Try reloading the course.</p>
                 </CourseDetailCard>
               ) : <CourseRequirements key={course.course_id} rules={rules.data ?? []} />}
             </aside>
           </div>
           {(rules.error || sections.error) && (
-            <button type="button" onClick={() => setAttempt(attempt + 1)}>Reload course</button>
+            <button className="catalog-button" type="button" onClick={() => setAttempt(attempt + 1)}>Reload course</button>
           )}
         </>
       )}

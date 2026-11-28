@@ -1,30 +1,30 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient.js";
-import DashboardCard from "../components/DashboardCard.jsx";
 import "../styles/Courses.css";
 
 const PAGE_SIZE = 25;
 
 function CourseRow({ course }) {
   return (
-    <div className="course-result-row">
-      <div className="course-result-title">
-        <Link to={`/courses/${course.course_id}`} state={{ fromCourses: true }}>
-          <strong>{course.course_code}</strong> — {course.course_title}
-          <span className="course-detail-link-label">View details →</span>
-        </Link>
+    <li className="catalog-result">
+      <div className="catalog-result-meta">
+        <span className="catalog-code">{course.course_code}</span>
+        {!course.active_status && <span className="catalog-inactive">Inactive</span>}
+        <span className="catalog-result-credits">
+          {course.min_credit_hours}
+          {course.min_credit_hours !== course.max_credit_hours && `–${course.max_credit_hours}`} credits
+        </span>
       </div>
-
+      <h3 className="catalog-result-title">
+        <Link className="catalog-result-link" to={`/courses/${course.course_id}`} state={{ fromCourses: true }}
+          aria-label={`${course.course_title} (${course.course_code})`}>
+          <span>{course.course_title}</span>
+          <span aria-hidden="true">→</span>
+        </Link>
+      </h3>
       <p>{course.description || "No description available."}</p>
-
-      <p>
-        <strong>Credits:</strong> {course.min_credit_hours}
-        {course.min_credit_hours !== course.max_credit_hours &&
-          ` - ${course.max_credit_hours}`}
-      </p>
-    </div>
+    </li>
   );
 }
 
@@ -120,100 +120,85 @@ function Courses() {
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   return (
-    <main className="courses-page">
-      <div className="courses-heading">
+    <main className="catalog-page">
+      <header className="catalog-hero">
         <h1>Courses</h1>
-        <p>Browse course information and prerequisite details.</p>
-      </div>
+        <p>Explore the catalog and check course requirements before planning your semester.</p>
+      </header>
 
-      <form
-        className="course-search-section"
-        onSubmit={handleSearch}
-      >
-        <input
-          className="course-search-input"
-          type="text"
-          placeholder="Search courses"
-          aria-label="Search courses"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-
-        <button className="course-search-button"type="submit">
-          <span>Search</span>
-        </button>
-
-        <button
-          className="course-filter-button"
-          type="button"
-          aria-pressed={activeOnly}
-          onClick={() => {
-            setActiveOnly(!activeOnly);
-            setPage(0);
-          }}
-        >
-          {activeOnly ? "Active Only" : "All Courses"}
-        </button>
-
-        <button
-          className="course-explore-button"
-          type="button"
-          onClick={handleExplore}
-        >
-          Explore Courses
-        </button>
+      <form className="catalog-panel catalog-search" role="search" aria-labelledby="catalog-search-title" onSubmit={handleSearch}>
+        <h2 id="catalog-search-title">Find a course</h2>
+        <div className="catalog-search-controls">
+          <div className="catalog-search-field">
+            <label htmlFor="catalog-search-input">Course code or title</label>
+            <div>
+              <input
+                className="catalog-input"
+                id="catalog-search-input"
+                type="search"
+                placeholder="For example, CS 110"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+              />
+              <button className="catalog-button catalog-button-primary" type="submit">Search</button>
+            </div>
+          </div>
+          <div className="catalog-filter-controls">
+            <button
+              className="catalog-button catalog-filter"
+              type="button"
+              aria-pressed={activeOnly}
+              onClick={() => {
+                setActiveOnly(!activeOnly);
+                setPage(0);
+              }}
+            >Active only</button>
+            <button className="catalog-button" type="button" onClick={handleExplore}>Reset filters</button>
+          </div>
+        </div>
       </form>
 
-      <DashboardCard title="Course Results">
+      <section className="catalog-panel catalog-results" aria-labelledby="catalog-results-title">
+        <header className="catalog-results-heading">
+          <h2 id="catalog-results-title">Course results</h2>
+          <span className="catalog-count" role="status">
+            {loading ? "Loading courses…" : error ? "" : `${total} ${total === 1 ? "course" : "courses"} found`}
+          </span>
+        </header>
         {loading ? (
-          <p>Loading courses...</p>
+          <div className="catalog-result-placeholder" aria-hidden="true"><span /><span /></div>
         ) : error ? (
-          <p role="alert">Error loading courses: {error}</p>
+          <p className="catalog-notice catalog-warning" role="alert">Error loading courses: {error}</p>
         ) : (
           <>
-            <p>{total} courses found</p>
-
-            <div className="course-results-list">
-              {courses.length > 0 ? (
-                courses.map((course) => (
-                  <CourseRow
-                    course={course}
-                    key={course.course_id}
-                  />
-                ))
-              ) : (
-                <p>No courses found.</p>
-              )}
-            </div>
+            {courses.length > 0 ? (
+              <ul className="catalog-results-list" role="list">
+                {courses.map((course) => <CourseRow course={course} key={course.course_id} />)}
+              </ul>
+            ) : (
+              <p className="catalog-notice">No courses found. Try a different search or include inactive courses.</p>
+            )}
 
             {totalPages > 1 && (
-              <div className="course-pagination">
+              <nav className="catalog-pagination" aria-label="Course results pages">
                 <button
-                  className="course-search-previous-button"
+                  className="catalog-button"
                   type="button"
                   disabled={page === 0}
                   onClick={() => setPage(page - 1)}
-                >
-                  Previous
-                </button>
-
-                <span>
-                  Page {page + 1} of {totalPages}
-                </span>
-
+                >Previous</button>
+                <span>Page {page + 1} of {totalPages}</span>
                 <button
-                  className="course-search-next-button"
+                  className="catalog-button"
                   type="button"
                   disabled={page + 1 >= totalPages}
                   onClick={() => setPage(page + 1)}
-                >
-                  Next
-                </button>
-              </div>
+                >Next</button>
+              </nav>
             )}
           </>
         )}
-      </DashboardCard>
+      </section>
     </main>
   );
 }

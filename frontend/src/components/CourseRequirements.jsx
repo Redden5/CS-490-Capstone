@@ -22,7 +22,7 @@ function CourseRequirements({ rules }) {
       {catalogs.length > 0 && (
         <div className="course-catalog-control">
           <label htmlFor="requirements-catalog">Requirements catalog year</label>
-          <select id="requirements-catalog" value={catalogId}
+          <select id="requirements-catalog" className="catalog-input" value={catalogId}
             aria-describedby="requirements-catalog-help"
             onChange={(event) => setSelectedCatalog(event.target.value)}>
             {catalogs.map((catalog) => <option key={catalog.id} value={catalog.id}>{catalog.label}</option>)}
