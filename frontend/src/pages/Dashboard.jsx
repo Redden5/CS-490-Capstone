@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CompletedCoursework from "../components/CompletedCoursework.jsx";
+import CourseworkGpa from "../components/CourseworkGpa.jsx";
 import { usePlanning } from "../context/planningContext.js";
 import { loadPlanner } from "../lib/studentPlannerApi.js";
 import "../styles/Dashboard.css";
@@ -129,6 +130,10 @@ export default function Dashboard() {
       <div className="dashboard-overview">
         <DashboardPanel title="Degree Progress" variant="progress" to="/degree-audit" action="View degree audit">
           <DegreeProgress record={record} evaluation={evaluation} audit={audit} requestError={evaluation.error || saveError} />
+        </DashboardPanel>
+
+        <DashboardPanel title="GPA" variant="gpa" to="/academic-info" action="Manage grades and credits">
+          <CourseworkGpa record={record} />
         </DashboardPanel>
 
         <DashboardPanel title="Completed Coursework" variant="coursework" to="/academic-info" action="Manage coursework"

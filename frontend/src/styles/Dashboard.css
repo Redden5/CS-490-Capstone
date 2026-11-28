@@ -45,7 +45,7 @@
 
 .dashboard-overview {
   display: grid;
-  grid-template-columns: 1.1fr 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
 
@@ -74,6 +74,92 @@
 .dashboard-panel--plans {
   --panel-tint: #f1f4e4;
   --panel-ink: #546628;
+}
+
+.dashboard-panel--gpa {
+  --panel-tint: #edf1fa;
+  --panel-ink: #3c547a;
+}
+
+.dashboard-panel--gpa .dashboard-panel-icon::before {
+  width: 15px;
+  height: 17px;
+  border: 1.5px solid;
+  border-radius: 3px;
+}
+
+.dashboard-panel--gpa .dashboard-panel-icon::after {
+  width: 7px;
+  border-top: 2px solid;
+  box-shadow: 0 5px;
+}
+
+.dashboard-gpa-caption {
+  margin: 6px 0 8px;
+  color: var(--dashboard-muted);
+  font-size: .875rem;
+}
+
+.dashboard-gpa-value {
+  margin-bottom: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboard-gpa-value strong {
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+.dashboard-gpa-value > span {
+  color: var(--dashboard-muted);
+  font-size: .9rem;
+}
+
+.dashboard-gpa-details {
+  margin-top: 14px;
+  font-size: .825rem;
+}
+
+.dashboard-gpa-details summary {
+  color: var(--panel-ink);
+  cursor: pointer;
+}
+
+.dashboard-gpa-details summary:focus-visible {
+  outline: 2px solid var(--panel-ink);
+  outline-offset: 3px;
+}
+
+.dashboard-gpa-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin: 12px 0;
+}
+
+.dashboard-gpa-totals dd {
+  margin: 4px 0 0;
+  font-weight: 700;
+}
+
+.dashboard-gpa-breakdown {
+  padding: 0;
+  list-style: none;
+}
+
+.dashboard-gpa-breakdown li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 5px 0;
+}
+
+.dashboard-gpa-policy {
+  display: inline-block;
+  margin: 6px 0 8px;
+  color: var(--panel-ink);
+  text-decoration: underline;
 }
 
 .dashboard-panel-heading {
@@ -385,10 +471,6 @@
 @media (max-width: 900px) {
   .dashboard-overview {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .dashboard-panel--progress {
-    grid-column: 1 / -1;
   }
 
   .dashboard-panel--progress .dashboard-panel-body {
