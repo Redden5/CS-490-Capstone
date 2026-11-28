@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import marshallLogo from "../assets/marshall-header-logo.webp";
 
 const links = [
   { to: "/", label: "Dashboard" },
@@ -45,8 +46,7 @@ function Header({ onSignOut }) {
   return (
     <header className="site-header">
       <Link className="brand" to="/" aria-label="Marshall Course Advisor home">
-        <span className="brand-mark" aria-hidden="true" />
-        <span className="brand-name">MARSHALL</span>{" "}
+        <img className="brand-logo" src={marshallLogo} width="240" height="163" alt="" />
         <span className="brand-title">Course Advisor</span>
       </Link>
 

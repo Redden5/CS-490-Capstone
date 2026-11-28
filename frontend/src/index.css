@@ -31,7 +31,7 @@ a:focus-visible {
   align-items: center;
   gap: 24px;
   min-height: 62px;
-  padding: 14px clamp(16px, 3.5vw, 56px);
+  padding: 10px clamp(16px, 3.5vw, 56px);
   background: #fff;
 }
 
@@ -42,6 +42,13 @@ a:focus-visible {
   flex-shrink: 0;
   font-size: 14px;
   font-weight: 600;
+}
+
+.brand-logo {
+  display: block;
+  flex-shrink: 0;
+  width: clamp(4.5rem, 6vw, 5rem);
+  height: auto;
 }
 
 .brand-mark {
