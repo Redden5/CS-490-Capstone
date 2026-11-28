@@ -1,11 +1,22 @@
+from threading import Lock
+
 import pymupdf
 
-def extract_pdf_text(file_path: str) -> str:
-    with pymupdf.open(file_path) as document:
-        content = ""
-        for page in document:
-            content += page.get_text("text", sort=True) + "\n"
+_PDF_LOCK = Lock()
 
-    return content
+
+def extract_pdf_text(file_path: str | bytes) -> str:
+    """Extract embedded text from a PDF path or an uploaded PDF."""
+    # Serialize PyMuPDF calls for concurrent uploads within this process.
+    with _PDF_LOCK:
+        document = (
+            pymupdf.open(stream=file_path, filetype="pdf")
+            if isinstance(file_path, bytes)
+            else pymupdf.open(file_path)
+        )
+        with document:
+            if not document.is_pdf or document.needs_pass:
+                raise ValueError("Expected an unlocked PDF")
+            return "".join(page.get_text("text", sort=True) + "\n" for page in document)
 
 
