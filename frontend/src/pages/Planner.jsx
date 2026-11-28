@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabaseClient.js";
 import DashboardCard from "../components/DashboardCard.jsx";
 import "../styles/Planner.css";
 import GeneratedSchedules from "../components/GeneratedSchedules.jsx";
+import { deleteSemester, loadPlanner, saveSemester } from "../lib/studentPlannerApi.js";
 
 const PAGE_SIZE = 25;
 
@@ -13,6 +14,7 @@ function creditLabel(min, max) {
 
 function CoursePicker({ term, selected, onSelect, onClose }) {
   const dialog = useRef(null);
+  const termId = term?.term_id;
   const [input, setInput] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
@@ -33,10 +35,10 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
         // Query courses as the parent so multiple sections never duplicate a course.
         const columns = "course_id, course_code, course_title, min_credit_hours, max_credit_hours";
         let query = supabase.from("course").select(
-          term ? `${columns}, coursesection!inner(term_id)` : columns,
+          termId ? `${columns}, coursesection!inner(term_id)` : columns,
           { count: "exact" }
         );
-        if (term) query = query.eq("coursesection.term_id", term.term_id);
+        if (termId) query = query.eq("coursesection.term_id", termId);
         const safeSearch = search.replace(/[^a-zA-Z0-9\s-]/g, "").trim();
         if (safeSearch) {
           query = query.or(`course_code.ilike.%${safeSearch}%,course_title.ilike.%${safeSearch}%`);
@@ -51,7 +53,7 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
     }
     load();
     return () => controller.abort();
-  }, [term, search, page, attempt]);
+  }, [termId, search, page, attempt]);
 
   return (
     <dialog className="planner-course-dialog" ref={dialog} aria-labelledby="course-picker-title" onCancel={onClose}>
@@ -114,12 +116,47 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
   );
 }
 
-function SemesterColumn({ semesterId, terms, loadingTerms, termError }) {
-  const [termId, setTermId] = useState("catalog");
-  const term = terms.find((item) => String(item.term_id) === termId);
-  const title = `Semester ${semesterId}`;
-  const [courses, setCourses] = useState([]);
+function SemesterColumn({ semester, number, terms, loadingTerms, termError, onSaved, onRemoved }) {
+  const { id: semesterId, revision, generated_summary: generatedSummary } = semester;
+  const [termId, setTermId] = useState(semester.term_id == null ? "catalog" : String(semester.term_id));
+  const activeTerm = terms.find((item) => String(item.term_id) === termId);
+  const term = activeTerm ?? (termId === "catalog" ? null : {
+    term_id: Number(termId), term_name: semester.term_name || `Term ${termId}`,
+  });
+  const title = `Semester ${number}`;
+  const [courses, setCourses] = useState(semester.courses);
   const [picking, setPicking] = useState(false);
+  const [operation, setOperation] = useState("");
+  const [saveError, setSaveError] = useState("");
+  const dirty = termId !== (semester.term_id == null ? "catalog" : String(semester.term_id)) || courses !== semester.courses;
+
+  async function persist() {
+    setOperation("saving");
+    setSaveError("");
+    try {
+      const saved = await saveSemester({ ...semester, courses, term_id: term?.term_id ?? null, term_name: term?.term_name ?? null });
+      setCourses(saved.courses);
+      onSaved(saved);
+    } catch (error) {
+      setSaveError(error.message);
+    } finally {
+      setOperation("");
+    }
+  }
+
+  async function remove() {
+    if (revision && !window.confirm(`Delete ${title} and its courses?`)) return;
+    setOperation("deleting");
+    setSaveError("");
+    try {
+      if (revision) await deleteSemester(semesterId, revision);
+      onRemoved(semesterId);
+    } catch (error) {
+      setSaveError(error.message);
+      setOperation("");
+    }
+  }
+
   const min = courses.reduce((sum, course) => sum + Number(course.min_credit_hours), 0);
   const max = courses.reduce((sum, course) => sum + Number(course.max_credit_hours), 0);
 
@@ -128,10 +165,11 @@ function SemesterColumn({ semesterId, terms, loadingTerms, termError }) {
       <h2>{title}</h2>
       <label className="planner-term-label" htmlFor={`planner-term-${semesterId}`}>Course availability</label>
       <select id={`planner-term-${semesterId}`} value={termId}
-        disabled={courses.length > 0}
+        disabled={Boolean(operation) || courses.length > 0}
         aria-describedby={`planner-term-help-${semesterId}`}
         onChange={(event) => setTermId(event.target.value)}>
         <option value="catalog">All catalog courses (no term)</option>
+        {term && !activeTerm && <option value={termId}>{term.term_name}</option>}
         {terms.map((item) => <option key={item.term_id} value={item.term_id}>{item.term_name}</option>)}
       </select>
       <p id={`planner-term-help-${semesterId}`} className="planner-term-help">
@@ -142,24 +180,71 @@ function SemesterColumn({ semesterId, terms, loadingTerms, termError }) {
           : "Choose a term to see its offerings, or browse the full catalog."}
       </p>
       <p>{creditLabel(min, max)} planned credits</p>
+
+      {generatedSummary && (
+        <div className="planner-term-help">
+          <p>
+            Created from a generated schedule
+            {generatedSummary.status === "TENTATIVE"
+              ? " with unresolved checks."
+              : "."}
+            {" "}Manual changes are not automatically checked for conflicts
+            or prerequisites.
+          </p>
+          {generatedSummary.unscheduled_required.length > 0 && (
+            <p>
+              Required courses left out of the original option:{" "}
+              {generatedSummary.unscheduled_required.join(", ")}
+            </p>
+          )}
+          {generatedSummary.warnings.length > 0 && (
+            <details>
+              <summary>Original schedule warnings</summary>
+              <ul>
+                {generatedSummary.warnings.map((warning, index) => (
+                  <li key={index}>{warning}</li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </div>
+      )}
       {!courses.length && <p className="planner-empty">No courses added yet.</p>}
       <ul className="planner-course-list">
         {courses.map((course) => (
           <li className="planner-course-slot planner-course-slot-filled" key={course.course_id}>
             <div className="planner-course-title"><strong>{course.course_code}</strong><span>{course.course_title}</span></div>
             <p>{creditLabel(course.min_credit_hours, course.max_credit_hours)} credits</p>
-            <button type="button" className="planner-remove-button" aria-label={`Remove ${course.course_code} from ${title}`}
+            {course.selected_section && (
+              <p className="planner-term-help">
+                Section {course.selected_section.section_number}
+                {course.selected_section.crn != null && ` · CRN ${course.selected_section.crn}`}
+              </p>
+            )}
+            <button type="button" className="planner-remove-button" disabled={Boolean(operation)} aria-label={`Remove ${course.course_code} from ${title}`}
               onClick={() => setCourses(courses.filter((item) => item.course_id !== course.course_id))}>Remove</button>
           </li>
         ))}
       </ul>
       <div className="planner-semester-actions">
-        <button className="planner-secondary-button" type="button" onClick={() => setPicking(true)}>Add Course</button>
-        <button className="planner-primary-button" type="button" disabled aria-describedby={`planner-save-help-${semesterId}`}>Save Semester</button>
+        <button className="planner-secondary-button" type="button" disabled={Boolean(operation)} onClick={() => setPicking(true)}>Add Course</button>
+        <button className="planner-primary-button" type="button" disabled={Boolean(operation) || (revision && !dirty)}
+          onClick={persist}>{operation === "saving" ? "Saving…" : "Save Semester"}</button>
+        <button className="planner-secondary-button" type="button" disabled={Boolean(operation)}
+          onClick={remove}>{revision ? "Delete Semester" : "Discard Semester"}</button>
       </div>
-      <p id={`planner-save-help-${semesterId}`} className="planner-term-help">Saving semesters is not available yet.</p>
+      <p className="planner-term-help" role="status">{revision && !dirty ? "Semester saved." : "Unsaved semester changes."}</p>
+      {saveError && <p role="alert">{saveError}</p>}
       {picking && <CoursePicker term={term} selected={courses} onClose={() => setPicking(false)}
-        onSelect={(course) => setCourses((current) => current.some((item) => item.course_id === course.course_id) ? current : [...current, course])} />}
+        onSelect={(course) => setCourses((current) => current.some((item) => item.course_id === course.course_id)
+          ? current : [...current, {
+            course_id: course.course_id,
+            course_code: course.course_code,
+            course_title: course.course_title ?? "",
+            min_credit_hours: Number(course.min_credit_hours),
+            max_credit_hours: Number(course.max_credit_hours),
+            selected_section: null,
+          }])} />}
     </section>
   );
 }
@@ -169,7 +254,58 @@ function Planner() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
-  const [semesters, setSemesters] = useState([1]);
+  const [semesters, setSemesters] = useState([]);
+  const [preferences, setPreferences] = useState(null);
+  const [planState, setPlanState] = useState({ loading: true });
+  const [planAttempt, setPlanAttempt] = useState(0);
+  const imports = useRef(new WeakMap());
+
+  useEffect(() => {
+    const controller = new AbortController();
+    loadPlanner(controller.signal).then((record) => {
+      if (controller.signal.aborted) return;
+      setSemesters(record.semesters);
+      setPreferences(record.preferences);
+      setPlanState({ loading: false });
+    }).catch((error) => {
+      if (!controller.signal.aborted) setPlanState({ loading: false, error: error.message });
+    });
+    return () => controller.abort();
+  }, [planAttempt]);
+
+  function upsertSemester(saved) {
+    setSemesters((current) => current.some((semester) => semester.id === saved.id)
+      ? current.map((semester) => semester.id === saved.id ? saved : semester) : [...current, saved]);
+  }
+
+  async function handleUseGeneratedSchedule({ termId, option, creditHours, handoffWarnings }) {
+    let draft = imports.current.get(option);
+    if (!draft) {
+      draft = {
+        id: crypto.randomUUID(),
+        term_id: Number(termId),
+        term_name: terms.find((term) => String(term.term_id) === termId)?.term_name ?? null,
+        courses: Object.entries(option.sections).map(([code, section]) => ({
+          course_id: section.course_id,
+          course_code: code,
+          course_title: section.course_title ?? "",
+          min_credit_hours: creditHours[code],
+          max_credit_hours: creditHours[code],
+          selected_section: {
+            section_id: section.section_id, section_number: section.section_number,
+            crn: section.crn,
+          },
+        })),
+        generated_summary: {
+          status: option.status,
+          warnings: [...(option.warnings ?? []), ...handoffWarnings],
+          unscheduled_required: option.unscheduled_required ?? [],
+        },
+      };
+      imports.current.set(option, draft);
+    }
+    upsertSemester(await saveSemester(draft));
+  }
 
   useEffect(() => {
     const controller = new AbortController();
@@ -206,17 +342,37 @@ function Planner() {
         <h1>Planner</h1>
         <p>Organize future semesters using recorded course offerings.</p>
       </div>
-        <GeneratedSchedules terms={terms} loadingTerms={loading} />
+      {!planState.loading && !planState.error && <GeneratedSchedules terms={terms} loadingTerms={loading}
+        initialPreferences={preferences} onUseSchedule={handleUseGeneratedSchedule} />}
       <DashboardCard title="Semester Plan">
-        <p>Your plan is temporary. Refreshing or leaving this page clears your selections.</p>
-        <button className="planner-primary-button" type="button"
-          onClick={() => setSemesters((current) => [...current, current.length + 1])}>Add Semester</button>
+        {planState.loading ? <p role="status">Loading saved semesters…</p> : planState.error ? (
+          <div role="alert"><p>{planState.error}</p><button type="button" onClick={() => {
+            setPlanState({ loading: true });
+            setPlanAttempt((value) => value + 1);
+          }}>Retry loading semesters</button></div>
+        ) : <>
+          <p>Save a semester to access it the next time you sign in.</p>
+          <button className="planner-primary-button" type="button" onClick={() => setSemesters((current) => [...current, {
+            id: crypto.randomUUID(), term_id: null, term_name: null, courses: [], generated_summary: null,
+          }])}>Add Semester</button>
+        </>}
         {loading ? <p role="status">Loading available terms…</p> : error ? (
           <div role="alert"><p>Unable to load terms.</p><button type="button" onClick={() => setAttempt(attempt + 1)}>Try again</button></div>
         ) : !terms.length ? <p>No active terms are listed. You can still add courses from the catalog; semester availability is unverified.</p> : null}
       </DashboardCard>
       <div className="planner-semester-grid">
-        {semesters.map((id) => <SemesterColumn semesterId={id} terms={terms} loadingTerms={loading} termError={error} key={id} />)}
+        {semesters.map((semester, index) => (
+          <SemesterColumn
+            key={semester.id}
+            semester={semester}
+            number={index + 1}
+            onSaved={upsertSemester}
+            onRemoved={(id) => setSemesters((current) => current.filter((plan) => plan.id !== id))}
+            terms={terms}
+            loadingTerms={loading}
+            termError={error}
+          />
+        ))}
       </div>
     </main>
   );

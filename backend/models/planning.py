@@ -49,6 +49,7 @@ class SupportedProgram(BaseModel):
     program_key: str
     program_title: str
     catalog_year: str
+    required_credits: int = Field(gt=0)
 
 
 class PlanningError(BaseModel):

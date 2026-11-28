@@ -31,7 +31,7 @@ request completion.
 Use the keys and years from this list when constructing requests.
 
 ```json
-[{"program_key":"computer-science-bs","program_title":"Computer Science, B.S.","catalog_year":"2026-2027"}]
+[{"program_key":"computer-science-bs","program_title":"Computer Science, B.S.","catalog_year":"2026-2027","required_credits":120}]
 ```
 
 **POST `/api/v1/planning/evaluate`** accepts JSON with the three required fields
@@ -112,3 +112,49 @@ server keys. [Supabase JWT verification](https://supabase.com/docs/guides/auth/j
 
 HTTP tests override the request dependency with a SELECT-only fixture and compare
 the complete response to a direct planning call.
+
+## Saved academic information
+
+Apply [migration 003](../backend/migrations/003_student_academic_records.sql) in a
+development Supabase project. Server configuration also needs
+`SUPABASE_PUBLISHABLE_KEY` (or the legacy `SUPABASE_ANON_KEY`) from the same project.
+FastAPI verifies the Supabase access token, then calls the academic record RPCs
+with that token so PostgreSQL can identify the owner. The existing privileged
+Supabase client remains responsible for catalog evidence reads during evaluation.
+
+All requests below require the student's Supabase bearer token:
+
+- `GET /api/v1/student/academics` returns the saved program, catalog year,
+  revision and ordered coursework attempts. It returns JSON null for a new account.
+- `PUT /api/v1/student/academics` saves a complete academic record. Include
+  `expected_revision` from the previous read, or null for the first save.
+  Each attempt has a stable UUID and can include a grade, reported credits,
+  and an equivalency flag. A stale revision returns HTTP 409.
+- `POST /api/v1/student/academics/evaluate` takes the saved revision and
+  evaluates the corresponding record. The audit is regenerated from saved
+  coursework and current catalog evidence.
+
+The reporting scope remains the CS B.S. program for 2026–2027. Developer setup
+still requires both FastAPI and the Vite app.
+
+## Saved semester plans
+
+Apply [migration 004](../backend/migrations/004_student_semester_plans.sql)
+after migration 003. Planner uses the same Supabase bearer token and server
+configuration as saved coursework.
+
+- `GET /api/v1/student/planner` returns the signed-in student's saved semesters
+  and generator settings.
+- `PUT /api/v1/student/planner/semesters` saves a complete semester and its
+  ordered course snapshots. Send a client-generated UUID and null
+  `expected_revision` on creation. Retrying that creation with the same
+  ID and payload returns the existing revision. Edits send the last revision.
+- `DELETE /api/v1/student/planner/semesters/{plan_id}` takes
+  `expected_revision` in the request body.
+- `PUT /api/v1/student/planner/preferences` saves the selected term and target
+  credits. Generating a schedule also saves those settings.
+
+Stale edits or deletes return HTTP 409. A generated schedule is saved when the
+student chooses **Use this schedule**. A manually edited semester is saved when
+the student clicks **Save Semester**. Course and section labels are snapshots
+so older plans remain readable when catalog data changes.

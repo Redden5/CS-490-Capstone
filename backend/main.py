@@ -11,6 +11,8 @@ from backend.routes.planning import router
 from backend.routes.schedules import router as schedules_router
 from backend.routes.transcripts import router as transcripts_router
 
+from backend.routes.student_academics import router as student_academics_router
+from backend.routes.student_planner import router as student_planner_router
 
 app = FastAPI(title="Degree Planning API", version="1")
 app.add_middleware(
@@ -24,6 +26,13 @@ app.include_router(router)
 app.include_router(schedules_router)
 app.include_router(transcripts_router)
 app.include_router(advisor_router)
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["Content-Type", "Authorization"],
+)
+app.include_router(router)
+app.include_router(schedules_router)
+app.include_router(student_academics_router)
+app.include_router(student_planner_router)
 
 
 @app.exception_handler(RequestValidationError)

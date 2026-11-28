@@ -1,8 +1,8 @@
 # Development handoff
 
-## Current state · 2026-11-14
+## Current state · 2026-11-17
 
-The local degree planning API is merged in `16c1d41` (PR #10). It evaluates student-reported coursework for Computer Science, B.S., catalog year `2026-2027`, and returns the v2.1 handoff by default. Academic Info and Degree Audit use the default v2.1 API on `frontend/planning-integration`. Schedule Generator integration is pending. [API guide](planning_api.md) · [Architecture and service interfaces](project_context.md)
+The local degree planning API is merged in `16c1d41` (PR #10). It evaluates student-reported coursework for Computer Science, B.S., catalog year `2026-2027`, and returns the v2.1 handoff by default. Academic Info and Degree Audit use the default v2.1 API. Planner consumes the schedule API and can copy a selected generated option into a temporary semester. The import fix is on `frontend/use-generated-schedule` for review. [API guide](planning_api.md) · [Architecture and service interfaces](project_context.md)
 
 The science-specific work originated on `feature/science-lab-requirements`, based on `d889101`.
 
@@ -35,13 +35,15 @@ The transactional Supabase import completed for the 2026–2027 catalog. The loa
 
 ## Upcoming development
 
+2026-11-17 · Generated semester import: corrected the parent/child prop names so new cards initialize with the generated term and courses. Removed an unused out-of-scope handler and duplicate course credits/Remove buttons. Imported sections, credit totals and original warnings remain intact. A Chromium fixture check reproduced zero imported courses before the fix and passed afterward, including independent options, manual term-filtered additions, removal and totals. All 15 frontend tests, lint and build passed. Backend files are unchanged: the offline suite runs 343 tests; this workspace has one existing manifest failure because the prerequisite CSV is checked out as CRLF. An untouched archive of the same branch passed with one optional-fixture skip. No live Supabase session was used for this verification.
+
 | Area | Open work or decision |
 | --- | --- |
 | Science with Lab | Confirm the provisional major/Core II overlap with the program. Obtain catalog-year evidence for additional Core II labs and approved “or above” substitutes before extending coverage. |
 | Critical Thinking | Review the opt-in v2.2 consumer contract and determine what evidence is needed for honors variants, transfer exemptions, and coursework origin. |
 | Prerequisites | Design interactive clarification for UNKNOWN results, including missing grades or equivalency evidence. Preserve uncertainty when catalog metadata itself is incomplete. |
 | Credit allocation | Resolve repeated credit slots, variable-credit evidence, and overlap across major and core requirements. Preserve potential matches until allocation policy is reviewed. |
-| Frontend and scheduling | Review the Academic Info/Degree Audit integration and verify it against the locally configured API and Supabase. Planner/Advisor consumption remains pending. Agree with the scheduler owner on handoff version, choice bundles, flexible memberships, UNKNOWN results, and term-specific feasibility checks. |
+| Frontend and scheduling | Review generated-option import into semester cards and verify the workflow against the locally configured API and Supabase. Semester persistence and Advisor consumption remain pending. Agree with the scheduler owner on handoff version, choice bundles, flexible memberships, UNKNOWN results, and term-specific feasibility checks. |
 | Full application and deployment | Exercise the student workflow end to end. Define and implement backend authentication and authorization, scheduler access, deployed origins, and operational limits. Browser sign-in already exists. |
 | RAG Advisor | Connect reviewed source material to retrieval and answers. The current Advisor page is a preview. |
 

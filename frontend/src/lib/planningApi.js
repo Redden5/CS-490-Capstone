@@ -10,12 +10,15 @@ export class PlanningError extends Error {
   }
 }
 
-async function request(path, { signal, body } = {}) {
+export async function request(path, { signal, body, method = body ? 'POST' : 'GET', token } = {}) {
   let response;
   try {
-    response = await fetch(`${API_BASE}/api/v1/planning/${path}`, {
-      method: body ? 'POST' : 'GET',
-      headers: body ? { 'Content-Type': 'application/json' } : undefined,
+    response = await fetch(`${API_BASE}/api/v1/${path}`, {
+      method,
+      headers: {
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
       body: body ? JSON.stringify(body) : undefined,
       cache: 'no-store',
       signal: AbortSignal.any([...(signal ? [signal] : []), AbortSignal.timeout(180000)]),
@@ -31,16 +34,28 @@ async function request(path, { signal, body } = {}) {
     const fields = Array.isArray(data?.fields)
       ? data.fields.filter((field) => ['program_key', 'catalog_year', 'completed_courses', 'reported_credits'].includes(field)) : [];
     const messages = {
+      401: 'Sign in again to access your saved coursework.',
+      409: 'Coursework changed elsewhere. Reload the saved record before continuing.',
+      503: 'Saved coursework is temporarily unavailable. Try again.',
       404: 'This program and catalog year are no longer supported. Refresh the available programs.',
       422: 'Check the course codes, grades, and reported credits. Credits must match the catalog range for each completed course.',
     };
+    if (path.startsWith('student/planner')) {
+      const plannerMessages = {
+        401: 'Sign in again to access your saved plans.',
+        409: 'This semester changed elsewhere. Reload Planner to get the saved version.',
+        422: 'Check the semester details and try again.',
+        503: 'Saved plans are temporarily unavailable. Try again.',
+      };
+      throw new PlanningError(plannerMessages[response.status] ?? 'Unable to complete the Planner request.', response.status);
+    }
     throw new PlanningError(messages[response.status] ?? 'The planning service could not complete the request. Please try again.', response.status, fields);
   }
   return data;
 }
 
 export async function fetchPrograms(signal) {
-  const data = await request('programs', { signal });
+  const data = await request('planning/programs', { signal });
   if (!Array.isArray(data) || !data.every((p) =>
     typeof p.program_key === 'string' && typeof p.catalog_year === 'string' && typeof p.program_title === 'string')) {
     throw new PlanningError('The planning service returned an unexpected program list.');
@@ -80,10 +95,13 @@ export async function importTranscript(file, signal) {
 }
 
 export async function evaluatePlanning(body, signal) {
-  const data = await request('evaluate', { body, signal });
+  return validatePlanningReport(await request('planning/evaluate', { body, signal }), body.catalog_year);
+}
+
+export function validatePlanningReport(data, catalogYear) {
   if (data?.schema_version !== '2.1.0' || !Array.isArray(data.requirements) ||
     !Array.isArray(data.course_eligibility?.courses) || !Array.isArray(data.flexible_candidates?.requirements) ||
-    !data.summary || !data.degree || data.degree.catalog_year !== body.catalog_year) {
+    !data.summary || !data.degree || data.degree.catalog_year !== catalogYear) {
     throw new PlanningError('The planning service returned an unsupported or incomplete report.');
   }
   return data;

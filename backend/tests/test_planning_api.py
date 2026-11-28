@@ -107,7 +107,7 @@ class PlanningApiTests(unittest.TestCase):
     def test_program_registry_and_unsupported_combinations(self):
         response = self.http.get(BASE + "/programs")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), [{**PROGRAM, "program_title": "Computer Science, B.S."}])
+        self.assertEqual(response.json(), [{**PROGRAM, "program_title": "Computer Science, B.S.", "required_credits": 120}])
         for fields in ({"catalog_year": "2025-2026"}, {"program_key": "other"}, {"program_key": "../private.json"}):
             self.assertEqual(self.post(**fields).status_code, 404)
         self.factory.assert_not_called()
