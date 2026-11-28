@@ -45,3 +45,11 @@ export function safeSourceUrl(value) {
     return ['https:', 'http:'].includes(url.protocol) && !url.username && !url.password ? url.href : null;
   } catch { return null; }
 }
+
+export function catalogCreditLabel(min, max, unit = 'credit') {
+  const amount = (value) => `${value} ${unit}${value === 1 ? '' : 's'}`;
+  if (min == null && max == null) return 'Credits unavailable';
+  if (max == null) return `At least ${amount(min)}`;
+  if (min == null) return `Up to ${amount(max)}`;
+  return min === max ? amount(min) : `${min}–${max} ${unit}s`;
+}

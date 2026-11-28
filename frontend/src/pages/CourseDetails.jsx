@@ -1,3 +1,4 @@
+import { catalogCreditLabel } from '../lib/planningPresentation.js';
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient.js";
@@ -94,7 +95,7 @@ function CourseDetails() {
   const { course, rules, sections } = result;
 
   return (
-    <main className="course-details-page" aria-busy={result.loading}>
+    <main className="course-details-page app-page" aria-busy={result.loading}>
       {location.state?.fromCourses ? (
         <button className="course-back-link" type="button" onClick={() => navigate(-1)}>← Back to courses</button>
       ) : <Link className="course-back-link" to="/courses">← Back to courses</Link>}
@@ -121,8 +122,7 @@ function CourseDetails() {
               </span>
             </div>
             <dl className="course-facts course-summary-facts">
-              <div><dt>Credits:</dt><dd>{course.min_credit_hours === course.max_credit_hours
-                ? course.min_credit_hours : `${course.min_credit_hours}–${course.max_credit_hours}`}</dd></div>
+              <div><dt>Credits:</dt><dd>{catalogCreditLabel(course.min_credit_hours, course.max_credit_hours)}</dd></div>
               <div><dt>Department:</dt><dd>{course.department?.department_name || "Not listed"}</dd></div>
             </dl>
           </header>

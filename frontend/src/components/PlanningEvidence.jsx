@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { choiceProgressText, explain, safeSourceUrl } from '../lib/planningPresentation.js';
+import { catalogCreditLabel, choiceProgressText, explain, safeSourceUrl } from '../lib/planningPresentation.js';
 
 export function StatusBadge({ status }) {
   const tone = ['MET', 'CANDIDATE_COMPLETE'].includes(status) ? 'met'
@@ -76,7 +76,8 @@ function FlexibleOptions({ flexible, eligibility }) {
     <ul className="planning-candidate-list">{(showAll ? candidates : candidates.slice(0, 15)).map((candidate) => <li key={candidate.course_code}>
       <div><strong>{candidate.course_code}</strong>{candidate.course_title && ` — ${candidate.course_title}`}</div>
       <StatusBadge status={eligibility[candidate.course_eligibility_reference ?? candidate.course_code]?.status ?? 'UNKNOWN'} />
-      {candidate.min_credit_hours != null && <span>{candidate.min_credit_hours === candidate.max_credit_hours ? candidate.min_credit_hours : `${candidate.min_credit_hours}–${candidate.max_credit_hours}`} catalog credits</span>}
+      {(candidate.min_credit_hours != null || candidate.max_credit_hours != null) &&
+        <span>{catalogCreditLabel(candidate.min_credit_hours, candidate.max_credit_hours)} (catalog)</span>}
       {candidate.course_id && <Link className="planning-link" to={`/courses/${candidate.course_id}`}>View course</Link>}
     </li>)}</ul>
     {candidates.length > 15 && <button type="button" className="planning-link" onClick={() => setShowAll(!showAll)}>{showAll ? 'Show fewer options' : `Show all ${candidates.length} options`}</button>}

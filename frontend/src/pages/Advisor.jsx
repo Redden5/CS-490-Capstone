@@ -1,3 +1,4 @@
+import PageHeading from '../components/PageHeading.jsx';
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Advisor.css";
@@ -41,14 +42,10 @@ function Advisor() {
   const [chatExpanded, setChatExpanded] = useState(true);
 
   return (
-    <main className="advisor-page">
-      <header className="advisor-heading">
-        <div>
-          <h1>AI Advisor</h1>
-          <p>Plan your next semester and get answers grounded in your course catalog.</p>
-        </div>
+    <main className="advisor-page app-page">
+      <PageHeading eyebrow="Explore academic guidance" title="AI Advisor" description="Preview course guidance and a workspace for semester planning.">
         <span className="advisor-preview-badge">Design preview · Sample data</span>
-      </header>
+      </PageHeading>
 
       <section className="advisor-context" aria-label="Sample academic context">
         <div><span>Program</span><strong>B.S. in Computer Science</strong></div>

@@ -1,3 +1,7 @@
+import { catalogCreditLabel } from '../lib/planningPresentation.js';
+import { searchCourses } from '../lib/courseSearch.js';
+import { useCourseSearch } from '../lib/useCourseSearch.js';
+import PageHeading from '../components/PageHeading.jsx';
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -19,11 +23,7 @@ function CourseRow({ course }) {
 
       <p>{course.description || "No description available."}</p>
 
-      <p>
-        <strong>Credits:</strong> {course.min_credit_hours}
-        {course.min_credit_hours !== course.max_credit_hours &&
-          ` - ${course.max_credit_hours}`}
-      </p>
+      <p>{catalogCreditLabel(course.min_credit_hours, course.max_credit_hours)}</p>
     </div>
   );
 }
@@ -33,98 +33,49 @@ function Courses() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [searchInput, setSearchInput] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const { input: searchInput, setInput: setSearchInput, search, page, setPage, submit: handleSearch, reset } = useCourseSearch();
   const [activeOnly, setActiveOnly] = useState(true);
 
-  const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
 
     async function fetchCourses() {
       setLoading(true);
       setError(null);
 
-      let query = supabase
-        .from("course")
-        .select(
-          "course_id, course_code, course_title, description, min_credit_hours, max_credit_hours, active_status",
-          { count: "exact" }
-        );
-
-      // Filter for active courses
-      if (activeOnly) {
-        query = query.eq("active_status", true);
-      }
-
-      // Search course code or title
-      if (searchTerm) {
-        const safeSearch = searchTerm
-          .replace(/[^a-zA-Z0-9\s-]/g, "")
-          .trim();
-
-        if (safeSearch) {
-          query = query.or(
-            `course_code.ilike.%${safeSearch}%,course_title.ilike.%${safeSearch}%`
-          );
+      try {
+        const { data, count } = await searchCourses(supabase, {
+          term: search.term, page, pageSize: PAGE_SIZE, activeOnly, signal: controller.signal,
+        });
+        if (!controller.signal.aborted) { setCourses(data); setTotal(count); }
+      } catch {
+        if (!controller.signal.aborted) {
+          setError('Course search is unavailable. Please try again.'); setCourses([]); setTotal(0);
         }
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
       }
-
-      // Sort and paginate
-      const from = page * PAGE_SIZE;
-
-      query = query
-        .order("course_code", { ascending: true })
-        .order("course_id", { ascending: true })
-        .range(from, from + PAGE_SIZE - 1);
-
-      const { data, error, count } = await query;
-
-      if (cancelled) return;
-
-      if (error) {
-        console.error("Supabase error:", error);
-        setError(error.message);
-        setCourses([]);
-        setTotal(0);
-      } else {
-        setCourses(data ?? []);
-        setTotal(count ?? 0);
-      }
-
-      setLoading(false);
     }
 
     fetchCourses();
 
     return () => {
-      cancelled = true;
+      controller.abort();
     };
-  }, [page, searchTerm, activeOnly]);
-
-  function handleSearch(event) {
-    event.preventDefault();
-    setPage(0);
-    setSearchTerm(searchInput.trim());
-  }
+  }, [page, search, activeOnly]);
 
   function handleExplore() {
-    setSearchInput("");
-    setSearchTerm("");
+    reset();
     setActiveOnly(true);
-    setPage(0);
   }
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   return (
-    <main className="courses-page">
-      <div className="courses-heading">
-        <h1>Courses</h1>
-        <p>Browse course information and prerequisite details.</p>
-      </div>
+    <main className="courses-page app-page">
+      <PageHeading eyebrow="Your course catalog" title="Courses" description="Browse course descriptions, prerequisites, and recorded offerings." />
 
       <form
         className="course-search-section"
@@ -133,7 +84,7 @@ function Courses() {
         <input
           className="course-search-input"
           type="text"
-          placeholder="Search courses"
+          placeholder="CS, CS120, or a course title"
           aria-label="Search courses"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
@@ -160,7 +111,7 @@ function Courses() {
           type="button"
           onClick={handleExplore}
         >
-          Explore Courses
+          Reset filters
         </button>
       </form>
 
@@ -171,7 +122,7 @@ function Courses() {
           <p role="alert">Error loading courses: {error}</p>
         ) : (
           <>
-            <p>{total} courses found</p>
+            <p>{total} {total === 1 ? 'course' : 'courses'} found</p>
 
             <div className="course-results-list">
               {courses.length > 0 ? (

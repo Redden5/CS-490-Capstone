@@ -1,16 +1,19 @@
+import { matchesCourseSearch } from '../lib/courseSearch.js';
+import PageHeading from '../components/PageHeading.jsx';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { usePlanning } from '../context/planningContext.js';
 import { CourseEvidence, RequirementEvidence } from '../components/PlanningEvidence.jsx';
 import { explain, requirementGroups } from '../lib/planningPresentation.js';
 import '../styles/Planning.css';
+import '../styles/DegreeAudit.css';
 
 function PrerequisiteResults({ courses }) {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
   const [limit, setLimit] = useState(25);
   const matching = courses.filter((course) => (!status || course.status === status) &&
-    course.course_code.replaceAll(' ', '').toLowerCase().includes(search.replaceAll(' ', '').toLowerCase()));
+    matchesCourseSearch(course, search));
   return <section className="planning-card" aria-labelledby="prerequisite-evidence-title">
     <h2 id="prerequisite-evidence-title">Prerequisite evidence</h2>
     <p>These results use your reported coursework. Met conditions do not confirm enrollment eligibility. Unknown results need additional evidence or review.</p>
@@ -20,7 +23,7 @@ function PrerequisiteResults({ courses }) {
         <option value="">All results</option><option value="MET">Met by reported evidence</option><option value="UNMET">Condition not met</option><option value="UNKNOWN">Uncertain</option>
       </select></label>
     </div>
-    <p>{matching.length} matching courses</p>
+    <p>{matching.length} matching {matching.length === 1 ? 'course' : 'courses'}</p>
     {!matching.length && <p className="planning-empty">No results for this selection. An absent course has not been evaluated.</p>}
     {matching.slice(0, limit).map((course) => <CourseEvidence key={course.course_code} course={course} />)}
     {matching.length > limit && <button className="planning-button secondary" type="button" onClick={() => setLimit(limit + 25)}>Show more courses</button>}
@@ -30,6 +33,7 @@ function PrerequisiteResults({ courses }) {
 export default function DegreeAudit() {
   const { programs, record, reloadAcademics, canSave, saving, saveError, dirty, evaluation, evaluate, stale } = usePlanning();
   const result = evaluation.data;
+  const [remainingOnly, setRemainingOnly] = useState(false);
   useEffect(() => {
     if (record.revision && canSave && !dirty && !result && !evaluation.loading && !evaluation.error && !saveError) {
       void evaluate();
@@ -43,12 +47,22 @@ export default function DegreeAudit() {
   const credits = result?.distinct_course_credit_evidence;
   const reportedCount = result?.completed_course_codes_entered?.length ?? 0;
 
-  return <main className="planning-page">
-    <header className="planning-heading"><div><p className="planning-eyebrow">Based on reported coursework</p><h1>Degree Audit</h1>
-      <p>Explore requirement progress and course options for your program.</p></div>
-      <Link className="planning-link" to="/academic-info">Edit Academic Info →</Link>
-    </header>
-    <p className="planning-notice">This is an unofficial planning audit. It does not verify your transcript, graduation requirements, or permission to enroll.</p>
+  const groups = requirementGroups((result?.requirements ?? []).filter((rule) =>
+    !remainingOnly || rule.planning_disposition === 'CANDIDATE_COURSEWORK_REMAINING'));
+  const breakdown = [
+    { label: 'Provisionally satisfied', value: complete, tone: 'met' },
+    { label: 'Coursework remaining', value: remaining, tone: 'remaining' },
+    { label: 'Needs review', value: review, tone: 'review' },
+  ];
+
+  return <main className="planning-page app-page audit-page">
+    <PageHeading title="Degree Audit" description="Review your reported progress, remaining coursework, and course options.">
+      <button className="planning-button" type="button" disabled={evaluation.loading || !canSave || saving} onClick={evaluate}>
+        {result ? 'Re-evaluate coursework' : 'Evaluate coursework'}
+      </button>
+      <Link className="planning-button secondary" to="/academic-info">Edit Academic Info →</Link>
+    </PageHeading>
+    <p className="audit-disclaimer"><strong>Unofficial planning audit.</strong> It does not verify your transcript, graduation requirements, or permission to enroll.</p>
     {evaluation.loading && <p role="status" className="planning-notice">Evaluating coursework and catalog evidence…</p>}
     {stale && <p className="planning-notice warning" role="status">Outdated results: your academic information has changed. The report below reflects your last successful evaluation.</p>}
     {evaluation.error && <div className="planning-notice warning" role="alert"><p>{evaluation.error.message}</p>
@@ -61,28 +75,40 @@ export default function DegreeAudit() {
     {saveError && <p role="alert">{saveError.message}{' '}
       <Link to="/academic-info">Open Academic Info</Link></p>}
     {programs.error && <p role="alert">{programs.error} <button className="planning-link" type="button" onClick={reloadAcademics}>Retry loading programs</button></p>}
-    <div className="planning-actions">
-      <button className="planning-button" type="button" disabled={evaluation.loading || !canSave || saving} onClick={evaluate}>
-        {result ? 'Re-evaluate coursework' : 'Evaluate coursework'}
-      </button>
-      <Link className="planning-button secondary" to="/planner">Open Planner</Link>
-    </div>
     {!result ? <section className="planning-card planning-empty">
       <h2>Your audit starts with Academic Info</h2>
       <p>Select your program and enter successfully completed courses. You can evaluate an empty list if you have not completed any courses yet.</p>
       <Link className="planning-link" to="/academic-info">Enter coursework →</Link>
+      <Link className="audit-empty-planner" to="/planner">Open Planner →</Link>
     </section> : <>
-      <section className="planning-card planning-report-heading">
-        <div><h2>{result.degree.program_title}</h2><p>Catalog {result.degree.catalog_year} · {reportedCount} distinct reported {reportedCount === 1 ? 'course' : 'courses'}</p></div>
-        <span className="planning-badge review">{stale ? 'Outdated report' : 'Last successful evaluation'}</span>
+      <section className="audit-overview" aria-labelledby="audit-program-title">
+        <div>
+          <p className="audit-report-state">{stale ? 'Outdated report' : 'Last successful evaluation'}</p>
+          <h2 id="audit-program-title">{result.degree.program_title}</h2>
+          <p>Catalog {result.degree.catalog_year} · {reportedCount} distinct reported {reportedCount === 1 ? 'course' : 'courses'}</p>
+          <Link className="audit-planner" to="/planner">Open Planner →</Link>
+        </div>
+        <div className="audit-breakdown">
+          <h3>Requirement breakdown</h3>
+          <div className="audit-track" aria-hidden="true">{breakdown.filter(item => item.value > 0).map(item =>
+            <span key={item.tone} className={item.tone} style={{ flexGrow: item.value }} />)}</div>
+          <dl>{breakdown.map(item => <div key={item.tone}><dt><i aria-hidden="true" className={item.tone} />{item.label}</dt><dd>{item.value}</dd></div>)}</dl>
+        </div>
       </section>
-      <div className="planning-stats" aria-label="Requirement progress">
-        <section className="planning-card"><strong>{complete}</strong><h2>Provisionally satisfied</h2><p>Requirements matched by reported evidence</p></section>
-        <section className="planning-card"><strong>{remaining}</strong><h2>Coursework remaining</h2><p>Requirements with additional coursework indicated</p></section>
-        <section className="planning-card"><strong>{review}</strong><h2>Needs review</h2><p>Unresolved rules or insufficient evidence</p></section>
-      </div>
-      <section className="planning-card" aria-labelledby="audit-evidence-title">
-        <h2 id="audit-evidence-title">Evidence available for this audit</h2>
+      <div className="audit-report-grid">
+      <section className="planning-card" aria-labelledby="degree-requirements-title">
+        <h2 id="degree-requirements-title">Degree requirements</h2>
+        <p>Expand a requirement to review its options, bundles, and evidence. Credit estimates across requirements must not be added together.</p>
+        <label className="audit-toggle"><input type="checkbox" checked={remainingOnly} onChange={event => setRemainingOnly(event.target.checked)} />Show only coursework remaining</label>
+        {groups.length === 0 && <p role="status">{remainingOnly ? 'No requirements marked as coursework remaining.' : 'No requirements returned for this audit.'}</p>}
+        {groups.map(([name, requirements]) => <section className="planning-requirement-group" key={name}>
+          <h3>{name}</h3>
+          {requirements.map((requirement) => <RequirementEvidence key={requirement.rule_id} requirement={requirement}
+            flexible={flexible[requirement.rule_id]} eligibility={eligibility} />)}
+        </section>)}
+      </section>
+      <section className="planning-card audit-evidence-note" aria-labelledby="audit-evidence-title">
+        <h2 id="audit-evidence-title">Audit evidence</h2>
         <p>Prerequisites: <strong>{explain(result.course_eligibility.evaluation_status)}</strong> · Flexible course options: <strong>{explain(result.flexible_candidates.generation_status)}</strong></p>
         {!result.candidate_option_coverage?.unmet_attribute_option_lists_enumerated && <p className="planning-notice warning">Some requirement categories do not have a complete list of course options. Missing options do not mean the requirements are satisfied.</p>}
         <p>Known credit subtotal for distinct reported courses: <strong>{credits?.known_credit_subtotal ?? 'Unavailable'}</strong>. This is a catalog/report estimate, not verified earned credit or a degree completion percentage.</p>
@@ -94,15 +120,7 @@ export default function DegreeAudit() {
             ...(result.flexible_candidates.completed_course_attribute_evidence?.issues ?? [])].map((issue, i) => <li key={i}>{explain(issue)}</li>)}</ul>
         </details>
       </section>
-      <section className="planning-card" aria-labelledby="degree-requirements-title">
-        <h2 id="degree-requirements-title">Degree requirements</h2>
-        <p>Expand a requirement to review its options, bundles, and evidence. Credit estimates across requirements must not be added together.</p>
-        {requirementGroups(result.requirements).map(([name, requirements]) => <section className="planning-requirement-group" key={name}>
-          <h3>{name}</h3>
-          {requirements.map((requirement) => <RequirementEvidence key={requirement.rule_id} requirement={requirement}
-            flexible={flexible[requirement.rule_id]} eligibility={eligibility} />)}
-        </section>)}
-      </section>
+      </div>
       <PrerequisiteResults key={evaluation.fingerprint} courses={result.course_eligibility.courses} />
     </>}
   </main>;

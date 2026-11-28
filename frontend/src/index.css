@@ -26,24 +26,30 @@ a:focus-visible {
   outline-offset: 4px;
 }
 
+/* All header controls share a height and explicit text alignment. */
 .site-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 24px;
-  min-height: 62px;
-  padding: 14px clamp(16px, 3.5vw, 56px);
+  gap: 20px;
+  min-height: 76px;
+  padding: 12px clamp(16px, 3.5vw, 56px);
+  border-bottom: 1px solid #e5e8eb;
   background: #fff;
 }
 
 .brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 9px;
+  width: fit-content;
+  min-height: 44px;
   flex-shrink: 0;
   font-size: 14px;
   font-weight: 600;
 }
 
+/* Kept for the existing sign-in branding. */
 .brand-mark {
   width: 29px;
   height: 29px;
@@ -51,37 +57,132 @@ a:focus-visible {
   background: #00b638;
 }
 
-.brand-name {
-  color: #00b638;
-  font-size: 15px;
-  letter-spacing: 0.4px;
+.header-brand-icon {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 9px;
+  box-shadow: 0 3px 8px rgb(0 103 71 / 12%);
+  transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
-.brand-title {
-  color: #26362c;
+.brand:hover .header-brand-icon {
+  transform: translateY(-1px) rotate(-3deg);
+  box-shadow: 0 5px 12px rgb(0 103 71 / 18%);
 }
+
+.brand-name { color: #006747; font-size: 15px; letter-spacing: 0.4px; }
+.brand-title { color: #26362c; }
 
 .main-nav {
   display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-left: auto;
+  align-items: center;
+  justify-self: end;
+  gap: 4px;
+  min-width: 0;
+  padding: 4px;
+  border: 1px solid #e7eaed;
+  border-radius: 14px;
+  background: #f5f6f8;
   font-size: 14px;
-  color: #38483f;
+  color: #53606c;
 }
 
 .main-nav a {
-  padding: 8px 13px;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
-.main-nav a:hover {
-  background: #edf7ef;
-}
-
+.main-nav a:hover { color: #006747; background: #edf4ef; }
 .main-nav a.active {
-  color: #008b24;
-  background: #c5e4c0;
+  color: #005b3f;
+  border-color: #c6dfcf;
+  background: #e1f0e6;
+  box-shadow: 0 1px 3px rgb(23 43 32 / 7%), inset 0 1px 0 rgb(255 255 255 / 75%);
+}
+
+.main-nav a:focus-visible { outline-offset: -2px; }
+
+.header-sign-out {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid #ccddd2;
+  border-radius: 10px;
+  background: #fff;
+  color: #315641;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.header-sign-out:hover {
+  background: #f0f7f3;
+  border-color: #83b69b;
+  box-shadow: 0 3px 8px rgb(0 103 71 / 8%);
+  transform: translateY(-1px);
+}
+.header-sign-out:active { transform: translateY(0); background: #e1f0e6; box-shadow: none; }
+.header-sign-out:focus-visible { outline: 3px solid #008b2f; outline-offset: 3px; }
+.sign-out-icon { flex-shrink: 0; transition: transform 180ms ease; }
+.header-sign-out:hover .sign-out-icon { transform: translateX(2px); }
+
+@media (max-width: 1100px) {
+  .site-header { grid-template-columns: minmax(0, 1fr) auto; gap: 10px 16px; }
+  .header-sign-out { grid-column: 2; grid-row: 1; }
+  .main-nav { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; overflow-x: auto; }
+  .main-nav a { flex: 1 0 auto; }
+}
+
+@media (max-width: 480px) {
+  .site-header { padding: 10px 16px; gap: 8px; }
+  .site-header .brand { flex-wrap: wrap; gap: 1px 7px; min-width: 0; }
+  .header-brand-icon { width: 32px; height: 32px; grid-row: span 2; }
+  .site-header .brand { display: grid; grid-template-columns: 32px auto; }
+  .site-header .brand-name { font-size: 13px; }
+  .site-header .brand-title { grid-column: 2; font-size: 12px; }
+  .header-sign-out { padding: 0 10px; gap: 6px; font-size: 13px; }
+  .main-nav { flex-wrap: wrap; justify-content: center; overflow: visible; }
+  .main-nav a { padding: 0 12px; font-size: 13px; }
+}
+
+.header-nav-toggle { display: none; }
+
+@media (max-width: 620px) {
+  .site-header { grid-template-columns: minmax(0, 1fr) 44px 44px; min-height: 72px; gap: 8px; padding: 10px 16px; }
+  .site-header .header-sign-out { grid-column: 3; grid-row: 1; width: 44px; padding: 0; }
+  .sign-out-label { display: none; }
+  .header-nav-toggle { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px; grid-column: 2; grid-row: 1; width: 44px; height: 44px; padding: 0; border: 1px solid #d6dce2; border-radius: 10px; background: #fff; color: #45535e; cursor: pointer; }
+  .header-nav-toggle:focus-visible { outline: 3px solid #008b60; outline-offset: 2px; }
+  .menu-line { display: block; width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: transform 160ms ease; }
+  .nav-open .menu-line:first-child { transform: translateY(4px) rotate(45deg); }
+  .nav-open .menu-line:last-child { transform: translateY(-4px) rotate(-45deg); }
+  .site-header .main-nav { display: none; grid-column: 1 / -1; grid-row: 2; overflow: visible; }
+  .site-header.nav-open .main-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-top: 4px; padding: 8px; animation: reveal-navigation 140ms ease-out; }
+  .main-nav a:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  @keyframes reveal-navigation { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: translateY(0); } }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-nav a, .header-sign-out, .sign-out-icon, .header-brand-icon, .menu-line { transition: none; }
+  .site-header.nav-open .main-nav { animation: none; }
+  .brand:hover .header-brand-icon, .header-sign-out:hover, .header-sign-out:hover .sign-out-icon { transform: none; }
 }
 
 .dashboard-card {
@@ -109,93 +210,12 @@ a:focus-visible {
 
 /* Give the header and cards more room on tablets. */
 @media (max-width: 900px) {
-  .site-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 16px 20px;
-  }
-
-  .main-nav {
-    width: 100%;
-    margin-left: 0;
-  }
-
 }
 
 @media (max-width: 600px) {
-  .main-nav {
-    gap: 4px;
-  }
-
   .main-nav a {
     display: flex;
     align-items: center;
     min-height: 44px;
-  }
-}
-
-/* ======================================
-   HEADER SIGN OUT BUTTON
-====================================== */
-
-.header-sign-out {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-
-  padding: 9px 16px;
-
-  background: #eaf7ee;
-  color: #176725;
-
-  border: 1px solid #b8ddc4;
-  border-radius: 7px;
-
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.header-sign-out:hover {
-  background: #d5efdc;
-  color: #005c22;
-  border-color: #8bc9a1;
-}
-
-.header-sign-out:active {
-  background: #c5e4c0;
-}
-
-.header-sign-out:focus-visible {
-  outline: 3px solid #008b2f;
-  outline-offset: 3px;
-}
-
-/* Space between navigation and sign out */
-.site-header .header-sign-out {
-  margin-left: 8px;
-}
-
-/* Tablet layout */
-@media (max-width: 900px) {
-  .site-header .header-sign-out {
-    margin-left: 0;
-  }
-}
-
-/* Mobile layout */
-@media (max-width: 600px) {
-  .header-sign-out {
-    min-height: 44px;
-    padding: 10px 16px;
   }
 }

@@ -1,3 +1,7 @@
+import { catalogCreditLabel } from '../lib/planningPresentation.js';
+import { searchCourses } from '../lib/courseSearch.js';
+import { useCourseSearch } from '../lib/useCourseSearch.js';
+import PageHeading from '../components/PageHeading.jsx';
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient.js";
@@ -8,16 +12,10 @@ import { deleteSemester, loadPlanner, saveSemester } from "../lib/studentPlanner
 
 const PAGE_SIZE = 25;
 
-function creditLabel(min, max) {
-  return min === max ? `${min}` : `${min}–${max}`;
-}
-
 function CoursePicker({ term, selected, onSelect, onClose }) {
   const dialog = useRef(null);
   const termId = term?.term_id;
-  const [input, setInput] = useState("");
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(0);
+  const { input, setInput, search, page, setPage, submit } = useCourseSearch();
   const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState({ loading: true });
 
@@ -32,20 +30,11 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
     async function load() {
       setResult({ loading: true });
       try {
-        // Query courses as the parent so multiple sections never duplicate a course.
-        const columns = "course_id, course_code, course_title, min_credit_hours, max_credit_hours";
-        let query = supabase.from("course").select(
-          termId ? `${columns}, coursesection!inner(term_id)` : columns,
-          { count: "exact" }
-        );
-        if (termId) query = query.eq("coursesection.term_id", termId);
-        const safeSearch = search.replace(/[^a-zA-Z0-9\s-]/g, "").trim();
-        if (safeSearch) {
-          query = query.or(`course_code.ilike.%${safeSearch}%,course_title.ilike.%${safeSearch}%`);
-        }
-        const { data, error, count } = await query.order("course_code").order("course_id")
-          .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1).abortSignal(controller.signal);
-        if (error) throw error;
+        const { data, count } = await searchCourses(supabase, {
+          term: search.term, page, pageSize: PAGE_SIZE, termId,
+          columns: 'course_id, course_code, course_title, min_credit_hours, max_credit_hours',
+          signal: controller.signal,
+        });
         if (!controller.signal.aborted) setResult({ loading: false, courses: data ?? [], total: count ?? 0 });
       } catch {
         if (!controller.signal.aborted) setResult({ loading: false, error: true });
@@ -62,14 +51,10 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
         <button type="button" className="planner-secondary-button" onClick={onClose}>Close</button>
       </div>
       <p>{term ? "Search courses with recorded offerings in this semester." : "Browse the course catalog. Semester availability has not been verified."} Adding a course does not enroll you.</p>
-      <form className="planner-search" onSubmit={(event) => {
-        event.preventDefault();
-        setSearch(input.trim());
-        setPage(0);
-      }}>
+      <form className="planner-search" onSubmit={submit}>
         <label htmlFor="planner-course-search">Course code or title</label>
         <div>
-          <input id="planner-course-search" value={input} onChange={(event) => setInput(event.target.value)} />
+          <input id="planner-course-search" placeholder="CS, CS120, or a course title" value={input} onChange={(event) => setInput(event.target.value)} />
           <button className="planner-primary-button" type="submit">Search</button>
         </div>
       </form>
@@ -81,8 +66,8 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
           </div>
         ) : (
           <>
-            <p role="status">{result.total} courses found</p>
-            {!result.courses.length && <p>{search ? "No courses match your search in this selection." : "No courses are listed for this selection."}</p>}
+            <p role="status">{result.total} {result.total === 1 ? 'course' : 'courses'} found</p>
+            {!result.courses.length && <p>{search.term ? "No courses match your search in this selection." : "No courses are listed for this selection."}</p>}
             <ul className="planner-picker-results">
               {result.courses.map((course) => {
                 const added = selected.some((item) => item.course_id === course.course_id);
@@ -93,7 +78,7 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
                       <strong>{course.course_code}</strong> — {course.course_title}
                       <span className="planner-course-link-hint">View details (opens in a new tab)</span>
                     </Link>
-                      <p>{creditLabel(course.min_credit_hours, course.max_credit_hours)} credits</p>
+                      <p>{catalogCreditLabel(course.min_credit_hours, course.max_credit_hours)}</p>
                     </div>
                     <button type="button" className="planner-secondary-button" disabled={added}
                       aria-label={`${added ? "Added" : "Add"} ${course.course_code}`}
@@ -157,8 +142,11 @@ function SemesterColumn({ semester, number, terms, loadingTerms, termError, onSa
     }
   }
 
-  const min = courses.reduce((sum, course) => sum + Number(course.min_credit_hours), 0);
-  const max = courses.reduce((sum, course) => sum + Number(course.max_credit_hours), 0);
+  function totalHours(field) {
+    if (courses.some(course => course[field] == null)) return null;
+    return courses.reduce((sum, course) => sum + Number(course[field]), 0);
+  }
+  const plannedCredits = catalogCreditLabel(totalHours('min_credit_hours'), totalHours('max_credit_hours'), 'planned credit');
 
   return (
     <section className="planner-semester-card" aria-label={title}>
@@ -179,7 +167,7 @@ function SemesterColumn({ semester, number, terms, loadingTerms, termError, onSa
           ? "No active terms are available. Catalog courses may not be offered in your planned semester."
           : "Choose a term to see its offerings, or browse the full catalog."}
       </p>
-      <p>{creditLabel(min, max)} planned credits</p>
+      <p>{plannedCredits}</p>
 
       {generatedSummary && (
         <div className="planner-term-help">
@@ -214,7 +202,7 @@ function SemesterColumn({ semester, number, terms, loadingTerms, termError, onSa
         {courses.map((course) => (
           <li className="planner-course-slot planner-course-slot-filled" key={course.course_id}>
             <div className="planner-course-title"><strong>{course.course_code}</strong><span>{course.course_title}</span></div>
-            <p>{creditLabel(course.min_credit_hours, course.max_credit_hours)} credits</p>
+            <p>{catalogCreditLabel(course.min_credit_hours, course.max_credit_hours)}</p>
             {course.selected_section && (
               <p className="planner-term-help">
                 Section {course.selected_section.section_number}
@@ -337,11 +325,8 @@ function Planner() {
   }, [attempt]);
 
   return (
-    <main className="planner-page">
-      <div className="planner-heading">
-        <h1>Planner</h1>
-        <p>Organize future semesters using recorded course offerings.</p>
-      </div>
+    <main className="planner-page app-page">
+      <PageHeading eyebrow="Your next semester" title="Planner" description="Organize future semesters and explore compatible course offerings." />
       {!planState.loading && !planState.error && <GeneratedSchedules terms={terms} loadingTerms={loading}
         initialPreferences={preferences} onUseSchedule={handleUseGeneratedSchedule} />}
       <DashboardCard title="Semester Plan">

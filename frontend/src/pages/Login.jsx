@@ -30,7 +30,7 @@ function Login() {
         <main className="login-page">
 
             <div className="login-brand">
-                <span className="brand-mark" aria-hidden="true" />
+                <img className="login-brand-icon" src="/course-advisor.svg" alt="" width="32" height="32" />
                 <span className="brand-name">MARSHALL</span>
                 <span className="brand-title">Course Advisor</span>
             </div>

@@ -1,116 +1,38 @@
-.degree-audit-page {
-  padding: 28px 40px 40px;
+main.audit-page { max-width: 1280px; }
+.audit-page .app-page-heading { margin-bottom: 12px; }
+.audit-disclaimer { margin: 0 0 20px; color: #53615a; font-size: 14px; }
+.audit-overview {
+  display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,1fr);
+  gap: 24px 48px; align-items: center; padding: clamp(22px,3vw,38px);
+  background: #163f34; color: #fafcf9; border-radius: 16px;
 }
-
-.degree-audit-heading {
-  margin-bottom: 18px;
+.audit-overview h2 { margin: 0; font: 500 clamp(28px,3vw,42px)/1.16 Georgia,serif; }
+.audit-overview p { margin: 9px 0; color: #dfebe2; }
+.audit-overview .audit-report-state { margin: 0 0 8px; font-size: 13px; }
+.audit-planner { display: inline-flex; align-items: center; min-height: 44px; color: #e2f5b2; text-decoration: underline; text-underline-offset: 4px; }
+.audit-empty-planner { display: inline-flex; align-items: center; margin-left: 16px; min-height: 44px; }
+.audit-breakdown h3 { margin: 0 0 12px; font-size: 17px; color: white; }
+.audit-track { display: flex; gap: 2px; height: 12px; border-radius: 8px; overflow: hidden; background: #33574c; }
+.audit-breakdown .met { background: #b6dbab; }
+.audit-breakdown .remaining { background: #a2c8dc; }
+.audit-breakdown .review { background: #eec97f; }
+.audit-breakdown dl { margin: 12px 0 0; }
+.audit-breakdown dl > div { display: flex; align-items: baseline; justify-content: space-between; padding: 4px 0; gap: 12px; }
+.audit-breakdown dt { display: flex; align-items: center; gap: 9px; }
+.audit-breakdown i { flex: none; width: 9px; height: 9px; border-radius: 50%; }
+.audit-breakdown dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+.audit-report-grid { display: grid; align-items: start; gap: 18px; grid-template-columns: minmax(0,1.85fr) minmax(260px,1fr); margin-top: 20px; }
+.audit-report-grid > .planning-card { margin: 0; }
+.audit-page .audit-evidence-note { background: #faf5e9; border-color: #e4d8bd; }
+.audit-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; font-size: 14px; }
+.audit-toggle input { accent-color: #006b3f; width: 18px; height: 18px; margin: 0; }
+.audit-page .planning-requirement-group > h3 { border-bottom: 1px solid #dce6df; padding-bottom: 8px; }
+.audit-page .planning-requirement > summary { background: #f6f8f6; }
+.audit-page .planning-requirement[open] > summary { background: #e8f3ec; }
+@media (max-width: 800px) {
+  .audit-report-grid { grid-template-columns: 1fr; }
 }
-
-.degree-audit-heading h1 {
-  margin: 0 0 4px;
-  font-size: 2rem;
-}
-
-.degree-audit-heading p {
-  margin: 0;
-  color: #6f776f;
-}
-
-.degree-progress-track {
-  width: 100%;
-  height: 14px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #dcebe3;
-}
-
-.degree-progress-fill {
-  width: 72%;
-  height: 100%;
-  border-radius: inherit;
-  background: #00a63c;
-}
-
-.degree-audit-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin: 18px 0;
-}
-
-.summary-bar {
-  width: 38%;
-  height: 10px;
-  margin-bottom: 12px;
-  border-radius: 999px;
-  background: #e5efe9;
-}
-
-.summary-value {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #5f675f;
-}
-
-.degree-audit-content {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
-  gap: 16px;
-  align-items: start;
-}
-
-.degree-audit-sidebar {
-  display: grid;
-  gap: 16px;
-}
-
-.requirement-list {
-  display: grid;
-  gap: 12px;
-}
-
-.requirement-row {
-  width: 100%;
-  padding: 15px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 0;
-  border-radius: 7px;
-  background: #f0f7f3;
-  color: #333;
-  text-align: left;
-  cursor: pointer;
-}
-
-.requirement-row:hover {
-  background: #e7f2eb;
-}
-
-.requirement-arrow {
-  font-size: 1.35rem;
-  color: #6d756f;
-}
-
-.eligibility-list {
-  display: grid;
-  gap: 12px;
-}
-
-.open-planner-button {
-  border: 0;
-  border-radius: 7px;
-  font: inherit;
-  font-weight: 400;
-  cursor: pointer;
-  padding: 9px 14px;
-  background: #00a83f;
-  color: #ffffff;
-  margin-right: 10px;
-  transition: background-color 160ms ease, box-shadow 160ms ease, transform 100ms ease;
-}
-
-.open-planner-button:hover {
-  background: #008f36;
-  box-shadow: 0 3px 8px rgba(0, 80, 30, 0.22);
+@media (max-width: 620px) {
+  .audit-overview { grid-template-columns: 1fr; gap: 12px; }
+  .audit-breakdown { border-top: 1px solid #527067; padding-top: 16px; }
 }
