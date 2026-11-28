@@ -13,12 +13,15 @@ export async function askAdvisor(question, courseCodes, signal) {
     });
   } catch (error) {
     if (signal.aborted) throw error;
-    throw new Error('The Advisor service could not be reached. Try again.', { cause: error });
+    throw new Error(error.name === 'TimeoutError'
+      ? 'The Advisor took too long to respond. Try again.'
+      : 'The Advisor service could not be reached. Check that the backend is running and try again.', { cause: error });
   }
   if (response.status === 429) {
     const seconds = Number(response.headers.get('Retry-After'));
     throw new Error(`You’ve reached the Advisor’s question limit. Try again in ${seconds > 0 ? seconds : 60} seconds.`);
   }
+  if (response.status === 503) throw new Error('The Advisor’s course information is temporarily unavailable. Please try again later.');
   if (!response.ok) throw new Error('The Advisor could not answer that question. Try again.');
   const data = await response.json().catch(() => null);
   if (typeof data?.answer !== 'string' || !Array.isArray(data.sources) || !Array.isArray(data.course_codes)) {

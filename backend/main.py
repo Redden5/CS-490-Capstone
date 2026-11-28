@@ -18,19 +18,14 @@ app = FastAPI(title="Degree Planning API", version="1")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["Content-Type", "Authorization"],
     expose_headers=["Retry-After"],
 )
 app.include_router(router)
 app.include_router(schedules_router)
 app.include_router(transcripts_router)
 app.include_router(advisor_router)
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
-    allow_headers=["Content-Type", "Authorization"],
-)
-app.include_router(router)
-app.include_router(schedules_router)
 app.include_router(student_academics_router)
 app.include_router(student_planner_router)
 

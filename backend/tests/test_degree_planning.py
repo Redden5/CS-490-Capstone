@@ -14,6 +14,48 @@ from backend.tests.test_core_ii_planning import Client, DRAFT, fixture
 
 
 class DegreePlanningTests(unittest.TestCase):
+    def test_engineering_replacement_satisfies_working_cs_requirement(self):
+        result = planning.run_degree_plan(self.draft, [{"course_code": "ENGR 222", "grade": "B"}])
+        rule = next(rule for rule in result.handoff["requirements"]
+                    if rule["rule_id"] == "t0_row_0040")
+        self.assertEqual(rule["candidate_progress_status"], "CANDIDATE_MET")
+        self.assertEqual(rule["required_course_code"], "ENGR 222")
+        self.assertNotIn("ENGR 222", result.preview["summary"]["unique_missing_explicit_required_courses"])
+        self.assertNotIn("ENGR 221", result.preview["summary"]["unique_missing_explicit_required_courses"])
+
+    def test_requirement_regeneration_keeps_engineering_replacement(self):
+        from backend.scripts.parse_requirements import interpret
+        from backend.scripts.resolve_requirements import resolve
+        raw = json.loads((DRAFT.parents[1] / "computer_science_bs.json").read_text(encoding="utf-8"))
+        parsed = interpret(raw)
+        rule = next(rule for rule in parsed["requirements"] if rule["rule_id"] == "t0_row_0040")
+        self.assertEqual(rule["course_codes"], ["ENGR 222"])
+        resolved = resolve(parsed)
+        node = next(node for node in resolved["nodes"] if node["node_id"] == "rule:t0_row_0040")
+        self.assertEqual(node["course_codes"], ["ENGR 222"])
+        self.assertEqual(node["metadata"]["source_correction"]["original_course_code"], "ENGR 221")
+
+    def test_unresolved_transfer_credits_remain_unknown_without_rejecting_audit(self):
+        result = planning.run_degree_plan(
+            self.draft,
+            [{"course_code": "CS 110", "grade": "B", "equivalency_verified": False}],
+            reported_credits={"CS 110": 4},
+            core_ii_candidates=True, client=self.client,
+        )
+        credit_evidence = result.handoff["distinct_course_credit_evidence"]
+        self.assertIn("CS 110", str(credit_evidence))
+        evidence = planning.fetch_supabase_attribute_evidence(
+            ["CS 110"], "2026-2027", {"CS 110": 4},
+            client=self.client, unresolved_courses={"CS 110"},
+        )["credit_by_course"]["CS 110"]
+        self.assertEqual(evidence["status"], "EQUIVALENCY_UNVERIFIED")
+        self.assertIsNone(evidence["credit_value"])
+        from backend.services.degree_audit import ReportedCreditError
+        with self.assertRaises(ReportedCreditError):
+            planning.fetch_supabase_attribute_evidence(
+                ["CS 110"], "2026-2027", {"CS 110": 4}, client=self.client,
+            )
+
     def setUp(self):
         self.draft = json.loads(DRAFT.read_text(encoding="utf-8"))
         tables, attributes, catalog, prerequisites = fixture()

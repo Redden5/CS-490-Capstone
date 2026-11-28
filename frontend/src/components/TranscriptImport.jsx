@@ -8,6 +8,7 @@ export default function TranscriptImport({ onImport }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
+  const [reviewCourses, setReviewCourses] = useState([]);
   const pending = useRef(null);
 
   useEffect(() => () => pending.current?.abort(), []);
@@ -27,12 +28,13 @@ export default function TranscriptImport({ onImport }) {
     pending.current = controller;
     setLoading(true);
     try {
-      const { courses, skipped_courses } = await importTranscript(file, controller.signal);
+      const { courses, skipped_courses, review_courses = [] } = await importTranscript(file, controller.signal);
       if (controller.signal.aborted) return;
       if (courses.length) onImport(courses);
+      setReviewCourses(review_courses);
       const imported = courses.length
         ? `Added ${courses.length} coursework ${courses.length === 1 ? 'entry' : 'entries'}. Review the list against your transcript before evaluating.`
-        : 'No recognized rows had a passing grade eligible for import.';
+        : 'No courses were added. Review entries below or enter courses manually.';
       const skipped = skipped_courses
         ? ` Skipped ${skipped_courses} recognized ${skipped_courses === 1 ? 'row' : 'rows'} without an eligible passing grade.`
         : '';
@@ -63,5 +65,11 @@ export default function TranscriptImport({ onImport }) {
     </button>
     {error && <p className="planning-notice warning" role="alert">{error}</p>}
     <div role="status">{loading ? 'Reading transcript…' : status && <p className="planning-notice">{status}</p>}</div>
+    {reviewCourses.length > 0 && <div className="planning-notice warning">
+      <p>These transcript entries need a course equivalency before evaluation. Review them with an advisor and add an approved course code manually.</p>
+      <ul>{reviewCourses.map((course, index) => <li key={index}>
+        {course.course_code} · {course.course_title} · {course.credits ?? 'Unknown'} credits · {course.grade}
+      </li>)}</ul>
+    </div>}
   </form>;
 }

@@ -134,6 +134,8 @@
 .advisor-page button:focus-visible, .advisor-page select:focus-visible { outline: 3px solid #008b2f; outline-offset: 3px; }
 
 .advisor-draft { display: flex; flex-direction: column; }
+.advisor-draft-selector { margin-top: 16px; flex-wrap: wrap; }
+.advisor-draft-selector select { min-width: 0; width: 100%; }
 .advisor-draft-summary { margin: 16px 0 12px; padding: 12px 16px; border-radius: 8px; background: #e3f6e9; color: #174b32; font-size: 18px; font-weight: 600; }
 .advisor-draft-courses { list-style: none; padding: 0; margin: 0 0 22px; border: 1px solid #c9dbd1; border-radius: 9px; }
 .advisor-draft-courses li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 12px 16px; line-height: 1.4; font-size: 15px; }

@@ -1322,13 +1322,13 @@
     {
       "node_id": "rule:t0_row_0040",
       "parent_node_id": "group:44df193fb0ff8a7a",
-      "name": "ENGR 221 Engineering Economy",
+      "name": "ENGR 222 Engr Cost Analysis & Economy",
       "source_kind": "REQUIRED_COURSE",
       "db_requirement_type_candidate": "ALL",
       "minimum_courses": null,
       "minimum_credits": null,
       "course_codes": [
-        "ENGR 221"
+        "ENGR 222"
       ],
       "attribute_names": [],
       "status": "READY",
@@ -1349,7 +1349,12 @@
       "metadata": {
         "catalog_declared_credits": 3,
         "credit_slots": [],
-        "original_review_flags": []
+        "original_review_flags": [],
+        "source_correction": {
+          "original_course_code": "ENGR 221",
+          "replacement_course_code": "ENGR 222",
+          "basis": "Project owner confirmed the replacement course on 2026-11-27."
+        }
       }
     },
     {

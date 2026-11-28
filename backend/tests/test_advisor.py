@@ -51,6 +51,18 @@ class AdvisorRetrievalTests(unittest.TestCase):
 
 
 class AdvisorApiTests(unittest.TestCase):
+    def test_missing_catalog_returns_readable_error_with_cors_headers(self):
+        with (
+            TestClient(app) as client,
+            patch("backend.routes.advisor.answer_question", side_effect=FileNotFoundError("private path")),
+            patch("backend.routes.advisor.rate_limit", AdvisorRateLimit()),
+        ):
+            response = client.post("/api/v1/advisor/chat", json={"question": "What is CS 110?"},
+                                   headers={"Origin": "http://localhost:5173"})
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(response.headers["access-control-allow-origin"], "http://localhost:5173")
+        self.assertNotIn("private", response.text)
+
     def test_chat_returns_citations_and_rate_limits_with_retry_after(self):
         with (
             TestClient(app) as client,

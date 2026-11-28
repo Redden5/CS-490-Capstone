@@ -77,4 +77,8 @@ def chat(payload: AdvisorQuestion, request: Request, response: Response):
             "Retry-After": str(retry_after), "Cache-Control": "no-store",
         })
     response.headers["Cache-Control"] = "no-store"
-    return generate_answer(payload.question, answer_question(payload.question, payload.course_codes))
+    try:
+        result = answer_question(payload.question, payload.course_codes)
+    except OSError:
+        raise HTTPException(503, "Advisor academic data is unavailable.") from None
+    return generate_answer(payload.question, result)

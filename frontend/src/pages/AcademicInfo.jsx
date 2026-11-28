@@ -76,7 +76,7 @@ export default function AcademicInfo() {
       <form className="planning-card planning-coursework" onSubmit={submit}>
         <div className="planning-section-heading"><h2>Completed coursework</h2><span>{input.rows.length} {input.rows.length === 1 ? 'entry' : 'entries'}</span></div>
         <p className="planning-muted">Include only courses you passed. Leave unknown grades or credits blank. Grades help check prerequisites; they do not verify degree credit.</p>
-        <p className="planning-muted">Record repeated successful attempts separately. Conflicting grades, plus/minus grades, and transfer marks may need review.</p>
+        <p className="planning-muted">Record repeated successful attempts separately. Conflicting grades, plus/minus grades, and transfer marks may need review. Credits for entries flagged for equivalency review are saved for reference and remain unvalidated in the audit.</p>
         {!input.rows.length && <p className="planning-empty">No coursework entered. Search for a course or add one manually. You can also evaluate with no completed courses.</p>}
         <ol className="planning-coursework-list">
           {input.rows.map((row, index) => <li key={row.id}>

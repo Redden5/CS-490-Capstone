@@ -4,10 +4,11 @@ from decimal import Decimal
 
 import pymupdf
 from fastapi import APIRouter, HTTPException, Request, Response
-from pydantic import BaseModel, TypeAdapter
+from pydantic import BaseModel, Field, TypeAdapter, ValidationError
 from starlette.concurrency import run_in_threadpool
 
 from backend.models.models import TranscriptCourse
+from backend.models.planning import CompletedCourse
 from backend.services.transcript_service import parse_transcript
 from backend.utils.pdf_extractor import extract_pdf_text
 
@@ -25,9 +26,14 @@ class ImportedCourse(BaseModel):
     is_transfer: bool
 
 
+class ReviewCourse(ImportedCourse):
+    course_title: str
+
+
 class TranscriptImport(BaseModel):
     courses: list[ImportedCourse]
     skipped_courses: int
+    review_courses: list[ReviewCourse] = Field(default_factory=list)
 
 
 def read_coursework(pdf: bytes) -> TranscriptImport:
@@ -43,18 +49,26 @@ def read_coursework(pdf: bytes) -> TranscriptImport:
         raise HTTPException(422, "No course rows were recognized. Check the transcript format or enter courses manually.")
 
     courses = []
+    review_courses = []
     for course in parsed:
         is_transfer = course.level is None
         allowed_grades = TRANSFER_GRADES if is_transfer else PASSING_GRADES
         if course.grade is None or course.grade.rstrip("+-") not in allowed_grades:
             continue
-        courses.append(ImportedCourse(
+        imported = ImportedCourse(
             course_code=f"{course.subject_code} {course.course_number}",
             grade=course.grade,
             credits=course.credits if course.credits > 0 else None,
             is_transfer=is_transfer,
-        ))
-    return TranscriptImport(courses=courses, skipped_courses=len(parsed) - len(courses))
+        )
+        try:
+            CompletedCourse(course_code=imported.course_code, equivalency_verified=not is_transfer)
+        except ValidationError:
+            review_courses.append(ReviewCourse(**imported.model_dump(), course_title=course.course_title))
+            continue
+        courses.append(imported)
+    return TranscriptImport(courses=courses, review_courses=review_courses,
+                            skipped_courses=len(parsed) - len(courses) - len(review_courses))
 
 
 @router.post("/import", response_model=TranscriptImport)

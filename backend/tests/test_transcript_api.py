@@ -44,7 +44,22 @@ class TranscriptApiTests(unittest.TestCase):
                 {"course_code": "CSC 141", "grade": "A-", "credits": "3.000", "is_transfer": False},
             ],
             "skipped_courses": 2,
+            "review_courses": [],
         })
+
+    def test_transfer_placeholders_are_returned_for_review(self):
+        response = self.upload(transcript_pdf(
+            "TRANSFER CREDIT ACCEPTED BY INSTITUTION\n"
+            "FA24: Example College\n"
+            "PSY 201 Psychology B. 4.000 12.00\n"
+            "UNC 1XX Unclassified CR. 1.000 0.00\n"
+            "UNC 1XX Unclassified D. 4.000 4.00\n"
+        ))
+        self.assertEqual(response.status_code, 200, response.text)
+        data = response.json()
+        self.assertEqual([course["course_code"] for course in data["courses"]], ["PSY 201"])
+        self.assertEqual([course["credits"] for course in data["review_courses"]], ["1.000", "4.000"])
+        self.assertEqual(data["skipped_courses"], 0)
 
     def test_invalid_and_unrecognized_pdfs_return_validation_errors(self):
         for pdf in (b"%PDF-invalid", transcript_pdf(), transcript_pdf("Unrecognized text")):
