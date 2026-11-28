@@ -29,7 +29,7 @@
 }
 
 .login-logo {
-  @apply mu:block mu:h-auto mu:w-20 mu:rounded-lg mu:bg-paper mu:p-1.5 mu:sm:w-24 mu:lg:w-28;
+  @apply mu:block mu:h-auto mu:w-17 mu:sm:w-21 mu:lg:w-25;
 }
 
 .login-product-name {
