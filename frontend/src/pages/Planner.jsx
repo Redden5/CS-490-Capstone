@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient.js";
-import DashboardCard from "../components/DashboardCard.jsx";
 import "../styles/Planner.css";
 import GeneratedSchedules from "../components/GeneratedSchedules.jsx";
 import { deleteSemester, loadPlanner, saveSemester } from "../lib/studentPlannerApi.js";
@@ -12,7 +11,7 @@ function creditLabel(min, max) {
   return min === max ? `${min}` : `${min}–${max}`;
 }
 
-function CoursePicker({ term, selected, onSelect, onClose }) {
+function CoursePicker({ term, selected, onSelect, onClose, triggerRef }) {
   const dialog = useRef(null);
   const termId = term?.term_id;
   const [input, setInput] = useState("");
@@ -23,9 +22,13 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
 
   useEffect(() => {
     const element = dialog.current;
+    const trigger = triggerRef.current;
     element.showModal();
-    return () => element.close();
-  }, []);
+    return () => {
+      element.close();
+      if (trigger?.isConnected) trigger.focus();
+    };
+  }, [triggerRef]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -69,21 +72,21 @@ function CoursePicker({ term, selected, onSelect, onClose }) {
       }}>
         <label htmlFor="planner-course-search">Course code or title</label>
         <div>
-          <input id="planner-course-search" value={input} onChange={(event) => setInput(event.target.value)} />
+          <input id="planner-course-search" type="search" value={input} onChange={(event) => setInput(event.target.value)} />
           <button className="planner-primary-button" type="submit">Search</button>
         </div>
       </form>
       <div aria-busy={result.loading}>
         {result.loading ? <p role="status">Loading courses…</p> : result.error ? (
-          <div role="alert">
+          <div className="planner-alert" role="alert">
             <p>Unable to load course offerings. Please try again.</p>
-            <button type="button" onClick={() => setAttempt(attempt + 1)}>Try again</button>
+            <button className="planner-secondary-button" type="button" onClick={() => setAttempt(attempt + 1)}>Try again</button>
           </div>
         ) : (
           <>
             <p role="status">{result.total} courses found</p>
             {!result.courses.length && <p>{search ? "No courses match your search in this selection." : "No courses are listed for this selection."}</p>}
-            <ul className="planner-picker-results">
+            <ul className="planner-picker-results" role="list">
               {result.courses.map((course) => {
                 const added = selected.some((item) => item.course_id === course.course_id);
                 return (
@@ -128,6 +131,7 @@ function SemesterColumn({ semester, number, terms, loadingTerms, termError, onSa
   const [picking, setPicking] = useState(false);
   const [operation, setOperation] = useState("");
   const [saveError, setSaveError] = useState("");
+  const pickerTrigger = useRef(null);
   const dirty = termId !== (semester.term_id == null ? "catalog" : String(semester.term_id)) || courses !== semester.courses;
 
   async function persist() {
@@ -160,9 +164,20 @@ function SemesterColumn({ semester, number, terms, loadingTerms, termError, onSa
   const min = courses.reduce((sum, course) => sum + Number(course.min_credit_hours), 0);
   const max = courses.reduce((sum, course) => sum + Number(course.max_credit_hours), 0);
 
+  const saved = revision && !dirty;
+
   return (
-    <section className="planner-semester-card" aria-label={title}>
-      <h2>{title}</h2>
+    <section className="planner-semester-card" aria-labelledby={`planner-title-${semesterId}`}>
+      <header className="planner-semester-heading">
+        <div>
+          <h3 id={`planner-title-${semesterId}`}>{title}</h3>
+          <p className="planner-semester-status" data-saved={Boolean(saved)} role="status">
+            {operation === "saving" ? "Saving semester…" : operation === "deleting" ? "Deleting semester…"
+              : saved ? "Semester saved." : "Unsaved semester changes."}
+          </p>
+        </div>
+        <p className="planner-credit-total">{creditLabel(min, max)} planned credits</p>
+      </header>
       <label className="planner-term-label" htmlFor={`planner-term-${semesterId}`}>Course availability</label>
       <select id={`planner-term-${semesterId}`} value={termId}
         disabled={Boolean(operation) || courses.length > 0}
@@ -179,10 +194,9 @@ function SemesterColumn({ semester, number, terms, loadingTerms, termError, onSa
           ? "No active terms are available. Catalog courses may not be offered in your planned semester."
           : "Choose a term to see its offerings, or browse the full catalog."}
       </p>
-      <p>{creditLabel(min, max)} planned credits</p>
 
       {generatedSummary && (
-        <div className="planner-term-help">
+        <div className="planner-generated-summary">
           <p>
             Created from a generated schedule
             {generatedSummary.status === "TENTATIVE"
@@ -210,9 +224,9 @@ function SemesterColumn({ semester, number, terms, loadingTerms, termError, onSa
         </div>
       )}
       {!courses.length && <p className="planner-empty">No courses added yet.</p>}
-      <ul className="planner-course-list">
+      <ul className="planner-course-list" role="list">
         {courses.map((course) => (
-          <li className="planner-course-slot planner-course-slot-filled" key={course.course_id}>
+          <li className="planner-course-slot" key={course.course_id}>
             <div className="planner-course-title"><strong>{course.course_code}</strong><span>{course.course_title}</span></div>
             <p>{creditLabel(course.min_credit_hours, course.max_credit_hours)} credits</p>
             {course.selected_section && (
@@ -227,15 +241,14 @@ function SemesterColumn({ semester, number, terms, loadingTerms, termError, onSa
         ))}
       </ul>
       <div className="planner-semester-actions">
-        <button className="planner-secondary-button" type="button" disabled={Boolean(operation)} onClick={() => setPicking(true)}>Add Course</button>
+        <button ref={pickerTrigger} className="planner-secondary-button" type="button" disabled={Boolean(operation)} onClick={() => setPicking(true)}>Add Course</button>
         <button className="planner-primary-button" type="button" disabled={Boolean(operation) || (revision && !dirty)}
           onClick={persist}>{operation === "saving" ? "Saving…" : "Save Semester"}</button>
-        <button className="planner-secondary-button" type="button" disabled={Boolean(operation)}
+        <button className="planner-remove-button" type="button" disabled={Boolean(operation)}
           onClick={remove}>{revision ? "Delete Semester" : "Discard Semester"}</button>
       </div>
-      <p className="planner-term-help" role="status">{revision && !dirty ? "Semester saved." : "Unsaved semester changes."}</p>
-      {saveError && <p role="alert">{saveError}</p>}
-      {picking && <CoursePicker term={term} selected={courses} onClose={() => setPicking(false)}
+      {saveError && <p className="planner-alert" role="alert">{saveError}</p>}
+      {picking && <CoursePicker term={term} selected={courses} triggerRef={pickerTrigger} onClose={() => setPicking(false)}
         onSelect={(course) => setCourses((current) => current.some((item) => item.course_id === course.course_id)
           ? current : [...current, {
             course_id: course.course_id,
@@ -338,42 +351,61 @@ function Planner() {
 
   return (
     <main className="planner-page">
-      <div className="planner-heading">
-        <h1>Planner</h1>
-        <p>Organize future semesters using recorded course offerings.</p>
-      </div>
+      <header className="planner-heading">
+        <div>
+          <h1>Planner</h1>
+          <p>Organize future semesters using recorded course offerings.</p>
+        </div>
+        <a className="planner-hero-link" href="#semester-plan">View semester plan <span aria-hidden="true">↓</span></a>
+      </header>
+
       {!planState.loading && !planState.error && <GeneratedSchedules terms={terms} loadingTerms={loading}
         initialPreferences={preferences} onUseSchedule={handleUseGeneratedSchedule} />}
-      <DashboardCard title="Semester Plan">
-        {planState.loading ? <p role="status">Loading saved semesters…</p> : planState.error ? (
-          <div role="alert"><p>{planState.error}</p><button type="button" onClick={() => {
-            setPlanState({ loading: true });
-            setPlanAttempt((value) => value + 1);
-          }}>Retry loading semesters</button></div>
-        ) : <>
-          <p>Save a semester to access it the next time you sign in.</p>
-          <button className="planner-primary-button" type="button" onClick={() => setSemesters((current) => [...current, {
-            id: crypto.randomUUID(), term_id: null, term_name: null, courses: [], generated_summary: null,
-          }])}>Add Semester</button>
-        </>}
-        {loading ? <p role="status">Loading available terms…</p> : error ? (
-          <div role="alert"><p>Unable to load terms.</p><button type="button" onClick={() => setAttempt(attempt + 1)}>Try again</button></div>
-        ) : !terms.length ? <p>No active terms are listed. You can still add courses from the catalog; semester availability is unverified.</p> : null}
-      </DashboardCard>
-      <div className="planner-semester-grid">
-        {semesters.map((semester, index) => (
-          <SemesterColumn
-            key={semester.id}
-            semester={semester}
-            number={index + 1}
-            onSaved={upsertSemester}
-            onRemoved={(id) => setSemesters((current) => current.filter((plan) => plan.id !== id))}
-            terms={terms}
-            loadingTerms={loading}
-            termError={error}
-          />
-        ))}
-      </div>
+
+      <section className="planner-plan" aria-labelledby="semester-plan">
+        <div className="planner-plan-heading">
+          <div>
+            <h2 id="semester-plan" tabIndex={-1}>Semester Plan</h2>
+            {!planState.loading && !planState.error && <p>Save a semester to access it the next time you sign in.</p>}
+          </div>
+          {!planState.loading && !planState.error && (
+            <button className="planner-secondary-button" type="button" onClick={() => setSemesters((current) => [...current, {
+              id: crypto.randomUUID(), term_id: null, term_name: null, courses: [], generated_summary: null,
+            }])}>Add Semester</button>
+          )}
+        </div>
+        {planState.loading ? <p className="planner-state" role="status">Loading saved semesters…</p> : planState.error ? (
+          <div className="planner-alert" role="alert">
+            <p>{planState.error}</p>
+            <button className="planner-secondary-button" type="button" onClick={() => {
+              setPlanState({ loading: true });
+              setPlanAttempt((value) => value + 1);
+            }}>Retry loading semesters</button>
+          </div>
+        ) : !semesters.length && <p className="planner-empty">No saved semester plans yet.</p>}
+        {loading ? <p className="planner-state" role="status">Loading available terms…</p> : error ? (
+          <div className="planner-alert" role="alert">
+            <p>Unable to load terms.</p>
+            <button className="planner-secondary-button" type="button" onClick={() => setAttempt(attempt + 1)}>Try again</button>
+          </div>
+        ) : !terms.length ? <p className="planner-state">No active terms are listed. You can still add courses from the catalog. Semester availability is unverified.</p> : null}
+        {semesters.length > 0 && (
+          <div className="planner-semester-grid">
+            {semesters.map((semester, index) => (
+              <SemesterColumn
+                key={semester.id}
+                semester={semester}
+                number={index + 1}
+                onSaved={upsertSemester}
+                onRemoved={(id) => setSemesters((current) => current.filter((plan) => plan.id !== id))}
+                terms={terms}
+                loadingTerms={loading}
+                termError={error}
+              />
+            ))}
+          </div>
+        )}
+      </section>
     </main>
   );
 }

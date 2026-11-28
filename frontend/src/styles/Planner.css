@@ -1,294 +1,245 @@
+@reference "./tailwind.css";
+
 .planner-page {
-  padding: 26px 40px 36px;
+  @apply mu:w-full mu:flex-1 mu:space-y-4 mu:bg-canvas mu:px-4 mu:pt-6 mu:pb-10 mu:font-campus mu:text-ink mu:wrap-anywhere mu:sm:px-6 mu:lg:px-10 mu:lg:pt-9;
+}
+
+@media (min-width: 87rem) {
+  .planner-page {
+    padding-inline: calc((100% - 82rem) / 2);
+  }
 }
 
 .planner-heading {
-  margin-bottom: 16px;
+  @apply mu:flex mu:min-h-40 mu:flex-wrap mu:items-end mu:justify-between mu:gap-4 mu:rounded-banner mu:bg-forest mu:px-6 mu:py-7 mu:text-paper mu:sm:px-8 mu:lg:min-h-48 mu:lg:px-10;
+  background-image:
+    repeating-radial-gradient(ellipse at 104% 138%, transparent 0 23px, #d7f5df24 24px 25px, transparent 26px 43px),
+    linear-gradient(115deg, var(--mu-color-forest) 44%, #1b6c49);
 }
 
 .planner-heading h1 {
-  margin: 0 0 3px;
-  font-size: 2rem;
-  line-height: 1.1;
-  color: #183321;
+  @apply mu:m-0 mu:font-display mu:text-page mu:font-normal mu:tracking-tight;
 }
 
 .planner-heading p {
-  margin: 0;
-  font-size: 0.96rem;
-  color: #78827b;
+  @apply mu:m-0 mu:mt-2 mu:text-sm mu:leading-relaxed mu:text-leaf mu:sm:text-base;
 }
 
-.planner-page > .dashboard-card {
-  margin-bottom: 17px;
-}
-
-.planner-plan-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
+.planner-hero-link,
 .planner-primary-button,
-.planner-secondary-button {
-  border: 0;
-  border-radius: 7px;
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
+.planner-secondary-button,
+.planner-search-previous-button,
+.planner-search-next-button {
+  @apply mu:inline-flex mu:min-h-11 mu:items-center mu:justify-center mu:gap-2 mu:rounded-lg mu:border mu:border-solid mu:px-3 mu:py-2 mu:[font-family:inherit] mu:text-center mu:text-sm mu:font-semibold mu:motion-safe:transition-colors;
+}
+
+.planner-hero-link {
+  @apply mu:border-paper/40 mu:bg-paper/10 mu:text-paper mu:hover:bg-paper/20;
 }
 
 .planner-primary-button {
-  padding: 9px 14px;
-  background: #00a83f;
-  color: #ffffff;
+  @apply mu:cursor-pointer mu:border-herd mu:bg-herd mu:text-paper mu:hover:bg-forest;
 }
 
-.planner-secondary-button {
-  padding: 9px 13px;
-  background: #e8f4ec;
-  color: #1c6e36;
+.planner-secondary-button,
+.planner-search-previous-button,
+.planner-search-next-button {
+  @apply mu:cursor-pointer mu:border-herd mu:bg-paper mu:text-herd mu:hover:bg-mint;
 }
 
-.planner-primary-button:hover,
-.planner-secondary-button:hover {
-  filter: brightness(0.98);
+.planner-page button:disabled {
+  @apply mu:cursor-not-allowed mu:opacity-55;
+}
+
+.planner-page :is(a, button, input, select, summary, h2[tabindex]):focus-visible {
+  outline: 2px solid var(--mu-color-herd);
+  outline-offset: 3px;
+}
+
+.planner-heading .planner-hero-link:focus-visible {
+  outline-color: var(--mu-color-leaf);
+}
+
+.planner-page :is(input, select) {
+  @apply mu:min-h-11 mu:w-full mu:min-w-0 mu:max-w-full mu:rounded-lg mu:border mu:border-solid mu:border-muted mu:bg-paper mu:px-3 mu:py-2 mu:[font-family:inherit] mu:text-sm mu:font-normal mu:text-ink;
+}
+
+.planner-page :is(input, select):disabled {
+  @apply mu:border-line mu:bg-canvas;
+}
+
+.planner-plan {
+  @apply mu:space-y-4;
+}
+
+.planner-plan-heading,
+.planner-semester-card {
+  @apply mu:min-w-0 mu:rounded-panel mu:border mu:border-solid mu:border-line mu:bg-paper mu:p-4 mu:text-sm mu:leading-relaxed mu:shadow-panel mu:sm:p-6;
+}
+
+.planner-plan-heading,
+.planner-semester-heading {
+  @apply mu:flex mu:flex-wrap mu:items-start mu:justify-between mu:gap-3;
+}
+
+.planner-plan-heading h2,
+.planner-semester-heading h3,
+.planner-dialog-heading h2 {
+  @apply mu:m-0 mu:text-lg mu:leading-tight mu:font-semibold mu:tracking-tight;
+}
+
+.planner-plan-heading p,
+.planner-term-help {
+  @apply mu:mt-1.5 mu:mb-0 mu:text-sm mu:leading-relaxed mu:text-muted;
 }
 
 .planner-semester-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  @apply mu:grid mu:items-start mu:gap-4 mu:md:grid-cols-2 mu:xl:grid-cols-3;
 }
 
-.planner-semester-card {
-  min-height: 360px;
-  padding: 18px 15px 16px;
-  border: 1px solid #d8e4dc;
-  border-radius: 11px;
-  background: #ffffff;
+.planner-semester-heading {
+  @apply mu:mb-4;
 }
 
-.planner-semester-card h2 {
-  margin: 0 0 11px;
-  font-size: 1.08rem;
-  color: #3b3b3b;
+.planner-semester-status {
+  @apply mu:mt-1 mu:mb-0 mu:text-xs mu:font-semibold mu:text-review-ink;
 }
 
-.planner-course-list {
-  display: grid;
-  gap: 10px;
-  margin-bottom: 10px;
+.planner-semester-status[data-saved="true"] {
+  @apply mu:text-herd;
 }
 
-.planner-course-slot {
-  min-height: 53px;
-  padding: 11px 12px;
-  border-radius: 7px;
-  background: #f0f7f3;
+.planner-credit-total {
+  @apply mu:m-0 mu:rounded-md mu:bg-mint mu:px-2 mu:py-1 mu:text-xs mu:font-semibold mu:text-herd mu:tabular-nums;
 }
 
-.planner-course-slot-filled {
-  color: #1e6c35;
+.planner-term-label,
+.planner-search label {
+  @apply mu:mb-1.5 mu:block mu:text-sm mu:font-semibold;
 }
 
-.planner-course-title {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  flex-wrap: wrap;
-  font-size: 0.92rem;
+.planner-state,
+.planner-empty,
+.planner-alert,
+.planner-generated-summary {
+  @apply mu:rounded-lg mu:border mu:border-solid mu:border-line mu:px-3 mu:py-2.5 mu:text-sm mu:leading-relaxed;
 }
 
-.planner-course-title strong,
-.planner-course-title span {
-  font-weight: 600;
+.planner-state,
+.planner-empty {
+  @apply mu:bg-audit-tint mu:text-muted;
 }
 
-.planner-course-slot p {
-  margin: 4px 0 0;
-  font-size: 0.76rem;
-  color: #a7b0aa;
+.planner-alert,
+.planner-generated-summary {
+  @apply mu:bg-review-tint mu:text-review-ink;
 }
 
-.planner-course-slot-empty {
-  display: flex;
-  align-items: flex-start;
-  color: #b6bfba;
-  font-size: 0.78rem;
+.planner-generated-summary {
+  @apply mu:mt-3;
 }
 
-.planner-semester-card > .planner-secondary-button {
-  margin-top: 1px;
-  padding: 8px 12px;
-  font-size: 0.82rem;
+.planner-generated-summary p:first-child,
+.planner-alert p:first-child {
+  @apply mu:mt-0;
 }
 
-@media (max-width: 900px) {
-  .planner-semester-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 620px) {
-  .planner-page {
-    padding: 22px 18px 30px;
-  }
-
-  .planner-plan-actions {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+.planner-generated-summary p:last-child {
+  @apply mu:mb-0;
 }
 
 .planner-course-list,
 .planner-picker-results {
-  list-style: none;
-  padding: 0;
+  @apply mu:my-3 mu:list-none mu:p-0;
 }
 
-.planner-empty,
+.planner-course-list {
+  @apply mu:grid mu:gap-2.5;
+}
+
+.planner-course-list:empty {
+  @apply mu:hidden;
+}
+
+.planner-course-slot {
+  @apply mu:min-w-0 mu:rounded-lg mu:border mu:border-solid mu:border-line mu:bg-audit-tint mu:p-3;
+}
+
+.planner-course-title {
+  @apply mu:flex mu:flex-wrap mu:items-baseline mu:gap-x-2 mu:gap-y-1 mu:text-sm;
+}
+
+.planner-course-title strong {
+  @apply mu:text-herd;
+}
+
 .planner-course-slot p {
-  color: #53665b;
+  @apply mu:my-1 mu:text-xs mu:text-muted;
 }
 
-.planner-plan-actions { flex-wrap: wrap; }
-
-.planner-page select,
-.planner-course-dialog input {
-  max-width: 100%;
-  min-height: 44px;
-  padding: 8px;
-  border: 1px solid #99b6a3;
-  border-radius: 6px;
-  font: inherit;
+.planner-semester-actions {
+  @apply mu:mt-4 mu:flex mu:flex-wrap mu:items-center mu:gap-2 mu:pt-3;
+  border-top: 1px solid var(--mu-color-line);
 }
-
-.planner-page button:disabled { opacity: 0.6; cursor: default; }
 
 .planner-remove-button {
-  margin-top: 10px;
-  padding: 5px 0;
-  background: transparent;
-  border: 0;
-  color: #006747;
-  text-decoration: underline;
-  cursor: pointer;
+  @apply mu:min-h-8 mu:cursor-pointer mu:rounded-sm mu:border-0 mu:bg-transparent mu:px-1 mu:py-1 mu:[font-family:inherit] mu:text-sm mu:font-semibold mu:text-red-800 mu:underline mu:underline-offset-4 mu:hover:bg-red-50;
 }
 
 .planner-course-dialog {
-  width: min(960px, calc(100vw - 32px));
-  max-width: calc(100vw - 32px);
-  max-height: 85svh;
-  overflow-y: auto;
-  overflow-wrap: anywhere;
-  padding: 24px;
-  border: 1px solid #d8e4dc;
-  border-radius: 12px;
-  color: #26362c;
+  @apply mu:w-[calc(100%-2rem)] mu:max-w-[60rem] mu:max-h-[85svh] mu:overflow-y-auto mu:overscroll-contain mu:rounded-banner mu:border mu:border-solid mu:border-line mu:bg-paper mu:p-4 mu:font-campus mu:text-sm mu:leading-relaxed mu:text-ink mu:shadow-xl mu:wrap-anywhere mu:sm:p-6;
 }
 
-.planner-course-dialog::backdrop { background: rgb(0 0 0 / 45%); }
+.planner-course-dialog::backdrop {
+  background: #132b21a6;
+}
 
 .planner-dialog-heading,
-.planner-picker-results li,
-.planner-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+.planner-picker-results li {
+  @apply mu:flex mu:items-center mu:justify-between mu:gap-3;
 }
 
-.planner-dialog-heading h2 { margin: 0; font-size: 1.2rem; }
-.planner-search label { display: block; margin-bottom: 8px; }
-.planner-search > div { display: flex; gap: 8px; }
-.planner-search input { min-width: 0; flex: 1; }
-.planner-picker-results li { padding: 16px 0; border-bottom: 1px solid #d8e4dc; }
-.planner-picker-course { min-width: 0; flex: 1; }
+.planner-dialog-heading > button,
+.planner-picker-results li > button {
+  @apply mu:shrink-0;
+}
+
+.planner-search > div {
+  @apply mu:grid mu:grid-cols-[minmax(0,1fr)_auto] mu:gap-2;
+}
+
+.planner-picker-results {
+  @apply mu:divide-y mu:divide-line;
+}
+
+.planner-picker-results li {
+  @apply mu:py-3;
+}
+
+.planner-picker-course {
+  @apply mu:min-w-0 mu:flex-1;
+}
+
 .planner-course-link {
-  color: #006747;
-  line-height: 1.5;
-  text-underline-offset: 3px;
+  @apply mu:font-semibold mu:text-herd mu:underline-offset-4 mu:hover:underline mu:focus-visible:underline;
 }
-.planner-course-link:hover,
-.planner-course-link:focus-visible { text-decoration: underline; }
-.planner-course-link strong { white-space: nowrap; }
-.planner-course-link-hint {
-  display: block;
-  margin-top: 4px;
-  color: #53665b;
-  font-size: 0.85rem;
+
+.planner-course-link-hint,
+.planner-picker-course p {
+  @apply mu:mt-1 mu:mb-0 mu:block mu:text-xs mu:font-normal mu:text-muted;
 }
-.planner-picker-results li > button,
-.planner-dialog-heading > button { flex-shrink: 0; }
-.planner-picker-results li > button { min-width: 76px; }
-.planner-picker-results p { margin: 6px 0 0; }
+
 .planner-pagination {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  @apply mu:grid mu:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] mu:items-center mu:gap-2 mu:text-sm;
 }
-.planner-pagination > button { margin-right: 0; }
+
 .planner-pagination > button:first-child { justify-self: start; }
 .planner-pagination > span { justify-self: center; text-align: center; }
 .planner-pagination > button:last-child { justify-self: end; }
 
-@media (max-width: 480px) {
+@media (max-width: 30rem) {
   .planner-pagination > span { grid-column: 1 / -1; grid-row: 1; }
   .planner-pagination > button { grid-row: 2; }
   .planner-pagination > button:first-child { grid-column: 1; }
   .planner-pagination > button:last-child { grid-column: 3; }
-}
-
-.planner-page button:focus-visible,
-.planner-page select:focus-visible,
-.planner-course-dialog button:focus-visible,
-.planner-course-dialog input:focus-visible {
-  outline: 3px solid #008b2f;
-  outline-offset: 3px;
-}
-
-@media (max-width: 620px) {
-  .planner-course-dialog { padding: 16px; }
-  .planner-dialog-heading { align-items: flex-start; }
-  .planner-picker-results li { align-items: flex-start; gap: 12px; }
-}
-
-.planner-term-label { display: block; margin-bottom: 6px; font-weight: 600; }
-.planner-term-help { color: #53665b; font-size: 0.85rem; line-height: 1.5; }
-.planner-semester-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-
-.planner-search-next-button {
-  border: 0;
-  border-radius: 7px;
-  font: inherit;
-  font-weight: 400;
-  cursor: pointer;
-  padding: 9px 14px;
-  background: #00a83f;
-  color: #ffffff;
-  margin-right: 10px;
-  transition: background-color 160ms ease, box-shadow 160ms ease, transform 100ms ease;
-}
-
-.planner-search-next-button:hover {
-  background: #008f36;
-  box-shadow: 0 3px 8px rgba(0, 80, 30, 0.22);
-}
-
-.planner-search-previous-button {
-  border: 0;
-  border-radius: 7px;
-  font: inherit;
-  font-weight: 400;
-  cursor: pointer;
-  padding: 9px 14px;
-  background: #00a83f;
-  color: #ffffff;
-  margin-right: 10px;
-  transition: background-color 160ms ease, box-shadow 160ms ease, transform 100ms ease;
-}
-
-.planner-search-previous-button:hover {
-  background: #008f36;
-  box-shadow: 0 3px 8px rgba(0, 80, 30, 0.22);
 }

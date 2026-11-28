@@ -1,43 +1,128 @@
+@reference "./tailwind.css";
+
 .schedule-generator {
-  margin-bottom: 18px;
-  padding: 20px;
-  border: 1px solid #d8e4dc;
-  border-radius: 11px;
-  background: #fff;
-  color: #26362c;
+  @apply mu:min-w-0 mu:rounded-panel mu:border mu:border-solid mu:border-line mu:bg-paper mu:p-4 mu:text-sm mu:leading-relaxed mu:shadow-panel mu:sm:p-6;
 }
-.schedule-generator h2 { margin: 0 0 10px; font-size: 1.25rem; }
-.schedule-generator h3 { margin: 15px 0 10px; font-size: 1.05rem; }
-.schedule-generator p { line-height: 1.45; }
-.schedule-generator .schedule-form { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; margin: 14px 0; }
-.schedule-generator label { display: grid; gap: 6px; font-weight: 600; }
-.schedule-generator input, .schedule-generator select {
-  min-height: 40px; max-width: 100%; padding: 8px;
-  border: 1px solid #99b6a3; border-radius: 6px; font: inherit;
+
+.schedule-generator h2,
+.schedule-generator h3 {
+  @apply mu:m-0 mu:text-lg mu:leading-tight mu:font-semibold mu:tracking-tight;
 }
-.schedule-generator input { width: 110px; }
-.schedule-option-picker { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+
+.schedule-generator h3 {
+  @apply mu:text-base;
+}
+
+.schedule-generator > p:first-of-type {
+  @apply mu:mt-2 mu:text-muted;
+}
+
+.schedule-form {
+  @apply mu:mt-4 mu:rounded-xl mu:border mu:border-solid mu:border-line mu:bg-audit-tint mu:p-3 mu:sm:p-4;
+}
+
+.schedule-fields {
+  @apply mu:grid mu:max-w-xl mu:gap-3 mu:sm:grid-cols-[minmax(0,1fr)_minmax(0,0.55fr)];
+}
+
+.schedule-generator label {
+  @apply mu:grid mu:min-w-0 mu:gap-1.5 mu:text-sm mu:font-semibold;
+}
+
+.schedule-form-actions,
+.schedule-option-actions,
+.schedule-option-picker,
+.schedule-row-actions,
+.schedule-swap-actions {
+  @apply mu:flex mu:flex-wrap mu:items-center mu:gap-2;
+}
+
+.schedule-form-actions,
+.schedule-option-actions {
+  @apply mu:mt-3;
+}
+
+.schedule-option-actions {
+  @apply mu:justify-between;
+}
+
 .schedule-option {
-  padding: 8px 12px; border: 1px solid #a5c4b2; border-radius: 8px;
-  color: #1c6e36; background: #eef7f1; font: inherit; cursor: pointer;
+  @apply mu:min-h-11 mu:cursor-pointer mu:rounded-lg mu:border mu:border-solid mu:border-line mu:bg-paper mu:px-3 mu:py-2 mu:[font-family:inherit] mu:text-sm mu:font-semibold mu:text-herd mu:motion-safe:transition-colors mu:hover:bg-mint;
 }
-.schedule-option.active { background: #006747; color: white; }
-.schedule-selected-sections { padding: 0; list-style: none; display: grid; gap: 8px; }
+
+.schedule-option[aria-pressed="true"] {
+  @apply mu:border-herd mu:bg-herd mu:text-paper;
+}
+
+.schedule-results {
+  @apply mu:mt-5 mu:pt-4;
+  border-top: 1px solid var(--mu-color-line);
+}
+
+.schedule-selected-sections {
+  @apply mu:my-3 mu:grid mu:list-none mu:gap-2 mu:p-0;
+}
+
 .schedule-selected-sections li {
-  border: 1px solid #d8e4dc; border-radius: 7px; padding: 12px;
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  @apply mu:flex mu:flex-wrap mu:items-center mu:justify-between mu:gap-3 mu:rounded-lg mu:border mu:border-solid mu:border-line mu:bg-audit-tint mu:p-3;
 }
-.schedule-selected-sections p { margin: 4px 0 0; }
-.schedule-subtle { font-size: 0.85rem; color: #53665b; }
-.schedule-notice { padding: 10px; border-left: 3px solid #bc8338; background: #fff8ec; }
-.schedule-error { color: #a51d2d; }
-.schedule-swap { margin-top: 15px; padding: 14px; border: 1px solid #99b6a3; border-radius: 8px; }
-.schedule-swap label { margin-bottom: 12px; }
-.schedule-swap-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.schedule-generator details { margin: 12px 0; }
-.schedule-generator button:focus-visible { outline: 3px solid #008b2f; outline-offset: 2px; }
-@media (max-width: 620px) {
-  .schedule-selected-sections li { align-items: flex-start; flex-direction: column; }
-  .schedule-generator { padding: 14px; }
+
+.schedule-course-detail {
+  @apply mu:min-w-0;
 }
-.schedule-row-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.schedule-course-detail p {
+  @apply mu:my-1 mu:text-sm mu:text-muted;
+}
+
+.schedule-generator .schedule-subtle {
+  @apply mu:text-xs mu:text-muted;
+}
+
+.schedule-notice,
+.schedule-error,
+.schedule-result-status {
+  @apply mu:rounded-lg mu:border mu:border-solid mu:border-line mu:px-3 mu:py-2.5;
+}
+
+.schedule-notice,
+.schedule-result-status[data-tentative="true"] {
+  @apply mu:bg-review-tint mu:text-review-ink;
+}
+
+.schedule-notice a {
+  @apply mu:font-semibold mu:underline mu:underline-offset-4;
+}
+
+.schedule-result-status {
+  @apply mu:bg-mint mu:text-herd;
+}
+
+.schedule-error {
+  @apply mu:bg-red-50 mu:text-red-800;
+}
+
+.schedule-swap {
+  @apply mu:mt-4 mu:space-y-3 mu:rounded-xl mu:border mu:border-solid mu:border-line mu:bg-audit-tint mu:p-3 mu:sm:p-4;
+}
+
+.schedule-swap label {
+  @apply mu:max-w-xl;
+}
+
+.schedule-generator details {
+  @apply mu:my-2 mu:rounded-lg mu:border mu:border-solid mu:border-line mu:p-2;
+}
+
+.schedule-generator summary,
+.planner-generated-summary summary {
+  @apply mu:cursor-pointer mu:rounded-sm mu:font-semibold;
+}
+
+.schedule-generator summary {
+  @apply mu:min-h-8 mu:px-1 mu:py-1;
+}
+
+.schedule-generator details ul {
+  @apply mu:mt-2 mu:mb-1 mu:pl-6;
+}

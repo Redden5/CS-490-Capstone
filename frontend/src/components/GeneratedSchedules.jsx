@@ -162,25 +162,29 @@ export default function GeneratedSchedules({ terms, loadingTerms, initialPrefere
       <Link to="/degree-audit">Open Degree Audit</Link>
     </p>}
     <div className="schedule-form">
-      <label>Academic term
-        <select value={termId} disabled={loading || loadingTerms || savingSettings || importing} onChange={(e) => {
-          request.current?.abort(); setLoading(false); setTermId(e.target.value); setSwap(null);
-        }}>
-          <option value="">Choose a term</option>
-          {termId && !termAvailable && <option value={termId}>Saved term (currently unavailable)</option>}
-          {terms.map((term) => <option key={term.term_id} value={term.term_id}>{term.term_name}</option>)}
-        </select>
-      </label>
-      <label>Target credit hours
-        <input type="number" min="1" max="21" step="1" value={targetCredits}
-          disabled={savingSettings || importing} onChange={(e) => setTargetCredits(e.target.value)} />
-      </label>
-      <button type="button" className="planner-primary-button" onClick={generate}
-        disabled={!handoff || !termAvailable || !validCredits || loading || savingSettings || importing}>
-        {loading ? 'Generating…' : 'Generate schedule options'}
-      </button>
-      <button type="button" className="planner-secondary-button" disabled={!validCredits || savingSettings || importing}
-        onClick={saveSettings}>Save generator settings</button>
+      <div className="schedule-fields">
+        <label>Academic term
+          <select value={termId} disabled={loading || loadingTerms || savingSettings || importing} onChange={(e) => {
+            request.current?.abort(); setLoading(false); setTermId(e.target.value); setSwap(null);
+          }}>
+            <option value="">Choose a term</option>
+            {termId && !termAvailable && <option value={termId}>Saved term (currently unavailable)</option>}
+            {terms.map((term) => <option key={term.term_id} value={term.term_id}>{term.term_name}</option>)}
+          </select>
+        </label>
+        <label>Target credit hours
+          <input type="number" min="1" max="21" step="1" value={targetCredits}
+            disabled={savingSettings || importing} onChange={(e) => setTargetCredits(e.target.value)} />
+        </label>
+      </div>
+      <div className="schedule-form-actions">
+        <button type="button" className="planner-primary-button" onClick={generate}
+          disabled={!handoff || !termAvailable || !validCredits || loading || savingSettings || importing}>
+          {loading ? 'Generating…' : 'Generate schedule options'}
+        </button>
+        <button type="button" className="planner-secondary-button" disabled={!validCredits || savingSettings || importing}
+          onClick={saveSettings}>Save generator settings</button>
+      </div>
     </div>
     {settingsMessage && <p role="status">{settingsMessage}</p>}
     {error && <p role="alert" className="schedule-error">{error}</p>}
@@ -189,39 +193,43 @@ export default function GeneratedSchedules({ terms, loadingTerms, initialPrefere
       {validGeneration.search_truncated && <p className="schedule-notice">The search limit was reached; additional schedules may exist.</p>}
       {!validGeneration.options.length && <p>No compatible options were found for the selected term. Review missing courses and offerings below.</p>}
       {!!validGeneration.options.length && <>
-        <div className="schedule-option-picker" role="group" aria-label="Generated schedule options">
-          {validGeneration.options.map((option, index) => <button type="button" key={index}
-            className={index === optionIndex ? 'schedule-option active' : 'schedule-option'}
-            aria-pressed={index === optionIndex}
-            disabled={importing} onClick={() => { setOptionIndex(index); setSwap(null); setImportError(''); }}>Option {index + 1} · {option.total_credits} credits</button>)}
-        </div>
+        <div className="schedule-option-actions">
+          <div className="schedule-option-picker" role="group" aria-label="Generated schedule options">
+            {validGeneration.options.map((option, index) => <button type="button" key={index}
+              className={index === optionIndex ? 'schedule-option active' : 'schedule-option'}
+              aria-pressed={index === optionIndex}
+              disabled={importing} onClick={() => { setOptionIndex(index); setSwap(null); setImportError(''); }}>Option {index + 1} · {option.total_credits} credits</button>)}
+          </div>
 
-        <button type="button" className="planner-primary-button"
-          disabled={loading || importing || Boolean(swap) || addedOptions.has(chosen)}
-          onClick={async () => {
-            setImporting(true);
-            setImportError('');
-            try {
-              await onUseSchedule({
-                termId, option: chosen, creditHours: validGeneration.course_credit_hours,
-                handoffWarnings: validGeneration.handoff_warnings ?? [],
-              });
-              setAddedOptions((current) => new Set([...current, chosen]));
-            } catch (error) {
-              setImportError(error.message);
-            } finally {
-              setImporting(false);
-            }
-          }}>
-          {importing ? 'Saving schedule…' : addedOptions.has(chosen) ? 'Added to semester plan' : 'Use this schedule'}
-        </button>
+          <button type="button" className="planner-primary-button"
+            disabled={loading || importing || Boolean(swap) || addedOptions.has(chosen)}
+            onClick={async () => {
+              setImporting(true);
+              setImportError('');
+              try {
+                await onUseSchedule({
+                  termId, option: chosen, creditHours: validGeneration.course_credit_hours,
+                  handoffWarnings: validGeneration.handoff_warnings ?? [],
+                });
+                setAddedOptions((current) => new Set([...current, chosen]));
+              } catch (error) {
+                setImportError(error.message);
+              } finally {
+                setImporting(false);
+              }
+            }}>
+            {importing ? 'Saving schedule…' : addedOptions.has(chosen) ? 'Added to semester plan' : 'Use this schedule'}
+          </button>
+        </div>
         {importError && <p role="alert" className="schedule-error">{importError}</p>}
         {addedOptions.has(chosen) && <p role="status">This schedule was saved as a semester plan.</p>}
 
-        <p><strong>Status:</strong> {chosen.status === 'TENTATIVE' ? 'Tentative: unresolved checks' : 'Known checks passed (not registration clearance)'}</p>
-        <ul className="schedule-selected-sections">
+        <p className="schedule-result-status" data-tentative={chosen.status === 'TENTATIVE'}><strong>Status:</strong> {chosen.status === 'TENTATIVE' ? 'Tentative: unresolved checks' : 'Known checks passed (not registration clearance)'}</p>
+        <ul className="schedule-selected-sections" role="list">
           {Object.entries(chosen.sections).map(([code, section]) => <li key={code}>
-            <div><strong>{code}</strong> · Section {section.section_number} · CRN {section.crn}
+            <div className="schedule-course-detail">
+              <strong>{code}</strong>
+              <p>Section {section.section_number} · CRN {section.crn}</p>
               <p>{meetingSummary(section)}</p>
               <p className="schedule-subtle">Section status: {section.section_status ?? 'UNKNOWN'}</p>
             </div>
