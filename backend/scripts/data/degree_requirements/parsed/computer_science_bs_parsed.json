@@ -750,10 +750,15 @@
     },
     {
       "kind": "REQUIRED_COURSE",
-      "name": "ENGR 221 Engineering Economy",
+      "name": "ENGR 222 Engr Cost Analysis & Economy",
       "course_codes": [
-        "ENGR 221"
+        "ENGR 222"
       ],
+      "source_correction": {
+        "original_course_code": "ENGR 221",
+        "replacement_course_code": "ENGR 222",
+        "basis": "Project owner confirmed the replacement course on 2026-11-27."
+      },
       "course_combination": "SINGLE_COURSE",
       "catalog_declared_credits": 3,
       "review_flags": [],

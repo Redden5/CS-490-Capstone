@@ -159,5 +159,5 @@ node_modules/
 #Generated data
 courses.csv
 
-backend/scripts/courses.csv
+!/backend/scripts/courses.csv
 /AGENTS.md

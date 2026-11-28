@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import CompletedCourseSearch from '../components/CompletedCourseSearch.jsx';
+import TranscriptImport from '../components/TranscriptImport.jsx';
 import { usePlanning } from '../context/planningContext.js';
 import '../styles/AcademicInfo.css';
 
@@ -11,6 +12,16 @@ export default function AcademicInfo() {
   function addCourse(code = '') {
     const row = { id: crypto.randomUUID(), code, grade: '', credits: '', unresolvedEquivalency: false };
     updateInput((current) => ({ ...current, rows: [...current.rows, row] }));
+  }
+  function addTranscriptCourses(courses) {
+    const rows = courses.map((course) => ({
+      id: crypto.randomUUID(),
+      code: course.course_code,
+      grade: course.grade,
+      credits: course.credits ?? '',
+      unresolvedEquivalency: course.is_transfer,
+    }));
+    updateInput((current) => ({ ...current, rows: [...current.rows, ...rows] }));
   }
   function editRow(id, field, value) {
     updateInput((current) => ({ ...current, rows: current.rows.map((row) => row.id === id ? { ...row, [field]: value } : row) }));
@@ -57,13 +68,14 @@ export default function AcademicInfo() {
           ) : <p>No programs are available. <button className="planning-link" type="button" onClick={reloadAcademics}>Refresh programs</button></p>}
           <p className="planning-muted">Choose the catalog year that applies to your program. Only supported combinations are listed.</p>
         </section>
+        <TranscriptImport onImport={addTranscriptCourses} />
         {!record.loading && !record.error && !saving && <CompletedCourseSearch onAdd={addCourse} />}
       </div>
 
       <form className="planning-card planning-coursework" aria-labelledby="coursework-title" onSubmit={submit}>
         <div className="planning-section-heading"><h2 id="coursework-title">Completed coursework</h2><span>{input.rows.length} {input.rows.length === 1 ? 'entry' : 'entries'}</span></div>
         <p className="planning-muted">Include only courses you passed. Leave unknown grades or credits blank. Grades help check prerequisites; they do not verify degree credit.</p>
-        <p className="planning-muted">Record repeated successful attempts separately. Conflicting grades, plus/minus grades, and transfer marks may need review.</p>
+        <p className="planning-muted">Record repeated successful attempts separately. Conflicting grades, plus/minus grades, and transfer marks may need review. Credits for entries flagged for equivalency review are saved for reference and remain unvalidated in the audit.</p>
         {!input.rows.length && <p className="planning-empty">No coursework entered. Search for a course or add one manually. You can also evaluate with no completed courses.</p>}
         <ol className="planning-coursework-list" role="list">
           {input.rows.map((row, index) => <li key={row.id}>

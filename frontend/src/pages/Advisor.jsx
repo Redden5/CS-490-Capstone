@@ -1,28 +1,14 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import AdvisorPersonalPlan from "../components/AdvisorPersonalPlan.jsx";
+import { usePlanning } from "../context/planningContext.js";
+import { askAdvisor } from "../lib/advisorApi.js";
 import "../styles/Advisor.css";
 
-const COURSE_EXAMPLES = [
-  {
-    code: "CS 215", title: "Data Structures",
-    reason: "Explore a core computer science course.",
-    source: "CS 210 and math requirements apply.",
-  },
-  {
-    code: "CS 410", title: "Database Engineering",
-    reason: "Compare against your completed coursework.",
-    source: "CS 210 with a minimum grade of D.",
-  },
-];
-
-const DRAFT_EXAMPLES = [
-  { code: "CS 215", title: "Data Structures", credits: 3 },
-  { code: "MTH 229", title: "Calculus", credits: 3 },
-  { code: "ENG 201", title: "Writing", credits: 3 },
-];
+const INTRO = { id: 'welcome', answer: 'Ask about a Marshall course, its prerequisites, available schedule records, or degree requirements. Try “What are the prerequisites for CS 215?”' };
 
 const ICON_PATHS = {
-  calendar: "M8 2v4 M16 2v4 M3 10h18 M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2",
+  down: "m6 9 6 6 6-6",
   chat: "M21 11a8 8 0 0 1-8 8H8l-5 3v-7a8 8 0 0 1 0-8 8 8 0 0 1 7-4h3a8 8 0 0 1 8 8Z",
   send: "m22 2-7 20-4-9-9-4z M22 2 11 13",
   external: "M14 3h7v7 M21 3 10 14 M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5",
@@ -38,7 +24,49 @@ function AdvisorIcon({ name }) {
 }
 
 function Advisor() {
+  const { input } = usePlanning();
   const [chatExpanded, setChatExpanded] = useState(true);
+  const [messages, setMessages] = useState([INTRO]);
+  const [question, setQuestion] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const pending = useRef(null);
+  const courseCodes = useRef([]);
+  const chatLog = useRef(null);
+  const messageInput = useRef(null);
+
+  useEffect(() => () => pending.current?.abort(), []);
+  useEffect(() => {
+    if (chatExpanded && chatLog.current) chatLog.current.scrollTop = chatLog.current.scrollHeight;
+  }, [messages, chatExpanded, loading]);
+
+  async function submit(event) {
+    event.preventDefault();
+    const text = question.trim();
+    if (!text || pending.current) return;
+    const controller = new AbortController();
+    pending.current = controller;
+    const id = crypto.randomUUID();
+    setQuestion('');
+    setError('');
+    setLoading(true);
+    setMessages((current) => [...current.slice(-38), { id, question: text }]);
+    try {
+      const result = await askAdvisor(text, courseCodes.current, controller.signal);
+      if (controller.signal.aborted) return;
+      courseCodes.current = result.course_codes;
+      setMessages((current) => [...current, { id: `${id}-reply`, ...result }]);
+    } catch (problem) {
+      if (!controller.signal.aborted) {
+        setMessages((current) => current.filter((message) => message.id !== id));
+        setQuestion(text);
+        setError(problem.message);
+      }
+    } finally {
+      pending.current = null;
+      if (!controller.signal.aborted) setLoading(false);
+    }
+  }
 
   return (
     <main className="advisor-page">
@@ -47,106 +75,81 @@ function Advisor() {
           <h1>AI Advisor</h1>
           <p>Plan your next semester and get answers grounded in your course catalog.</p>
         </div>
-        <span className="advisor-preview-badge">Design preview · Sample data</span>
+        <a className="advisor-hero-link" href="#advisor-courses-title">
+          View course suggestions <AdvisorIcon name="down" />
+        </a>
       </header>
 
-      <section className="advisor-context" aria-label="Sample academic context">
-        <div><span>Program</span><strong>B.S. in Computer Science</strong></div>
-        <div><span>Catalog</span><strong>2026–2027</strong></div>
+      <dl className="advisor-context" aria-label="Your academic context">
         <div>
-          <span>About this workspace</span>
-          <p>Get course recommendations, build a next-semester draft, and ask questions about courses, prerequisites, and policies.</p>
+          <dt>Program</dt>
+          <dd>{input.program?.program_title ?? <Link className="advisor-text-button" to="/academic-info">Choose your program in Academic Info</Link>}</dd>
         </div>
-      </section>
+        <div><dt>Catalog year</dt><dd>{input.program?.catalog_year ?? 'Not selected'}</dd></div>
+      </dl>
 
-      <div className="advisor-workspace">
-        <section className="advisor-panel advisor-recommendations" aria-labelledby="advisor-courses-title">
-          <div className="advisor-panel-heading">
-            <h2 id="advisor-courses-title">Courses to consider</h2>
-            <label className="advisor-catalog-control">Catalog
-              <select defaultValue="2026-2027" aria-label="Recommendation catalog year">
-                <option value="2026-2027">2026–2027</option>
-              </select>
-            </label>
-          </div>
-          <p className="advisor-panel-intro">Recommended courses to explore for your next semester, based on your program and catalog.</p>
-          <div className="advisor-course-list">
-            {COURSE_EXAMPLES.map((course) => (
-              <article className="advisor-course-card" key={course.code}>
-                <div className="advisor-course-copy">
-                  <h3>{course.code} · {course.title}</h3>
-                  <p><strong>Reason:</strong> {course.reason}</p>
-                  <p className="advisor-course-source"><span>Source:</span> {course.source}</p>
-                </div>
-                <div className="advisor-course-actions">
-                  <button type="button" className="advisor-text-button" disabled>
-                    View requirements <AdvisorIcon name="external" />
-                  </button>
-                  <button type="button" className="advisor-outline-button" disabled>
-                    <span aria-hidden="true">＋</span> Add to draft
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="advisor-panel advisor-draft" aria-labelledby="advisor-draft-title">
-          <h2 id="advisor-draft-title">Next semester draft</h2>
-          <p className="advisor-draft-summary">Sample draft · 9 credits</p>
-          <ul className="advisor-draft-courses">
-            {DRAFT_EXAMPLES.map((course) => (
-              <li key={course.code}>
-                <strong>{course.code} · {course.title}</strong><span>{course.credits} credits</span>
-              </li>
-            ))}
-          </ul>
-          <Link className="advisor-primary-button advisor-open-planner" to="/planner">
-            <AdvisorIcon name="calendar" /> Open Planner
-          </Link>
-        </section>
-      </div>
-
-      <section className="advisor-panel advisor-chat" aria-labelledby="advisor-chat-title">
-        <div className="advisor-chat-heading">
-          <div className="advisor-chat-heading-copy">
-            <AdvisorIcon name="chat" />
-            <div>
-              <h2 id="advisor-chat-title">Ask about your plan</h2>
-              <p>Get help with semester planning, prerequisites, course options, and university policies.</p>
-            </div>
-          </div>
-          <button type="button" className="advisor-chat-toggle" aria-expanded={chatExpanded}
-            aria-controls="advisor-conversation" onClick={() => setChatExpanded(!chatExpanded)}>
-            <svg className="advisor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              strokeWidth="2" aria-hidden="true"><path d={chatExpanded ? "m5 15 7-7 7 7" : "m5 9 7 7 7-7"} /></svg>
-            {chatExpanded ? "Collapse conversation" : "Expand conversation"}
-          </button>
-        </div>
-        <div id="advisor-conversation" hidden={!chatExpanded}>
-          <div className="advisor-messages" aria-label="Sample conversation">
-            <div className="advisor-message advisor-user-message">
-              <p>How should I balance this semester?</p>
-              <span className="advisor-avatar"><span className="sr-only">Student</span><AdvisorIcon name="user" /></span>
-            </div>
-            <div className="advisor-message advisor-assistant-message">
-              <span className="advisor-avatar"><span className="sr-only">Advisor</span><AdvisorIcon name="assistant" /></span>
-              <div className="advisor-message-bubble">
-                <p>Compare course workloads and confirm each requirement before adding courses to your plan.</p>
-                <p className="advisor-chat-source">Source: <button type="button" className="advisor-text-button" disabled>
-                  View catalog requirements <AdvisorIcon name="external" />
-                </button></p>
+      <div className="advisor-layout">
+        <section className="advisor-panel advisor-chat" aria-labelledby="advisor-chat-title">
+          <div className="advisor-chat-heading">
+            <div className="advisor-chat-heading-copy">
+              <span className="advisor-chat-icon"><AdvisorIcon name="chat" /></span>
+              <div>
+                <h2 id="advisor-chat-title">Ask about your plan</h2>
+                <p>Get help with course details, prerequisites, scheduling, and degree requirements.</p>
               </div>
             </div>
+            <button type="button" className="advisor-chat-toggle" aria-expanded={chatExpanded}
+              aria-controls="advisor-conversation" onClick={() => setChatExpanded((current) => !current)}>
+              {chatExpanded ? "Collapse conversation" : "Expand conversation"} <AdvisorIcon name="down" />
+            </button>
           </div>
-          <div className="advisor-composer">
-            <label className="sr-only" htmlFor="advisor-message">Ask a follow-up</label>
-            <input id="advisor-message" placeholder="Ask a follow-up…" disabled aria-describedby="advisor-preview-note" />
-            <button className="advisor-primary-button" type="button" disabled><AdvisorIcon name="send" /> Send</button>
+          <div id="advisor-conversation" hidden={!chatExpanded}>
+            <div className="advisor-messages" role="log" aria-label="Advisor conversation" tabIndex={0} ref={chatLog}>
+              {messages.map((message) => message.question ? (
+                <div key={message.id} className="advisor-message advisor-user-message">
+                  <p>{message.question}</p>
+                  <span className="advisor-avatar"><span className="sr-only">Student</span><AdvisorIcon name="user" /></span>
+                </div>
+              ) : (
+                <div key={message.id} className="advisor-message advisor-assistant-message">
+                  <span className="advisor-avatar"><span className="sr-only">Advisor</span><AdvisorIcon name="assistant" /></span>
+                  <div className="advisor-message-bubble">
+                    <p className="advisor-answer">{message.answer}</p>
+                    {message.sources?.length > 0 && <ul className="advisor-chat-source" aria-label="Sources" role="list">
+                      {message.sources.map((source) => (
+                        <li key={source.title}>{source.url
+                          ? <a className="advisor-text-button" href={source.url} target="_blank" rel="noreferrer">
+                            {source.title} <AdvisorIcon name="external" />
+                          </a>
+                          : source.title}</li>
+                      ))}
+                    </ul>}
+                    {message.action === 'planner' && <Link className="advisor-text-button" to="/planner">Open Planner</Link>}
+                    {message.action === 'audit' && <Link className="advisor-text-button" to="/academic-info">Open Academic Info</Link>}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {error && <p className="advisor-state advisor-chat-feedback" role="alert">{error}</p>}
+            {loading && <p className="advisor-state advisor-chat-feedback" role="status">Looking up academic records…</p>}
+            <form className="advisor-composer" onSubmit={submit}>
+              <label className="advisor-composer-label" htmlFor="advisor-message">Your question</label>
+              <div className="advisor-composer-field">
+                <input id="advisor-message" ref={messageInput} placeholder="Ask about a course…" value={question}
+                  maxLength={500} onChange={(event) => setQuestion(event.target.value)} readOnly={loading} />
+                <button className="advisor-primary-button" type="submit" disabled={loading || !question.trim()}><AdvisorIcon name="send" /> Send</button>
+              </div>
+            </form>
           </div>
-        </div>
-        <p className="advisor-preview-note" id="advisor-preview-note">Recommendations, draft courses, and conversation are examples. Chat and recommendation actions are not available yet.</p>
-      </section>
+        </section>
+
+        <AdvisorPersonalPlan onRequirements={(code) => {
+          setChatExpanded(true);
+          setError('');
+          setQuestion(`What are the prerequisites for ${code}?`);
+          requestAnimationFrame(() => messageInput.current?.focus());
+        }} />
+      </div>
     </main>
   );
 }

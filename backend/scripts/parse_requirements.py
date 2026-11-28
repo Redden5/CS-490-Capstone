@@ -183,6 +183,18 @@ def interpret(raw: dict[str, Any]) -> dict[str, Any]:
         rule["source_row_ids"] = [source_id(r) for r in member_rows]
         rule["section_path"] = path()
         rule["review_flags"] = sorted(set(rule.get("review_flags") or []))
+        # Project-owner correction for the working 2026–2027 CS degree plan.
+        if (raw.get("program_title") == "Computer Science, B.S."
+                and raw.get("catalog_year") == "2026-2027"
+                and rule.get("kind") == "REQUIRED_COURSE"
+                and rule.get("course_codes") == ["ENGR 221"]):
+            rule["name"] = "ENGR 222 Engr Cost Analysis & Economy"
+            rule["course_codes"] = ["ENGR 222"]
+            rule["source_correction"] = {
+                "original_course_code": "ENGR 221",
+                "replacement_course_code": "ENGR 222",
+                "basis": "Project owner confirmed the replacement course on 2026-11-27.",
+            }
         requirements.append(rule)
         if not path():
             unlabeled_tables.add(t)

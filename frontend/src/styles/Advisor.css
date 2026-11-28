@@ -1,200 +1,340 @@
+@reference "./tailwind.css";
+
 .advisor-page {
-  width: 100%;
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 28px clamp(16px, 3vw, 48px) 40px;
-  color: #26362c;
-  overflow-wrap: anywhere;
+  @apply mu:grid mu:w-full mu:flex-1 mu:content-start mu:gap-4 mu:bg-canvas mu:px-4 mu:pt-6 mu:pb-10 mu:font-campus mu:text-ink mu:wrap-anywhere mu:sm:px-6 mu:lg:px-10 mu:lg:pt-9;
+}
+
+@media (min-width: 87rem) {
+  .advisor-page {
+    padding-inline: calc((100% - 82rem) / 2);
+  }
 }
 
 .advisor-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 16px 24px;
-  margin-bottom: 26px;
+  @apply mu:flex mu:min-h-40 mu:flex-wrap mu:items-end mu:justify-between mu:gap-4 mu:rounded-banner mu:bg-forest mu:px-6 mu:py-7 mu:text-paper mu:sm:px-8 mu:lg:min-h-48 mu:lg:px-10;
+  background-image:
+    repeating-radial-gradient(ellipse at 104% 138%, transparent 0 23px, #d7f5df24 24px 25px, transparent 26px 43px),
+    linear-gradient(115deg, var(--mu-color-forest) 44%, #1b6c49);
 }
 
 .advisor-heading h1 {
-  margin: 0 0 6px;
-  color: #183321;
-  font-size: clamp(2rem, 3vw, 2.5rem);
-  letter-spacing: -0.025em;
+  @apply mu:m-0 mu:font-display mu:text-page mu:font-normal mu:tracking-tight;
 }
 
-.advisor-heading p { margin: 0; line-height: 1.5; font-size: 17px; }
-.advisor-preview-badge {
-  padding: 7px 14px;
-  margin-top: 5px;
-  border: 1px solid #a6c8b5;
-  border-radius: 999px;
-  background: #edf8f1;
-  color: #285c43;
-  font-size: 13px;
+.advisor-heading p {
+  @apply mu:m-0 mu:mt-2 mu:text-sm mu:leading-relaxed mu:text-leaf mu:sm:text-base;
+}
+
+.advisor-context,
+.advisor-panel {
+  @apply mu:min-w-0 mu:rounded-panel mu:border mu:border-solid mu:border-line mu:bg-paper mu:shadow-panel;
 }
 
 .advisor-context {
-  display: grid;
-  grid-template-columns: minmax(200px, 1.1fr) minmax(130px, 0.65fr) minmax(0, 3.5fr);
-  gap: 24px;
-  padding: 18px 24px;
-  border: 1px solid #cfe0d6;
-  border-radius: 11px;
-  background: #fff;
-  margin-bottom: 18px;
+  @apply mu:m-0 mu:grid mu:grid-cols-[minmax(0,1fr)_auto] mu:items-start mu:divide-x mu:divide-line mu:px-4 mu:py-3 mu:sm:flex mu:sm:px-6;
 }
 
-.advisor-context > div { min-width: 0; }
-.advisor-context > div + div { border-left: 1px solid #bfd6c9; padding-left: 28px; }
-.advisor-context span { display: block; margin-bottom: 5px; color: #3e6650; font-size: 14px; font-weight: 600; }
-.advisor-context strong { font-size: 16px; line-height: 1.4; }
-.advisor-context p { margin: 0; line-height: 1.5; font-size: 14px; }
+.advisor-context > div:first-child {
+  @apply mu:pr-4 mu:sm:pr-8;
+}
 
+.advisor-context > div:last-child {
+  @apply mu:pl-4 mu:sm:pl-8;
+}
+
+.advisor-context dt {
+  @apply mu:mb-1 mu:text-xs mu:font-semibold mu:text-muted;
+}
+
+.advisor-context dd {
+  @apply mu:m-0 mu:text-sm mu:leading-relaxed mu:font-semibold mu:text-forest;
+}
+
+.advisor-context dd .advisor-text-button {
+  @apply mu:min-h-6;
+}
+
+.advisor-layout,
 .advisor-workspace {
-  display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-  gap: 20px;
-  margin-bottom: 22px;
+  @apply mu:grid mu:min-w-0 mu:items-start mu:gap-4;
+}
+
+.advisor-layout {
+  @apply mu:lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)];
 }
 
 .advisor-panel {
-  min-width: 0;
-  padding: 22px;
-  background: #fff;
-  border: 1px solid #cfe0d6;
-  border-radius: 12px;
+  @apply mu:p-4 mu:text-sm mu:leading-relaxed mu:sm:p-6;
 }
 
-.advisor-panel h2 { margin: 0; font-size: 24px; line-height: 1.3; color: #174b32; letter-spacing: -0.02em; }
-.advisor-panel-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-.advisor-panel-intro { margin: 8px 0 18px; color: #53665b; font-size: 14px; line-height: 1.5; }
-.advisor-catalog-control { display: flex; align-items: center; gap: 10px; font-size: 14px; }
-.advisor-catalog-control select {
-  max-width: 100%;
-  min-height: 40px;
-  padding: 8px 10px;
-  font: inherit;
-  color: #26362c;
-  background: #fff;
-  border: 1px solid #a3b9ac;
-  border-radius: 7px;
+.advisor-panel h2 {
+  @apply mu:m-0 mu:text-xl mu:leading-tight mu:font-semibold mu:tracking-tight mu:text-forest;
 }
 
-.advisor-course-list { display: grid; gap: 14px; }
-.advisor-course-card {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 18px;
-  border: 1px solid #cfe0d6;
-  border-radius: 10px;
+.advisor-panel-intro,
+.advisor-chat-heading p {
+  @apply mu:mt-1.5 mu:mb-0 mu:text-sm mu:leading-relaxed mu:text-muted;
 }
 
-.advisor-course-copy { flex: 1; min-width: 0; }
-.advisor-course-card h3 { margin: 0 0 6px; font-size: 19px; line-height: 1.35; color: #183d29; }
-.advisor-course-card p { margin: 5px 0 0; font-size: 14px; line-height: 1.5; }
-.advisor-course-card p strong { color: #006747; }
-.advisor-course-source span { color: #53665b; margin-right: 6px; }
-.advisor-course-actions { display: flex; flex-direction: column; align-items: stretch; gap: 8px; flex-shrink: 0; border-left: 1px solid #dce7e0; padding-left: 18px; }
-.advisor-icon { display: inline-block; width: 23px; height: 23px; flex-shrink: 0; vertical-align: middle; }
+.advisor-hero-link,
+.advisor-text-button,
+.advisor-outline-button,
+.advisor-primary-button,
+.advisor-chat-toggle {
+  @apply mu:inline-flex mu:min-h-11 mu:items-center mu:justify-center mu:gap-2 mu:rounded-lg mu:px-3 mu:py-2 mu:[font-family:inherit] mu:text-sm mu:leading-snug mu:font-semibold mu:motion-safe:transition-colors;
+}
+
+.advisor-hero-link,
+.advisor-outline-button,
+.advisor-primary-button,
+.advisor-chat-toggle {
+  @apply mu:cursor-pointer mu:border mu:border-solid;
+}
+
+.advisor-hero-link {
+  @apply mu:border-paper/40 mu:bg-paper/10 mu:text-paper mu:hover:bg-paper/20;
+}
+
 .advisor-text-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 38px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: #006747;
-  font: inherit;
-  font-size: 13px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.advisor-text-button .advisor-icon { width: 15px; height: 15px; }
-.advisor-outline-button, .advisor-primary-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 42px;
-  padding: 10px 14px;
-  border: 1px solid #006747;
-  border-radius: 7px;
-  font: inherit;
-  font-weight: 600;
-  line-height: 1.3;
-}
-.advisor-outline-button { background: #fff; color: #006747; font-size: 14px; }
-.advisor-primary-button { background: #006747; color: #fff; }
-.advisor-primary-button:not(:disabled):hover { background: #004e36; }
-.advisor-page button:disabled, .advisor-page input:disabled { cursor: not-allowed; opacity: 0.8; }
-.advisor-page button:focus-visible, .advisor-page select:focus-visible { outline: 3px solid #008b2f; outline-offset: 3px; }
-
-.advisor-draft { display: flex; flex-direction: column; }
-.advisor-draft-summary { margin: 16px 0 12px; padding: 12px 16px; border-radius: 8px; background: #e3f6e9; color: #174b32; font-size: 18px; font-weight: 600; }
-.advisor-draft-courses { list-style: none; padding: 0; margin: 0 0 22px; border: 1px solid #c9dbd1; border-radius: 9px; }
-.advisor-draft-courses li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 12px 16px; line-height: 1.4; font-size: 15px; }
-.advisor-draft-courses li + li { border-top: 1px solid #dce7e0; }
-.advisor-draft-courses span { flex-shrink: 0; font-size: 14px; }
-.advisor-open-planner { width: 100%; margin-top: auto; }
-
-.advisor-chat { padding: 0; overflow: hidden; }
-.advisor-chat-heading { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; padding: 18px 22px; border-bottom: 1px solid #dce7e0; }
-.advisor-chat-heading-copy { display: flex; gap: 14px; align-items: flex-start; }
-.advisor-chat-heading-copy > .advisor-icon { width: 26px; height: 26px; margin-top: 3px; color: #006747; }
-.advisor-chat-heading p { margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: #53665b; }
-.advisor-chat-toggle { display: inline-flex; align-items: center; gap: 10px; min-height: 38px; padding: 4px 0; border: 0; background: transparent; color: #006747; font: inherit; font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
-.advisor-messages { display: grid; gap: 18px; padding: 18px 22px; }
-.advisor-message { display: flex; align-items: flex-start; gap: 12px; }
-.advisor-message p { margin: 0; font-size: 15px; line-height: 1.5; }
-.advisor-user-message { justify-content: flex-end; }
-.advisor-user-message > p { background: #e3f3e7; padding: 12px 16px; border-radius: 12px 12px 3px 12px; max-width: 80%; }
-.advisor-avatar { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; background: #edf7f0; color: #006747; }
-.advisor-user-message .advisor-avatar { background: #f3f6f4; }
-.advisor-message-bubble { padding: 12px 16px; border-radius: 12px 12px 12px 3px; background: #f1f4f2; max-width: 85%; }
-.advisor-message-bubble .advisor-chat-source { margin-top: 4px; color: #53665b; font-size: 13px; }
-.advisor-chat-source .advisor-text-button { min-height: 24px; }
-.advisor-composer { display: flex; gap: 12px; padding: 0 16px 12px; }
-.advisor-composer input { flex: 1; min-width: 0; min-height: 44px; padding: 12px 16px; border: 1px solid #9eafa5; border-radius: 7px; color: #26362c; background: #fff; font: inherit; }
-.advisor-composer input::placeholder { color: #53665b; opacity: 1; }
-.advisor-preview-note { margin: 0; padding: 0 22px 16px; color: #53665b; font-size: 12px; line-height: 1.5; }
-.advisor-chat [hidden] + .advisor-preview-note { padding-top: 14px; }
-
-@media (max-width: 1100px) {
-  .advisor-workspace { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
-  .advisor-course-card { flex-direction: column; align-items: stretch; }
-  .advisor-course-actions { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; border-left: 0; border-top: 1px solid #dce7e0; padding: 10px 0 0; }
-  .advisor-context { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
-  .advisor-context > div:last-child { grid-column: 1 / -1; padding: 14px 0 0; border-left: 0; border-top: 1px solid #dce7e0; }
+  @apply mu:cursor-pointer mu:border-0 mu:bg-transparent mu:px-0 mu:text-left mu:text-herd mu:underline mu:underline-offset-4 mu:hover:text-forest;
 }
 
-@media (max-width: 760px) {
-  .advisor-workspace { grid-template-columns: minmax(0, 1fr); }
-  .advisor-heading { margin-bottom: 20px; }
-  .advisor-heading p { font-size: 16px; }
-  .advisor-context { gap: 16px; padding: 18px; }
-  .advisor-context > div + div { padding-left: 16px; }
-  .advisor-context > div:last-child { padding-left: 0; }
-  .advisor-panel { padding: 18px; }
-  .advisor-panel h2 { font-size: 22px; }
-  .advisor-panel-heading { align-items: flex-start; }
-  .advisor-chat { padding: 0; }
-  .advisor-chat-heading { padding: 18px; }
-  .advisor-chat-heading-copy { min-width: 0; gap: 10px; }
-  .advisor-messages { padding: 18px 14px; }
-  .advisor-message { gap: 8px; }
-  .advisor-message-bubble { max-width: calc(100% - 46px); }
-  .advisor-user-message > p { max-width: calc(100% - 46px); }
-  .advisor-composer { gap: 8px; padding: 0 14px 12px; }
-  .advisor-composer .advisor-primary-button { padding: 10px; }
-  .advisor-preview-note { padding-right: 18px; padding-left: 18px; }
+.advisor-primary-button {
+  @apply mu:border-herd mu:bg-herd mu:text-paper mu:hover:bg-forest;
 }
 
-@media (max-width: 380px) {
-  .advisor-context { grid-template-columns: minmax(0, 1fr); }
-  .advisor-context > div + div { padding: 12px 0 0; border-left: 0; border-top: 1px solid #dce7e0; }
-  .advisor-draft-courses li { flex-wrap: wrap; gap: 4px 10px; }
+.advisor-outline-button {
+  @apply mu:border-herd mu:bg-paper mu:text-herd mu:hover:bg-mint;
+}
+
+.advisor-chat-toggle {
+  @apply mu:min-h-9 mu:border-line mu:bg-paper mu:px-2.5 mu:py-1.5 mu:text-xs mu:text-herd mu:hover:bg-mint;
+}
+
+.advisor-page button:disabled {
+  @apply mu:cursor-not-allowed mu:border-line mu:bg-canvas mu:text-muted;
+}
+
+.advisor-page .advisor-text-button:disabled {
+  @apply mu:bg-transparent mu:no-underline;
+}
+
+.advisor-page :is(a, button, input, select, [tabindex]) {
+  @apply mu:student-focus;
+}
+
+.advisor-heading .advisor-hero-link:focus-visible {
+  outline-color: var(--mu-color-leaf);
+}
+
+.advisor-icon {
+  @apply mu:inline-block mu:size-4 mu:shrink-0 mu:align-middle;
+}
+
+.advisor-page :is(input, select) {
+  @apply mu:min-h-11 mu:w-full mu:min-w-0 mu:max-w-full mu:rounded-lg mu:border mu:border-solid mu:border-muted mu:bg-paper mu:px-3 mu:py-2 mu:[font-family:inherit] mu:text-sm mu:leading-normal mu:font-normal mu:text-ink;
+}
+
+.advisor-page input::placeholder {
+  @apply mu:text-muted mu:opacity-100;
+}
+
+.advisor-state {
+  @apply mu:my-3 mu:rounded-lg mu:border mu:border-solid mu:border-line mu:bg-audit-tint mu:px-3 mu:py-2.5 mu:text-sm mu:leading-relaxed mu:text-muted;
+}
+
+.advisor-state[role="alert"] {
+  @apply mu:bg-review-tint mu:text-review-ink;
+}
+
+.advisor-state p {
+  @apply mu:m-0;
+}
+
+.advisor-state-actions,
+.advisor-course-actions,
+.advisor-draft-actions,
+.advisor-draft-heading {
+  @apply mu:flex mu:flex-wrap mu:items-center mu:gap-x-4 mu:gap-y-1;
+}
+
+.advisor-course-list {
+  @apply mu:mt-3 mu:grid mu:gap-2.5;
+}
+
+.advisor-course-list > .advisor-state {
+  @apply mu:m-0;
+}
+
+.advisor-course-card {
+  @apply mu:grid mu:gap-2 mu:rounded-lg mu:border mu:border-solid mu:border-line mu:bg-audit-tint mu:p-3 mu:sm:p-4;
+}
+
+.advisor-course-copy h3 {
+  @apply mu:m-0 mu:text-base mu:leading-snug mu:font-semibold mu:text-forest;
+}
+
+.advisor-course-copy p {
+  @apply mu:mt-1 mu:mb-0 mu:text-muted;
+}
+
+.advisor-course-copy .advisor-course-source {
+  @apply mu:mt-2 mu:inline-block mu:rounded-md mu:bg-review-tint mu:px-2 mu:py-1 mu:text-xs mu:leading-snug mu:font-semibold mu:text-review-ink;
+}
+
+.advisor-course-copy .advisor-course-source[data-status="MET"] {
+  @apply mu:bg-mint mu:text-herd;
+}
+
+.advisor-course-actions {
+  @apply mu:gap-x-3;
+}
+
+.advisor-course-actions .advisor-text-button {
+  @apply mu:text-xs mu:sm:text-sm;
+}
+
+.advisor-add-course {
+  @apply mu:sm:ml-auto;
+}
+
+.advisor-draft-heading {
+  @apply mu:justify-between;
+}
+
+.advisor-draft-summary {
+  @apply mu:m-0 mu:rounded-md mu:bg-mint mu:px-2 mu:py-1 mu:text-xs mu:font-semibold mu:text-herd mu:tabular-nums;
+}
+
+.advisor-draft-selector {
+  @apply mu:mt-3 mu:grid mu:gap-1.5 mu:font-semibold;
+}
+
+.advisor-draft-courses,
+.advisor-chat-source {
+  @apply mu:my-3 mu:list-none mu:p-0;
+}
+
+.advisor-draft-courses {
+  @apply mu:divide-y mu:divide-line mu:rounded-lg mu:border mu:border-solid mu:border-line;
+}
+
+.advisor-draft-courses li {
+  @apply mu:flex mu:flex-wrap mu:items-center mu:justify-between mu:gap-x-3 mu:px-3;
+}
+
+.advisor-draft-courses span {
+  @apply mu:text-xs mu:text-muted mu:tabular-nums;
+}
+
+.advisor-draft-actions {
+  @apply mu:mt-3;
+}
+
+.advisor-draft-feedback {
+  @apply mu:my-2 mu:text-herd;
+}
+
+.advisor-draft-feedback:empty {
+  @apply mu:m-0;
+}
+
+.advisor-chat {
+  @apply mu:p-0;
+}
+
+.advisor-chat-heading {
+  @apply mu:flex mu:flex-wrap mu:items-start mu:justify-between mu:gap-3 mu:p-4 mu:sm:p-6;
+}
+
+.advisor-chat-heading-copy {
+  @apply mu:flex mu:min-w-0 mu:items-start mu:gap-3;
+}
+
+.advisor-chat-icon,
+.advisor-avatar {
+  @apply mu:inline-flex mu:shrink-0 mu:items-center mu:justify-center mu:bg-mint mu:text-herd;
+}
+
+.advisor-chat-icon {
+  @apply mu:size-10 mu:rounded-lg;
+}
+
+.advisor-chat-icon .advisor-icon {
+  @apply mu:size-5;
+}
+
+.advisor-chat-toggle .advisor-icon {
+  @apply mu:motion-safe:transition-transform;
+}
+
+.advisor-chat-toggle[aria-expanded="true"] .advisor-icon {
+  transform: rotate(180deg);
+}
+
+.advisor-messages {
+  @apply mu:mx-4 mu:flex mu:min-h-44 mu:max-h-[min(26rem,58vh)] mu:flex-col mu:gap-4 mu:overflow-y-auto mu:rounded-lg mu:border mu:border-solid mu:border-line mu:bg-audit-tint mu:p-3 mu:sm:mx-6 mu:sm:min-h-60 mu:sm:p-4;
+}
+
+.advisor-message {
+  @apply mu:flex mu:min-w-0 mu:items-start mu:gap-2 mu:sm:gap-3;
+}
+
+.advisor-message p {
+  @apply mu:m-0;
+}
+
+.advisor-user-message {
+  @apply mu:justify-end;
+}
+
+.advisor-user-message > p,
+.advisor-message-bubble {
+  @apply mu:min-w-0 mu:max-w-[calc(100%-2.75rem)] mu:rounded-lg mu:px-3 mu:py-2.5 mu:sm:max-w-[85%];
+}
+
+.advisor-user-message > p {
+  @apply mu:rounded-tr-sm mu:bg-mint;
+}
+
+.advisor-avatar {
+  @apply mu:size-8 mu:rounded-full;
+}
+
+.advisor-user-message .advisor-avatar {
+  @apply mu:bg-paper mu:text-muted;
+}
+
+.advisor-message-bubble {
+  @apply mu:rounded-tl-sm mu:border mu:border-solid mu:border-line mu:bg-paper;
+}
+
+.advisor-answer {
+  @apply mu:whitespace-pre-line;
+}
+
+.advisor-chat-source {
+  @apply mu:mb-0 mu:pt-1 mu:text-xs mu:text-muted;
+  border-top: 1px solid var(--mu-color-line);
+}
+
+.advisor-chat-source .advisor-text-button,
+.advisor-message-bubble > .advisor-text-button {
+  @apply mu:min-h-7 mu:py-1 mu:text-xs;
+}
+
+.advisor-chat-feedback {
+  @apply mu:mx-4 mu:mb-0 mu:sm:mx-6;
+}
+
+.advisor-composer {
+  @apply mu:grid mu:gap-1.5 mu:px-4 mu:pt-3 mu:pb-4 mu:sm:px-6 mu:sm:pb-6;
+}
+
+.advisor-composer-label {
+  @apply mu:text-sm mu:font-semibold;
+}
+
+.advisor-composer-field {
+  @apply mu:grid mu:grid-cols-[minmax(0,1fr)_auto] mu:items-center mu:gap-2;
 }

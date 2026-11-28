@@ -49,6 +49,7 @@ def fetch_supabase_attribute_evidence(
     completed_courses: list[str], catalog_year: str,
     reported_credits: dict[str, float] | None = None, *, client: Any = None,
     client_factory: Callable[[], Any] | None = None,
+    unresolved_courses: set[str] | None = None,
 ) -> dict[str, Any]:
     """Fetch only the student's entered courses and catalog-year attributes.
 
@@ -110,7 +111,8 @@ def fetch_supabase_attribute_evidence(
               .in_("course_code", completed[index:index + 100]),
             "course",
         ))
-    credit_by_course = course_credit_evidence(completed, courses, reported_credits)
+    credit_by_course = course_credit_evidence(completed, courses, reported_credits,
+                                            unresolved_courses=unresolved_courses)
     code_by_id = {row["course_id"]: row["course_code"] for row in courses}
     course_ids = sorted(code_by_id)
 
@@ -306,6 +308,8 @@ def run_degree_plan(
     A preview-only caller can skip the v1 projection with include_handoff=False.
     """
     coursework = normalize_coursework(completed_courses)
+    unresolved = {entry["course_code"] for entry in coursework
+                  if isinstance(entry, dict) and entry.get("equivalency_verified") is False}
     completed = coursework_codes(coursework)
     year = draft.get("catalog_year")
     flexible_requested = core_ii_candidates or critical_thinking_candidates
@@ -321,7 +325,8 @@ def run_degree_plan(
     progress_evidence = {"status": "NOT_REQUESTED", "issues": []}
     if supabase_attributes or flexible_requested:
         try:
-            evidence = fetch_supabase_attribute_evidence(completed, year, credits, client_factory=get_client)
+            evidence = fetch_supabase_attribute_evidence(completed, year, credits, client_factory=get_client,
+                                                        unresolved_courses=unresolved)
             progress_evidence["status"] = "AVAILABLE"
         except (AttributeEvidenceUnavailable, OSError):
             if not flexible_requested:

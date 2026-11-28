@@ -63,6 +63,37 @@ export async function fetchPrograms(signal) {
   return data;
 }
 
+export async function importTranscript(file, signal) {
+  let response;
+  try {
+    response = await fetch(`${API_BASE}/api/v1/transcripts/import`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/pdf' },
+      body: file,
+      cache: 'no-store',
+      signal: AbortSignal.any([signal, AbortSignal.timeout(30000)]),
+    });
+  } catch (error) {
+    if (signal.aborted) throw error;
+    throw new PlanningError(error.name === 'TimeoutError'
+      ? 'Transcript import timed out. Try again or enter courses manually.'
+      : 'The transcript service could not be reached. Check that the planning API is running.');
+  }
+  const data = await response.json().catch(() => null);
+  if (!response.ok) {
+    const message = [413, 415, 422].includes(response.status) && typeof data?.detail === 'string'
+      ? data.detail : 'The transcript could not be imported. Try again or enter courses manually.';
+    throw new PlanningError(message, response.status);
+  }
+  if (!Array.isArray(data?.courses) || !Number.isInteger(data.skipped_courses) ||
+      !data.courses.every((course) => typeof course.course_code === 'string' &&
+        typeof course.grade === 'string' && typeof course.is_transfer === 'boolean' &&
+        (course.credits === null || typeof course.credits === 'string'))) {
+    throw new PlanningError('The transcript service returned an unexpected response.');
+  }
+  return data;
+}
+
 export async function evaluatePlanning(body, signal) {
   return validatePlanningReport(await request('planning/evaluate', { body, signal }), body.catalog_year);
 }

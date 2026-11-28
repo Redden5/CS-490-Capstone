@@ -1,3 +1,5 @@
+@reference "./tailwind.css";
+
 /* Native progress and decorative treatments complement the template utilities. */
 .dashboard-hero {
   background-image: radial-gradient(ellipse at 100% 110%, #2c7b52, transparent 65%);
@@ -104,4 +106,62 @@
   .dashboard-hero::after {
     opacity: .35;
   }
+}
+
+.dashboard-icon--gpa::before {
+  width: 15px;
+  height: 17px;
+  border: 1.5px solid;
+  border-radius: 3px;
+}
+
+.dashboard-icon--gpa::after {
+  width: 7px;
+  border-top: 1.5px solid;
+  box-shadow: 0 4px;
+}
+
+.dashboard-gpa-caption,
+.dashboard-note {
+  @apply mu:my-1 mu:text-sm mu:leading-relaxed mu:text-muted;
+}
+
+.dashboard-gpa-value {
+  @apply mu:my-2 mu:flex mu:flex-wrap mu:items-baseline mu:gap-1.5 mu:tabular-nums;
+}
+
+.dashboard-gpa-value strong {
+  @apply mu:text-4xl mu:leading-none mu:font-semibold;
+}
+
+.dashboard-gpa-value span {
+  @apply mu:text-sm mu:text-muted;
+}
+
+.dashboard-gpa-details {
+  @apply mu:mt-3 mu:rounded-lg mu:border mu:border-solid mu:border-line mu:bg-audit-tint mu:p-3 mu:text-sm;
+}
+
+.dashboard-gpa-details summary {
+  @apply mu:student-focus mu:cursor-pointer mu:font-semibold mu:text-herd;
+}
+
+.dashboard-gpa-totals {
+  @apply mu:flex mu:flex-wrap mu:gap-3;
+}
+
+.dashboard-gpa-totals dd {
+  @apply mu:mt-1 mu:ml-0 mu:font-semibold;
+}
+
+.dashboard-gpa-breakdown {
+  @apply mu:list-none mu:divide-y mu:divide-line mu:p-0;
+}
+
+.dashboard-gpa-breakdown li {
+  @apply mu:flex mu:flex-wrap mu:gap-2 mu:py-1.5;
+}
+
+.dashboard-gpa-policy {
+  @apply mu:font-semibold mu:text-herd mu:underline mu:underline-offset-4;
 }

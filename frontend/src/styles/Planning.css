@@ -29,6 +29,7 @@
 .planning-input-layout { display: grid; grid-template-columns: minmax(300px, 0.85fr) minmax(0, 1.5fr); align-items: start; gap: 22px; }
 .planning-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; font-size: 14px; font-weight: 600; }
 .planning-field input, .planning-field select { font-weight: 400; }
+.planning-transcript .planning-field { margin-bottom: 12px; }
 .planning-search label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; }
 .planning-search > div { display: flex; gap: 8px; }
 .planning-search button { flex-shrink: 0; }

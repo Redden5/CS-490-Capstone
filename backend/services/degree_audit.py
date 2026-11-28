@@ -74,6 +74,7 @@ def coursework_codes(records: list[str | dict[str, Any]]) -> list[str]:
 def course_credit_evidence(
     completed_courses: list[str], course_rows: list[dict[str, Any]],
     reported_credits: dict[str, float] | None = None,
+    *, unresolved_courses: set[str] | None = None,
 ) -> dict[str, dict[str, Any]]:
     """Use catalog fixed credits as estimates; never invent variable-credit earnings."""
     reported = reported_credits or {}
@@ -93,6 +94,14 @@ def course_credit_evidence(
     result: dict[str, dict[str, Any]] = {}
     for code in sorted(completed):
         row = rows.get(code)
+        if code in (unresolved_courses or set()):
+            result[code] = {
+                "status": "EQUIVALENCY_UNVERIFIED",
+                "catalog_min_credits": row.get("min_credit_hours") if row else None,
+                "catalog_max_credits": row.get("max_credit_hours") if row else None,
+                "credit_value": None, "credit_source": None,
+            }
+            continue
         if row is None:
             if code in reported:
                 raise ReportedCreditError(f"Cannot validate reported credits: {code} absent from course table")

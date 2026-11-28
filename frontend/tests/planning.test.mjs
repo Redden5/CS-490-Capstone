@@ -1,6 +1,6 @@
 import test, { afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildPlanningRequest, fetchPrograms, evaluatePlanning } from '../src/lib/planningApi.js';
+import { buildPlanningRequest, fetchPrograms, evaluatePlanning, importTranscript } from '../src/lib/planningApi.js';
 import { choiceProgressText, requirementGroups, safeSourceUrl } from '../src/lib/planningPresentation.js';
 const originalFetch = globalThis.fetch;
 afterEach(() => { globalThis.fetch = originalFetch; });
@@ -10,6 +10,22 @@ const body = { program_key: program.program_key, catalog_year: program.catalog_y
 const handoff = () => ({ schema_version: '2.1.0', degree: { catalog_year: program.catalog_year }, requirements: [], summary: {},
   course_eligibility: { evaluation_status: 'UNAVAILABLE', courses: [{ course_code: 'CS 210', status: 'UNKNOWN' }] },
   flexible_candidates: { generation_status: 'UNAVAILABLE', requirements: [] } });
+
+test('uploads the PDF body and receives editable coursework data', async () => {
+  const pdf = new Blob(['%PDF-1.7'], { type: 'application/pdf' });
+  const result = {
+    courses: [{ course_code: 'CS 110', grade: 'A-', credits: '3.000', is_transfer: false }],
+    skipped_courses: 1,
+  };
+  globalThis.fetch = async (url, options) => {
+    assert.equal(url, '/api/v1/transcripts/import');
+    assert.equal(options.method, 'POST');
+    assert.equal(options.headers['Content-Type'], 'application/pdf');
+    assert.equal(options.body, pdf);
+    return Response.json(result);
+  };
+  assert.deepEqual(await importTranscript(pdf, new AbortController().signal), result);
+});
 
 test('empty coursework is valid and request excludes frontend-only state', () => {
   assert.deepEqual(buildPlanningRequest({ program, rows: [] }), body);

@@ -336,6 +336,8 @@ def resolve(
             "credit_slots": rule.get("credit_slots", []),
             "original_review_flags": rule.get("review_flags", []),
         }
+        if rule.get("source_correction"):
+            metadata["source_correction"] = rule["source_correction"]
         if kind == "REQUIRED_COURSE":
             db_type = "ALL"
             course_codes = unique_nonblank_strings(rule.get("course_codes", []))

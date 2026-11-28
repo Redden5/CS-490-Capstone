@@ -6,8 +6,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from backend.models.planning import PlanningRequest
+from backend.routes.advisor import router as advisor_router
 from backend.routes.planning import router
 from backend.routes.schedules import router as schedules_router
+from backend.routes.transcripts import router as transcripts_router
+
 from backend.routes.student_academics import router as student_academics_router
 from backend.routes.student_planner import router as student_planner_router
 
@@ -17,9 +20,12 @@ app.add_middleware(
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["Content-Type", "Authorization"],
+    expose_headers=["Retry-After"],
 )
 app.include_router(router)
 app.include_router(schedules_router)
+app.include_router(transcripts_router)
+app.include_router(advisor_router)
 app.include_router(student_academics_router)
 app.include_router(student_planner_router)
 

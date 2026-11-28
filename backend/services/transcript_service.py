@@ -1,16 +1,9 @@
 import re
 
-from pydantic import TypeAdapter
-
-from backend.models.models import TranscriptCourse
-from backend.utils.pdf_extractor import extract_pdf_text
-from backend.models import models
-#Python caches recently used regex patterns could be optimized
-#Term can return None for courses that are transfer or do not
 TRANSFER_COURSE_PATTERN = re.compile(r"(?P<subject_code>[A-Z]{2,4})\s+"
                             r"(?P<course_number>[0-9A-Z]{3,4})\s+"
                             r"(?P<course_title>.+?)\s+"
-                            r"(?P<grade>[A-Z]{1,2})\.\s+"
+                            r"(?P<grade>[A-Z]{1,2}[+-]?)\.\s+"
                             r"(?P<credits>\d+\.\d+)\s+"
                             r"(?P<quality_points>\d+\.\d+)$"
                             )
@@ -19,7 +12,7 @@ INSTITUTION_COURSE_PATTERN =  re.compile(r"(?P<subject_code>[A-Z]{2,4})\s+"
                             r"(?P<course_number>[0-9A-Z]{3,4})\s+"
                             r"(?P<level>[0-9]{1,2})\s+"
                             r"(?P<course_title>.+?)\s+"
-                            r"(?P<grade>[A-Z]{1,2})\s+"
+                            r"(?P<grade>[A-Z]{1,2}[+-]?)\s+"
                             r"(?P<credits>\d+\.\d+)\s+"
                             r"(?P<quality_points>\d+\.\d+)$")
 
@@ -27,12 +20,12 @@ COURSE_IN_PROGRESS_PATTERN = re.compile(r"(?P<subject_code>[A-Z]{2,4})\s+"
                             r"(?P<course_number>[0-9A-Z]{3,4})\s+"
                             r"(?P<level>[0-9]{1,2})\s+"
                             r"(?P<course_title>.+?)\s+"
-                            r"(?P<credits>\d+\.\d{3})$"
+                            r"(?P<credits>\d+\.\d+)$"
 )
 INSTITUTION_PREFIX_PATTERN = re.compile(r"^(?P<subject_code>[A-Z]{2,4})\s+"
                   r"(?P<course_number>[0-9A-Z]{3,4})\s+"
                   r"(?P<level>\d{1,2})\s+")
-INSTITUTION_GRADE_PATTERN = re.compile(r"(?P<grade>[A-Z])\s+"
+INSTITUTION_GRADE_PATTERN = re.compile(r"(?P<grade>[A-Z][+-]?)\s+"
                      r"(?P<credits>\d+\.\d{3})\s+"
                      r"(?P<quality_points>\d+\.\d{2})$")
 
@@ -48,8 +41,6 @@ def parse_transcript(text: str) -> list[dict]:
     lines = text.splitlines()
     for i, raw_line in enumerate(lines):
         line = raw_line.strip()
-    # for line in text.splitlines():
-    #     line = line.strip()
 
         match line:
             case "TRANSFER CREDIT ACCEPTED BY INSTITUTION":
@@ -79,6 +70,7 @@ def parse_transcript(text: str) -> list[dict]:
 
         if line.startswith("Term: "):
             current_term = line.split(":", 1)[1].strip()
+            continue
 
         course = parse_course_line(line, current_section)
 
@@ -92,12 +84,6 @@ def parse_transcript(text: str) -> list[dict]:
                 next_line = lines[i+1]
                 if is_title_continuation(next_line,current_section):
                     course["course_title"] += " " + next_line.strip()
-
-        # Possible course check
-        # elif current_section is not None:
-        #     possible_course = re.match(r"^[A-Z]{2,4}\s+[0-9A-Z]{3,4}\s+",line)
-        #     if possible_course:
-        #         print("Possible Course: " ,line)
 
     return courses
 
@@ -146,7 +132,10 @@ def is_title_continuation(raw_line:str,current_section:str | None)-> bool:
     if (current_section == "institution"
             and raw_line.startswith(" ")
             and raw_line.strip()
-            and not raw_line.strip().startswith("Term Totals")
+            and not raw_line.strip().startswith(("Term Totals", "Term:", "TRANSCRIPT TOTALS",
+                                                "COURSE(S) IN PROGRESS", "INSTITUTION CREDIT",
+                                                "TRANSFER CREDIT ACCEPTED BY INSTITUTION"))
+            and not INSTITUTION_PREFIX_PATTERN.match(raw_line.strip())
     ):
         return True
     return False
