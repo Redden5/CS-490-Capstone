@@ -1,0 +1,191 @@
+@reference "./tailwind.css";
+
+.planning-page {
+  @apply mu:mx-auto mu:w-full mu:flex-1 mu:space-y-4 mu:bg-canvas mu:px-4 mu:pt-6 mu:pb-10 mu:font-campus mu:text-ink mu:wrap-anywhere mu:sm:px-6 mu:lg:px-10 mu:lg:pt-9;
+}
+
+.planning-page .planning-heading {
+  @apply mu:flex mu:min-h-40 mu:flex-wrap mu:items-end mu:justify-between mu:gap-4 mu:rounded-banner mu:bg-forest mu:px-6 mu:py-7 mu:text-paper mu:sm:px-8 mu:lg:min-h-48 mu:lg:px-10;
+  background-image:
+    repeating-radial-gradient(ellipse at 104% 138%, transparent 0 23px, #d7f5df24 24px 25px, transparent 26px 43px),
+    linear-gradient(115deg, var(--mu-color-forest) 44%, #1b6c49);
+}
+
+.planning-page .planning-heading h1 {
+  @apply mu:m-0 mu:font-display mu:text-page mu:font-normal mu:tracking-tight;
+}
+
+.planning-page .planning-heading p {
+  @apply mu:m-0 mu:mt-2 mu:text-sm mu:leading-relaxed mu:text-leaf mu:sm:text-base;
+}
+
+.planning-page .planning-link {
+  @apply mu:cursor-pointer mu:border-0 mu:bg-transparent mu:p-0 mu:[font-family:inherit] mu:text-sm mu:font-semibold mu:text-herd mu:underline mu:underline-offset-4;
+}
+
+.planning-page :is(.planning-button, .planning-heading .planning-link) {
+  @apply mu:inline-flex mu:min-h-11 mu:items-center mu:justify-center mu:gap-2 mu:rounded-lg mu:border mu:border-solid mu:px-3 mu:py-2 mu:[font-family:inherit] mu:text-sm mu:font-semibold mu:no-underline mu:motion-safe:transition-colors;
+}
+
+.planning-page .planning-heading .planning-link {
+  @apply mu:border-paper/40 mu:bg-paper/10 mu:text-paper mu:hover:bg-paper/20;
+}
+
+.planning-page .planning-heading .planning-link:focus-visible {
+  outline-color: var(--mu-color-leaf);
+}
+
+.planning-page .planning-button {
+  @apply mu:cursor-pointer mu:border-herd mu:bg-herd mu:text-paper mu:hover:bg-forest mu:disabled:cursor-not-allowed mu:disabled:opacity-55;
+}
+
+.planning-page .planning-button.secondary {
+  @apply mu:border-herd mu:bg-paper mu:text-herd mu:hover:bg-mint;
+}
+
+.planning-page :is(a, button, input, select):focus-visible {
+  outline: 2px solid var(--mu-color-herd);
+  outline-offset: 3px;
+}
+
+.planning-page .planning-input-layout {
+  @apply mu:grid mu:items-start mu:gap-4 mu:lg:grid-cols-[minmax(0,1fr)_minmax(0,1.58fr)];
+}
+
+.planning-page .planning-input-layout > div {
+  @apply mu:min-w-0 mu:space-y-4;
+}
+
+.planning-page .planning-card {
+  @apply mu:min-w-0 mu:rounded-panel mu:border mu:border-solid mu:border-line mu:bg-paper mu:p-4 mu:text-sm mu:leading-relaxed mu:shadow-panel mu:sm:p-6;
+}
+
+.planning-page .planning-card h2 {
+  @apply mu:m-0 mu:mb-3 mu:text-lg mu:leading-tight mu:font-semibold mu:tracking-tight;
+}
+
+.planning-page .planning-muted {
+  @apply mu:my-2 mu:text-sm mu:leading-relaxed mu:text-muted;
+}
+
+.planning-page .planning-notice {
+  @apply mu:rounded-xl mu:border mu:border-solid mu:border-line mu:bg-mint mu:px-4 mu:py-3 mu:text-sm mu:leading-relaxed;
+}
+
+.planning-page .planning-notice:is(.warning, [data-dirty="true"]) {
+  @apply mu:bg-review-tint mu:text-review-ink;
+}
+
+.planning-page .planning-notice p {
+  @apply mu:mt-0 mu:mb-2;
+}
+
+.planning-page .planning-notice p:last-child {
+  @apply mu:mb-0;
+}
+
+.planning-page :is(.planning-field, .planning-search label) {
+  @apply mu:grid mu:min-w-0 mu:gap-1.5 mu:text-sm mu:font-semibold;
+}
+
+.planning-page :is(input:not([type="checkbox"]), select) {
+  @apply mu:min-h-11 mu:w-full mu:min-w-0 mu:rounded-lg mu:border mu:border-solid mu:border-muted mu:bg-paper mu:px-3 mu:py-2 mu:[font-family:inherit] mu:text-sm mu:font-normal mu:text-ink;
+}
+
+.planning-page input::placeholder {
+  color: var(--mu-color-muted);
+  opacity: 1;
+}
+
+.planning-page select:disabled,
+.planning-page fieldset:disabled input {
+  @apply mu:border-line mu:bg-canvas;
+}
+
+.planning-page .planning-search > div {
+  @apply mu:mt-1.5 mu:grid mu:grid-cols-[minmax(0,1fr)_auto] mu:gap-2;
+}
+
+.planning-page .planning-search-results {
+  @apply mu:my-2 mu:list-none mu:divide-y mu:divide-line mu:p-0;
+}
+
+.planning-page .planning-search-results > li {
+  @apply mu:flex mu:items-center mu:justify-between mu:gap-3 mu:py-2.5;
+}
+
+.planning-page .planning-search-results > li button {
+  @apply mu:shrink-0;
+}
+
+.planning-page .planning-card [role="alert"]:not(.planning-notice) {
+  @apply mu:text-review-ink;
+}
+
+.planning-page .planning-section-heading {
+  @apply mu:flex mu:flex-wrap mu:items-baseline mu:justify-between mu:gap-2;
+}
+
+.planning-page .planning-section-heading h2 {
+  @apply mu:mb-0;
+}
+
+.planning-page .planning-section-heading > span {
+  @apply mu:rounded-md mu:bg-mint mu:px-2 mu:py-1 mu:text-xs mu:font-semibold mu:text-herd mu:tabular-nums;
+}
+
+.planning-page .planning-coursework-list {
+  @apply mu:my-4 mu:list-none mu:space-y-3 mu:p-0;
+}
+
+.planning-page .planning-coursework-list:empty {
+  @apply mu:hidden;
+}
+
+.planning-page .planning-coursework-list fieldset {
+  @apply mu:m-0 mu:min-w-0 mu:rounded-xl mu:border mu:border-solid mu:border-line mu:bg-audit-tint mu:px-3 mu:pt-2 mu:pb-3 mu:sm:px-4;
+}
+
+.planning-page .planning-coursework-list legend {
+  @apply mu:max-w-full mu:px-1 mu:text-sm mu:font-semibold mu:text-herd;
+}
+
+.planning-page .planning-course-fields {
+  @apply mu:grid mu:min-w-0 mu:gap-3 mu:sm:grid-cols-3;
+}
+
+.planning-page .planning-checkbox {
+  @apply mu:mt-3 mu:flex mu:min-h-8 mu:cursor-pointer mu:items-center mu:gap-2 mu:text-sm;
+}
+
+.planning-page .planning-checkbox input {
+  @apply mu:m-0 mu:size-4 mu:shrink-0 mu:accent-herd;
+}
+
+.planning-page .planning-remove-entry {
+  @apply mu:mt-1 mu:min-h-8 mu:text-red-800;
+}
+
+.planning-page .planning-evaluate {
+  @apply mu:mt-5 mu:flex mu:flex-wrap mu:gap-2 mu:pt-4;
+  border-top: 1px solid var(--mu-color-line);
+}
+
+.planning-page .planning-evaluate p {
+  @apply mu:basis-full;
+}
+
+.planning-page .planning-empty {
+  @apply mu:my-4 mu:rounded-xl mu:border mu:border-dashed mu:border-line mu:bg-canvas mu:p-4 mu:text-muted;
+}
+
+.planning-page .planning-transcript .planning-field {
+  @apply mu:mb-3;
+}
+
+/* Match the shared page width while letting the canvas reach the viewport edges. */
+@media (min-width: 87rem) {
+  .planning-page {
+    padding-inline: calc((100% - 82rem) / 2);
+  }
+}

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import CompletedCourseSearch from '../components/CompletedCourseSearch.jsx';
 import { usePlanning } from '../context/planningContext.js';
-import '../styles/Planning.css';
+import '../styles/AcademicInfo.css';
 
 export default function AcademicInfo() {
   const { input, updateInput, programs, record, reloadAcademics, canSave, saving, save, saveError, dirty, evaluation, evaluate, stale } = usePlanning();
@@ -26,15 +26,15 @@ export default function AcademicInfo() {
 
   return <main className="planning-page">
     <header className="planning-heading">
-      <div><p className="planning-eyebrow">Your academic record</p><h1>Academic Info</h1>
+      <div><h1>Academic Info</h1>
         <p>Enter successfully completed coursework to explore your degree requirements.</p></div>
-      <Link className="planning-link" to="/degree-audit">View Degree Audit →</Link>
+      <Link className="planning-link" to="/degree-audit">View Degree Audit <span aria-hidden="true">→</span></Link>
     </header>
     {record.loading && <p role="status">Loading saved coursework…</p>}
-    {record.error && <p role="alert">{record.error.message}{' '}
+    {record.error && <p className="planning-notice warning" role="alert">{record.error.message}{' '}
       <button type="button" className="planning-link" onClick={reloadAcademics}>Retry loading coursework</button>
     </p>}
-    <p className="planning-notice" role="status">{dirty ? 'You have unsaved academic changes.'
+    <p className="planning-notice planning-save-status" data-dirty={dirty} role="status">{dirty ? 'You have unsaved academic changes.'
       : record.revision ? 'Your academic information is saved.' : 'Save your academic information to use it the next time you sign in.'}</p>
     {stale && <p className="planning-notice warning" role="status">Your coursework has changed. Evaluate it again to update your Degree Audit.</p>}
 
@@ -60,12 +60,12 @@ export default function AcademicInfo() {
         {!record.loading && !record.error && !saving && <CompletedCourseSearch onAdd={addCourse} />}
       </div>
 
-      <form className="planning-card planning-coursework" onSubmit={submit}>
-        <div className="planning-section-heading"><h2>Completed coursework</h2><span>{input.rows.length} {input.rows.length === 1 ? 'entry' : 'entries'}</span></div>
+      <form className="planning-card planning-coursework" aria-labelledby="coursework-title" onSubmit={submit}>
+        <div className="planning-section-heading"><h2 id="coursework-title">Completed coursework</h2><span>{input.rows.length} {input.rows.length === 1 ? 'entry' : 'entries'}</span></div>
         <p className="planning-muted">Include only courses you passed. Leave unknown grades or credits blank. Grades help check prerequisites; they do not verify degree credit.</p>
         <p className="planning-muted">Record repeated successful attempts separately. Conflicting grades, plus/minus grades, and transfer marks may need review.</p>
         {!input.rows.length && <p className="planning-empty">No coursework entered. Search for a course or add one manually. You can also evaluate with no completed courses.</p>}
-        <ol className="planning-coursework-list">
+        <ol className="planning-coursework-list" role="list">
           {input.rows.map((row, index) => <li key={row.id}>
             <fieldset disabled={record.loading || Boolean(record.error) || saving}>
               <legend>Course {index + 1}{row.code && ` · ${row.code}`}</legend>
@@ -82,7 +82,7 @@ export default function AcademicInfo() {
               </div>
               <label className="planning-checkbox"><input type="checkbox" checked={row.unresolvedEquivalency}
                 onChange={(e) => editRow(row.id, 'unresolvedEquivalency', e.target.checked)} /> Transfer or equivalency still needs review</label>
-              <button type="button" className="planning-link" aria-label={`Remove coursework entry ${index + 1}`}
+              <button type="button" className="planning-link planning-remove-entry" aria-label={`Remove entry ${index + 1}`}
                 onClick={() => updateInput((current) => ({ ...current, rows: current.rows.filter((item) => item.id !== row.id) }))}>Remove entry</button>
             </fieldset>
           </li>)}

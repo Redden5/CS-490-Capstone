@@ -50,7 +50,7 @@ export default function CompletedCourseSearch({ onAdd }) {
     {result.error && <p role="alert">{result.error}</p>}
     {search.term && !result.loading && !result.error && <p>{result.data.length
       ? 'Showing up to 12 matches. Refine your search to find more.' : 'No matching courses found.'}</p>}
-    <ul className="planning-search-results">
+    <ul className="planning-search-results" role="list">
       {result.data.map((course) => <li key={course.course_id}>
         <span><strong>{course.course_code}</strong> — {course.course_title}</span>
         <button className="planning-button secondary" type="button" aria-label={`Add ${course.course_code}`}
